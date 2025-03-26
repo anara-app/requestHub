@@ -1,0 +1,24 @@
+FROM node:18 as build
+
+WORKDIR /app
+COPY package.json pnpm-workspace.yaml ./
+
+RUN npm install -g pnpm
+COPY . .
+
+RUN pnpm install
+RUN pnpm build:server
+
+# RUN apt update && apt install libssl-dev dumb-init -y --no-install-recommends
+
+# COPY --chown=node:node --from=build /app/packages/server/build ./build
+# COPY --chown=node:node --from=build /app/packages/server/package.json .
+# COPY --chown=node:node --from=build /app/node_modules/.pnpm/@prisma+client@*/node_modules/.prisma/client ./node_modules/.prisma/client
+# COPY --chown=node:node --from=build /app/node_modules ./node_modules
+
+# ENV NODE_ENV production
+
+WORKDIR /app
+EXPOSE 5000
+
+CMD ["pnpm", "start:server"]

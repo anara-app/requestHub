@@ -1,0 +1,193 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: var(--font-lato);
+  background-color: #f2f2f2;
+}
+
+/* TinyMCE section specific classes */
+.default-card {
+  border: 1px solid #b2b2b2;
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.default-card > h2 {
+  margin: 0px;
+  margin-bottom: 20px;
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: bold;
+}
+
+.default-card > p {
+  margin: 0px;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.yellow-card {
+  border: 1px solid #e1daaa;
+  background-color: #fff8c5;
+  border-radius: 16px;
+  padding: 32px;
+}
+
+.yellow-card > p {
+  margin: 0px;
+  font-size: 24px;
+  line-height: 28px;
+}
+
+.numbered-card {
+  border: 1px solid silver;
+  border-radius: 8px;
+  padding: 32px;
+  position: relative;
+}
+
+.numbered-card > div.order-number {
+  height: 30px;
+  width: 30px;
+  border-radius: 15px;
+  background-color: skyblue;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  position: absolute;
+  top: -15px;
+  left: 32px;
+}
+
+.numbered-card > h2 {
+  margin: 0px;
+  margin-bottom: 20px;
+  font-size: 22px;
+  line-height: 24px;
+  font-weight: bold;
+}
+
+.numbered-card > p {
+  margin: 0px;
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.survey-placeholder-title,
+.survey-placeholder-question {
+  display: none !important;
+}
+
+.carousel {
+  display: none;
+}
+
+blockquote {
+  margin-left: 32px;
+  border-left: 6px solid #3b86d4 !important;
+  font-size: 21px;
+  color: #000;
+  padding-left: 13px !important;
+}
+
+blockquote p {
+  margin: 0;
+}
+
+.quote-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+}
+
+.quote {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-style: italic;
+  position: relative;
+}
+
+.quote-text {
+  max-width: 500px;
+  line-height: 1.5;
+}
+
+.quote-icon {
+  font-size: 56px;
+  color: #3b86d4;
+  flex-shrink: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.quote-icon:first-child {
+  left: -40px;
+}
+
+.quote-icon:last-child {
+  right: -40px;
+}
+
+.quote-author {
+  margin-top: 10px;
+  font-size: 14px;
+  color: silver;
+}
+
+.related-articles {
+  float: left;
+  margin-right: 20px;
+  background: #faf9f6;
+  padding: 18px;
+  max-width: 250px;
+}
+
+.related-title {
+  color: gray;
+  font-size: 14px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.article-link {
+  font-weight: bold;
+  text-decoration: none;
+  color: black;
+  margin: 0;
+  cursor: pointer;
+}
+
+.article-link:hover {
+  text-decoration: underline;
+}
+
+/* Swiper styles */
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.carousel-btn {
+  display: none;
+}

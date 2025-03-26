@@ -1,0 +1,41 @@
+{
+  "name": "mono-template",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": ">=18.17.1",
+    "pnpm": ">=8.15.1"
+  },
+  "scripts": {
+    "build": "pnpm generate && pnpm build:server && pnpm build:client && pnpm build:admin",
+    "dev:server": "pnpm --filter server dev",
+    "dev:client": "pnpm --filter client dev",
+    "dev:admin": "pnpm --filter admin dev",
+    "build:admin": "pnpm generate && pnpm --filter admin build",
+    "build:server": "pnpm migrate && pnpm generate && pnpm --filter server build",
+    "build:client": "pnpm --filter client build",
+    "start:server": "pnpm --filter server start",
+    "start:client": "pnpm --filter client start",
+    "start:admin": "pnpm --filter admin start",
+    "migrate": "pnpm --filter server deploy:database",
+    "generate": "pnpm --filter server generate:client",
+    "dev": "concurrently \"pnpm dev:server\" \"pnpm dev:client\" \"pnpm dev:admin\" \"pnpm --filter server studio\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "server": "workspace:server",
+    "client": "workspace:client",
+    "admin": "workspace:admin"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@8.15.1",
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -1,0 +1,22 @@
+export const CONSTANTS = {
+  API_PORT: process.env.PORT || 8080,
+  WEB_CLIENT_URL: process.env.WEB_CLIENT_URL || "http://localhost:3000",
+  JWT_KEY: process.env.JWT_KEY || "secret",
+
+  RESEND_API_KEY: process.env.RESEND_API_KEY || "",
+
+  //AWS env vars
+  AWS: {
+    BUCKET_NAME: process.env.AWS_S3_BUCKET_NAME!,
+    ENDPOINT: process.env.AWS_S3_ENDPOINT!,
+    REGION: process.env.AWS_S3_REGION!,
+    S3_KEY: process.env.AWS_S3_KEY!,
+    S3_SECRET: process.env.AWS_S3_SECRET!,
+  },
+
+  //REDIS
+  REDIS: {
+    HOST: process.env.REDIS_HOST || "localhost",
+    PORT: process.env.REDIS_PORT || 6379,
+  },
+};

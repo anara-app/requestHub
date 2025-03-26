@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  email    String @unique
+  password String
+
+  firstName   String?
+  lastName    String?
+  phoneNumber String?
+  address     String?
+
+  roleId Int?
+  role   Role? @relation(fields: [roleId], references: [id])
+
+  profilePicture   MediaFile? @relation(fields: [profilePictureId], references: [id])
+  profilePictureId Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Role {
+  id Int @id @default(autoincrement())
+
+  name String
+
+  permissions RolePermission[]
+  users       User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model RolePermission {
+  id Int @id @default(autoincrement())
+
+  name        String?
+  description String?
+  action      PermissionOperation?
+
+  roleId Int
+  role   Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model MediaFile {
+  id Int @id @default(autoincrement())
+
+  filename         String?
+  originalFileName String?
+  altName          String?
+  url              String?
+  type             FileType @default(IMAGE)
+
+  width  Int? @default(0)
+  height Int? @default(0)
+
+  users User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Language {
+  id Int @id @default(autoincrement())
+
+  name      String
+  code      String  @unique
+  isDefault Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum FileType {
+  IMAGE
+  VIDEO
+  PDF
+  FILE
+}
+
+enum PermissionOperation {
+  //Users
+  CREATE_USER
+  READ_USERS
+  UPDATE_USER
+  DELETE_USER
+
+  //Roles
+  CREATE_ROLE
+  READ_ROLES
+  UPDATE_ROLE
+  DELETE_ROLE
+
+  //Gallery
+  READ_GALLERY
+  UPDATE_GALLERY
+  DELETE_GALLERY
+}
