@@ -8,12 +8,13 @@
     "start": "node ./build/main.js",
     "start:cron": "API_PORT=8090 node ./build/jobs/index.js",
     "start:cron:dev": "API_PORT=8090 nodemon ./src/jobs/index.ts",
-    "dev": "nodemon ./src/main.ts",
+    "dev": "tsx ./src/main.ts --watch",
     "build": "tsc",
-    "studio": "npx prisma studio",
+    "studio": "npx prisma studio --port 5555",
     "migrate": "npx prisma migrate dev",
     "deploy:database": "npx prisma migrate deploy",
-    "generate:client": "npx prisma generate"
+    "generate:client": "npx prisma generate",
+    "create:admin": "tsx ./scripts/create-admin-user.ts"
   },
   "keywords": [],
   "author": "",
@@ -63,6 +64,7 @@
     "@types/uuid": "^9.0.8",
     "prisma": "^5.9.1",
     "ts-node": "^10.9.2",
+    "tsx": "^4.20.1",
     "typescript": "5.6.3"
   }
 }

@@ -48,7 +48,7 @@ server.register(mediaRouter, {
   prefix: "/api/media",
 });
 
-server.get("/api/up", async (request, reply) => {
+server.get("/api/up", async (_, reply) => {
   console.log("HEALTH-CHECK");
   return reply.send({
     message: "up",

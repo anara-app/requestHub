@@ -1,25 +1,41 @@
-import { Box, Table, Checkbox } from "@mantine/core";
+import { Box, Table, Checkbox, Text } from "@mantine/core";
 import { Prisma } from "server/src/common/database-types";
-
-const PERMISSION_TYPES = ["СОЗДАТЬ", "ЧИТАТЬ", "ИЗМЕНИТЬ", "УДАЛИТЬ"];
 
 const PERMISSION_GROUPS: {
   label: string;
-  operations: Prisma.PermissionOperation[];
+  operations: {
+    operation: Prisma.PermissionOperation;
+    description: string;
+  }[];
 }[] = [
   {
     label: "Пользователи",
-    operations: ["CREATE_USER", "READ_USERS", "UPDATE_USER", "DELETE_USER"],
+    operations: [
+      { operation: "CREATE_USER", description: "Создание новых пользователей" },
+      { operation: "READ_USERS", description: "Просмотр списка пользователей" },
+      {
+        operation: "UPDATE_USER",
+        description: "Редактирование данных пользователей",
+      },
+      { operation: "DELETE_USER", description: "Удаление пользователей" },
+    ],
   },
-
   {
     label: "Роли",
-    operations: ["CREATE_ROLE", "READ_ROLES", "UPDATE_ROLE", "DELETE_ROLE"],
+    operations: [
+      { operation: "CREATE_ROLE", description: "Создание новых ролей" },
+      { operation: "READ_ROLES", description: "Просмотр ролей" },
+      { operation: "UPDATE_ROLE", description: "Редактирование ролей" },
+      { operation: "DELETE_ROLE", description: "Удаление ролей" },
+    ],
   },
-
   {
     label: "Галерея",
-    operations: ["READ_GALLERY", "UPDATE_GALLERY", "DELETE_GALLERY"],
+    operations: [
+      { operation: "READ_GALLERY", description: "Просмотр галереи" },
+      { operation: "UPDATE_GALLERY", description: "Редактирование галереи" },
+      { operation: "DELETE_GALLERY", description: "Удаление из галереи" },
+    ],
   },
 ];
 
@@ -49,24 +65,35 @@ export default function PermissionSelect({
         <Table.Thead>
           <Table.Tr>
             <Table.Th>Ресурс</Table.Th>
-            {PERMISSION_TYPES.map((type) => (
-              <Table.Th key={type}>{type}</Table.Th>
-            ))}
+            <Table.Th>Разрешения</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
           {PERMISSION_GROUPS.map((group) => (
             <Table.Tr key={group.label}>
-              <Table.Td>{group.label}</Table.Td>
-              {group.operations.map((operation) => (
-                <Table.Td key={operation}>
-                  <Checkbox
-                    value={operation}
-                    checked={selectedOperations.includes(operation)}
-                    onChange={() => handleCheckboxChange(operation)}
-                  />
-                </Table.Td>
-              ))}
+              <Table.Td>
+                <Text fw={500}>{group.label}</Text>
+              </Table.Td>
+              <Table.Td>
+                <Box
+                  style={{
+                    display: "flex",
+                    gap: "8px",
+                    flexDirection: "column",
+                  }}
+                >
+                  {group.operations.map(({ operation, description }) => (
+                    <Checkbox
+                      key={operation}
+                      value={operation}
+                      checked={selectedOperations.includes(operation)}
+                      onChange={() => handleCheckboxChange(operation)}
+                      label={description}
+                      size="sm"
+                    />
+                  ))}
+                </Box>
+              </Table.Td>
             </Table.Tr>
           ))}
         </Table.Tbody>

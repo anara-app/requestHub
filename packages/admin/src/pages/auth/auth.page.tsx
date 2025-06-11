@@ -25,8 +25,8 @@ const defaultValues = {
 };
 
 const validationSchema = z.object({
-  email: z.string().email("E-mail некорректен"),
-  password: z.string().min(6, "Пароль должен быть не менее 6 символов"),
+  email: z.string().min(1, "E-mail некорректен"),
+  password: z.string().min(4, "Пароль должен быть не менее 6 символов"),
 });
 
 export default function AuthPage() {

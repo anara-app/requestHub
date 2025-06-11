@@ -7,7 +7,7 @@ import {
 import { TRPCError } from "@trpc/server";
 import { db } from "../../../common/prisma";
 import bcrypt from "bcrypt";
-import { PermissionOperation } from "@prisma/client";
+import { $Enums } from "../../../common/prisma";
 
 export const usersRouter = router({
   getUsers: protectedPermissionProcedure(["READ_USERS"])
@@ -198,7 +198,7 @@ export const usersRouter = router({
     const user = ctx.user;
 
     if (!user?.roleId) {
-      return [] as PermissionOperation[];
+      return [] as $Enums.PermissionOperation[];
     }
 
     const role = await db.role.findFirst({
@@ -209,11 +209,11 @@ export const usersRouter = router({
     });
 
     if (!role) {
-      return [] as PermissionOperation[];
+      return [] as $Enums.PermissionOperation[];
     }
 
     return role?.permissions.map(
-      (permission) => permission.action
-    ) as PermissionOperation[];
+      (permission: $Enums.PermissionOperation) => permission.action
+    ) as $Enums.PermissionOperation[];
   }),
 });

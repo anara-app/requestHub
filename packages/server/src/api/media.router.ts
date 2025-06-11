@@ -1,7 +1,7 @@
 import { FastifyInstance } from "fastify";
 import { AWSManager } from "../modules/AWS/s3";
-import { FileType } from "@prisma/client";
 import { generateSlug } from "../common/utils";
+import { FileType } from "@prisma/client";
 
 // /api/media
 export function mediaRouter(fastify: FastifyInstance, opts: any, done: any) {
