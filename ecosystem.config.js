@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "API",
-      script: "npm",
+      script: "pnpm",
       args: "run start:server",
       env: {
         API_PORT: 8080,
@@ -10,8 +10,13 @@ module.exports = {
     },
     {
       name: "Client",
-      script: "npm",
+      script: "pnpm",
       args: "run start:client",
+    },
+    {
+      name: "Admin",
+      script: "pnpm",
+      args: "run start:admin",
     },
   ],
 };
