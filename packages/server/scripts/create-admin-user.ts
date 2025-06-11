@@ -4,6 +4,8 @@ import * as bcrypt from "bcrypt";
 
 const prisma = new PrismaClient();
 
+//TODO: Implement this script later on
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,

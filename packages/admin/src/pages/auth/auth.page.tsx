@@ -18,6 +18,8 @@ import { useAuthStore } from "../../store/useAuth";
 import { TokenManager } from "../../common/tokens";
 import { Prisma } from "server/src/common/database-types";
 import logo from "../../assets/logo.png";
+import { Typography } from "../../components/Typography";
+import { useLingui } from "@lingui/react/macro";
 
 const defaultValues = {
   email: "",
@@ -31,6 +33,8 @@ const validationSchema = z.object({
 
 export default function AuthPage() {
   const navigate = useNavigate();
+  const { t } = useLingui();
+
   const { mutate, isPending } = trpc.admin.auth.login.useMutation();
   const { setUser } = useAuthStore();
 
@@ -68,11 +72,11 @@ export default function AuthPage() {
         </Center>
         <Paper withBorder shadow="sm" p={30} mt={30} radius="md">
           <TextInput
-            label="Логин"
+            label={t`Логин`}
             error={errors.email?.message}
             {...register("email")}
             mb="sm"
-            placeholder="Логин"
+            placeholder={t`Логин`}
             required
           />
           <PasswordInput
@@ -81,8 +85,8 @@ export default function AuthPage() {
             error={errors.password?.message}
             {...register("password")}
             mb="sm"
-            placeholder="Пароль"
-            label="Пароль"
+            placeholder={t`Пароль`}
+            label={t`Пароль`}
             type="password"
           />
           <Button
@@ -92,7 +96,7 @@ export default function AuthPage() {
             fullWidth
             mt="xl"
           >
-            Войти
+            <Typography>Войти</Typography>
           </Button>
         </Paper>
       </Container>
