@@ -20,8 +20,6 @@ export const authRouter = router({
         where: { email },
       });
 
-      console.log({ user });
-
       if (!user) {
         throw new TRPCError({
           code: "BAD_REQUEST",
