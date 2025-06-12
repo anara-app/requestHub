@@ -9,8 +9,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        georgia: ['var(--font-georgia)'],
-        lato: ['var(--font-lato)']
+        georgia: ["var(--font-georgia)"],
+        lato: ["var(--font-lato)"],
       },
     },
   },

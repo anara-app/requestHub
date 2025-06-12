@@ -8,9 +8,7 @@ interface Props {
 export default function Footer({ className }: Props) {
   return (
     <div className={twMerge("pt-8 pb-12 bg-black", className)}>
-      <Container>
-        Footer
-      </Container>
+      <Container>Footer</Container>
     </div>
   );
 }

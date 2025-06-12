@@ -34,12 +34,7 @@
     "*.config.ts",
     "*.config.mjs"
   ],
-  "exclude": [
-    "node_modules",
-    ".next",
-    "build",
-    ".open-next"
-  ],
+  "exclude": ["node_modules", ".next", "build", ".open-next"],
   "references": [
     {
       "path": "../server"

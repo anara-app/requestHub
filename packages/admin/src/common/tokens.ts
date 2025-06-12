@@ -10,6 +10,6 @@ function setToken(token: string) {
 
 function removeToken() {
   localStorage.removeItem(LS_TOKEN_KEY);
-}   
+}
 
 export const TokenManager = { getToken, setToken, removeToken };

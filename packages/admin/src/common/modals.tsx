@@ -11,8 +11,8 @@ interface Options {
 }
 
 export function confirmModal({
-  title = 'Внимание',
-  body = 'Вы уверены, что хотите продолжить это действие?',
+  title = "Внимание",
+  body = "Вы уверены, что хотите продолжить это действие?",
   labels,
   color = "red",
   onCancel,

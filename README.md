@@ -5,13 +5,13 @@ Full system
 The current tech stack consists of 3 workspaces set up using pnpm. Each workspace is described below:
 
 1.  Client: Next.js
-    -   Tech stack: Next.js, React Query, shadcn/ui, Socket.IO, react-hook-form, tRPC
+    - Tech stack: Next.js, React Query, shadcn/ui, Socket.IO, react-hook-form, tRPC
 2.  Admin: React.js (Vite)
-    -   Tech stack: React.js, React Query, MantineUI, react-hook-form, Zustand, tRPC, react-router
+    - Tech stack: React.js, React Query, MantineUI, react-hook-form, Zustand, tRPC, react-router
 3.  Server: API with all the business logic
-    -   Tech stack: Node.js, Fastify, tRPC, Prisma, Socket.IO, Bull MQ, PostgreSQL, Redis
+    - Tech stack: Node.js, Fastify, tRPC, Prisma, Socket.IO, Bull MQ, PostgreSQL, Redis
 
-For authentication we use *Supabase*
+For authentication we use _Supabase_
 
 The system utilizes pnpm to manage the workspaces and dependencies across the project.
 
@@ -30,7 +30,6 @@ The system utilizes pnpm to manage the workspaces and dependencies across the pr
    3. API at `http://localhost:8080`
    4. Prisma Studio at `http://localhost:5555`
    5. WebSocket at `http://localhost:8081`
-
 
 ## How to build and deploy the project
 

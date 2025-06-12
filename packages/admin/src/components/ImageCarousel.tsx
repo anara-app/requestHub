@@ -8,7 +8,6 @@ interface Props {
 }
 
 export default function ImageCarousel({ media, mediaMetaData }: Props) {
-
   console.log({ mediaMetaData });
 
   return (

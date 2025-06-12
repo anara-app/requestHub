@@ -1,4 +1,4 @@
 export const APP_ROUTES = {
-    ARTICLE: '/article',
-    FEED: "/feed"
-}
+  ARTICLE: "/article",
+  FEED: "/feed",
+};
