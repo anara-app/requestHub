@@ -52,6 +52,7 @@
     "stripe": "^18.2.1",
     "superjson": "^2.2.2",
     "telegraf": "^4.16.3",
+    "trpc-to-openapi": "^2.3.1",
     "twilio": "^5.7.1",
     "unquote": "^1.1.1",
     "uuid": "^11.1.0",
