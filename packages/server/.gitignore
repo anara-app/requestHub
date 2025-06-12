@@ -2,5 +2,6 @@
 node_modules
 .env
 build
-# service-account.json
+service-account.json
 .trigger
+tsconfig.tsbuildinfo

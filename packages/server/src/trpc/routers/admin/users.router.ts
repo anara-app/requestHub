@@ -212,8 +212,10 @@ export const usersRouter = router({
       return [] as $Enums.PermissionOperation[];
     }
 
-    return role?.permissions.map(
+    const myPermissions = role?.permissions.map(
       (permission: $Enums.PermissionOperation) => permission.action
     ) as $Enums.PermissionOperation[];
+
+    return myPermissions;
   }),
 });

@@ -19,4 +19,10 @@ export const CONSTANTS = {
     HOST: process.env.REDIS_HOST || "localhost",
     PORT: process.env.REDIS_PORT || 6379,
   },
+
+  //CLOUDFLARE
+  CLOUDFLARE: {
+    ZONE_ID: process.env.CLOUDFLARE_ZONE_ID!,
+    API_TOKEN: process.env.CLOUDFLARE_API_TOKEN!,
+  },
 };

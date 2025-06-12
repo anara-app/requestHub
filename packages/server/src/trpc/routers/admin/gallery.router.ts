@@ -2,7 +2,8 @@ import { z } from "zod";
 import { db } from "../../../common/prisma";
 import { protectedPermissionProcedure, router } from "../../trpc";
 
-export const galleryRouter = router({
+//TODO: fix this
+export const galleryRouter: any = router({
   getAllGallery: protectedPermissionProcedure(["READ_GALLERY"])
     .input(z.object({ altName: z.string().optional() }))
     .query(async ({ input }) => {

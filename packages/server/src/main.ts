@@ -11,7 +11,6 @@ import { mediaRouter } from "./api/media.router";
 import fastifyMultipart from "@fastify/multipart";
 import sendsible from "@fastify/sensible";
 import { CONSTANTS } from "./common/constants";
-import { startAllWorkers } from "./worker";
 
 dotenv.config();
 
@@ -49,7 +48,7 @@ server.register(mediaRouter, {
 });
 
 server.get("/api/up", async (_, reply) => {
-  console.log("HEALTH-CHECK");
+  console.log("HEALTH-CHECK", new Date().toISOString());
   return reply.send({
     message: "up",
   });
@@ -59,7 +58,6 @@ server.get("/api/up", async (_, reply) => {
 async function startServer() {
   try {
     await server.listen({ port: +CONSTANTS.API_PORT, host: "0.0.0.0" });
-    startAllWorkers();
     console.log(`Server started successfully on port: ${CONSTANTS.API_PORT}`);
   } catch (err) {
     server.log.error(err);
