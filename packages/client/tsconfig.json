@@ -13,6 +13,8 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "rootDir": ".",
+    "baseUrl": ".",
     "plugins": [
       {
         "name": "next"
@@ -20,9 +22,27 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "react": ["./node_modules/@types/react"]
+      "react": ["./node_modules/@types/react"],
+      "@server/*": ["../server/src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    ".next/types/**/*.ts",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "*.config.ts",
+    "*.config.mjs"
+  ],
+  "exclude": [
+    "node_modules",
+    ".next",
+    "build",
+    ".open-next"
+  ],
+  "references": [
+    {
+      "path": "../server"
+    }
+  ]
 }
