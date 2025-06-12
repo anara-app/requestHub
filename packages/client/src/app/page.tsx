@@ -1,7 +1,3 @@
-import { redirect } from "next/navigation";
-
-export const runtime = 'edge';
-
-export default function Home() {
-  return redirect("/ru");
+export default function HomePage() {
+  return <div>main page</div>;
 }

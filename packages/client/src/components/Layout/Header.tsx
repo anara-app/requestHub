@@ -1,17 +1,15 @@
 "use client";
 
 import { twMerge } from "tailwind-merge";
-import { Link } from "@/i18n/routing";
 import Container from "../Container";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Header() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const pathname = usePathname();
+  const [isMobileMenuOpen] = useState(false);
 
   return (
-    <div className={twMerge("bg-black py-4 md:py-8", className)}>
+    <div className={twMerge("bg-black py-4 md:py-8")}>
       <Container>Header</Container>
 
       {/* Mobile menu */}

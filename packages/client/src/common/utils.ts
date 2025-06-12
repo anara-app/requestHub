@@ -1,4 +1,3 @@
-import { ArticleType } from "@/app/[locale]/page";
 import { formatDistanceToNow } from "date-fns";
 import { ru } from "date-fns/locale/ru";
 

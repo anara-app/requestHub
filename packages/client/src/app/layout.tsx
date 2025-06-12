@@ -3,6 +3,8 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import { ENV_KEYS } from "@/common/constants";
 import { Montserrat } from "next/font/google";
 import "./globals.css";
+import { getLocale } from "next-intl/server";
+import { NextIntlClientProvider } from "next-intl";
 
 const montserratFont = Montserrat({
   subsets: ["latin"],
@@ -14,17 +16,15 @@ export const metadata: Metadata = {
   description: "Site.com",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // const locale = await getLocale();
-  // const messages = await getMessages();
+  const locale = await getLocale();
 
   return (
-    <html lang={"ru"}>
-      {/* <html lang={locale}> */}
+    <html lang={locale}>
       <head>
         <link rel="icon" href="/logos/logo.svg" sizes="any" />
 
@@ -35,9 +35,7 @@ export default function RootLayout({
       </head>
       <GoogleAnalytics gaId={ENV_KEYS.GOOGLE_TAG} />
       <body className={`${montserratFont.variable} antialiased`}>
-        {/* <NextIntlClientProvider messages={messages}> */}
-        {children}
-        {/* </NextIntlClientProvider> */}
+        <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>
   );

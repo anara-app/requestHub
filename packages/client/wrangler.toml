@@ -1,4 +1,11 @@
 name = "mono-templete-front"
-compatibility_date = "2024-07-29"
+main = ".open-next/worker.js"
+compatibility_date = "2025-03-25"
 compatibility_flags = ["nodejs_compat"]
-pages_build_output_dir = ".vercel/output/static"
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
+[observability.logs]
+enabled = true
