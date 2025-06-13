@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { db } from "../../../common/prisma";
-import { protectedPermissionProcedure, router } from "../../trpc";
+import { db } from "../../common/prisma";
+import { protectedPermissionProcedure, router } from "../../trpc/trpc";
 
 //TODO: fix this
 export const galleryRouter: any = router({

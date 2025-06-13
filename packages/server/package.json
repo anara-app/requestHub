@@ -7,7 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./build/src/main.js",
-    "dev": "tsx ./src/main.ts --watch",
+    "dev": "nodemon ./src/main.ts --watch",
     "build": "tsc --build",
     "studio": "npx prisma studio --port 5555",
     "migrate": "npx prisma migrate dev",
@@ -47,6 +47,7 @@
     "node-cron": "^4.1.0",
     "nodemon": "^3.1.10",
     "puppeteer": "^24.10.1",
+    "resend": "^4.5.2",
     "slugify": "^1.6.6",
     "socket.io": "^4.8.1",
     "stripe": "^18.2.1",

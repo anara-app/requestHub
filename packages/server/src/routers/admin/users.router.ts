@@ -3,11 +3,11 @@ import {
   protectedPermissionProcedure,
   protectedProcedure,
   router,
-} from "../../trpc";
+} from "../../trpc/trpc";
 import { TRPCError } from "@trpc/server";
-import { db } from "../../../common/prisma";
+import { db } from "../../common/prisma";
 import bcrypt from "bcrypt";
-import { $Enums } from "../../../common/prisma";
+import { $Enums } from "../../common/prisma";
 
 export const usersRouter = router({
   getUsers: protectedPermissionProcedure(["READ_USERS"])
@@ -212,9 +212,9 @@ export const usersRouter = router({
       return [] as $Enums.PermissionOperation[];
     }
 
-    const myPermissions = role?.permissions.map(
-      (permission: $Enums.PermissionOperation) => permission.action
-    ) as $Enums.PermissionOperation[];
+    const myPermissions = role?.permissions
+      .filter((permission) => !!permission.action)
+      .map((permission) => permission.action!);
 
     return myPermissions;
   }),

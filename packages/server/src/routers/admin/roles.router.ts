@@ -1,6 +1,6 @@
-import { db } from "../../../common/prisma";
-import { router } from "../../trpc";
-import { protectedPermissionProcedure } from "../../trpc";
+import { db } from "../../common/prisma";
+import { router } from "../../trpc/trpc";
+import { protectedPermissionProcedure } from "../../trpc/trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { PermissionOperation } from "@prisma/client";

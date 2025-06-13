@@ -63,7 +63,7 @@ export const middleware = t.middleware;
 export const publicProcedure = t.procedure;
 export const protectedProcedure = t.procedure.use(isAuthed);
 
-type UserWithRole = User & {
+export type UserWithRole = User & {
   role: { permissions: Prisma.RolePermissionGetPayload<{}>[] } | null;
 };
 

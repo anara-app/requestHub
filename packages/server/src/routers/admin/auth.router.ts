@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { router, publicProcedure } from "../../trpc";
+import { router, publicProcedure } from "../../trpc/trpc";
 import { TRPCError } from "@trpc/server";
-import { db } from "../../../common/prisma";
-import { createJWT } from "../../../common/jwt";
+import { db } from "../../common/prisma";
+import { createJWT } from "../../common/jwt";
 import bcrypt from "bcrypt";
 
 export const authRouter = router({

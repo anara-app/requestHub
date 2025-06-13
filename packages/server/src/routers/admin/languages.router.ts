@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { protectedProcedure, router } from "../../trpc";
+import { protectedProcedure, router } from "../../trpc/trpc";
 import { TRPCError } from "@trpc/server";
 
 export const languageRouter = router({

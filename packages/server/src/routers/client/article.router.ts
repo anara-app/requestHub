@@ -1,3 +1,3 @@
-import { router } from "../../trpc";
+import { router } from "../../trpc/trpc";
 
 export const clientArticleRouter = router({});

@@ -126,7 +126,7 @@ export default function DashboardLayout() {
                   label={item.label}
                   className={`${
                     item?.activePaths?.includes(currentPath)
-                      ? "!bg-primary !text-white"
+                      ? "!bg-blue-500 !text-white"
                       : ""
                   }`}
                 />
