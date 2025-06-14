@@ -31,8 +31,8 @@
     "db:migrate": "pnpm --filter server migrate",
     "db:deploy": "pnpm --filter server deploy:database",
     "create:admin": "pnpm --filter server create:admin",
-    "prettier:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
-    "prettier:fix": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,css}\"",
+    "prettier:check": "prettier --check \"packages/**/*.{ts,tsx,js,jsx,json,md,css}\"",
+    "prettier:fix": "prettier --write \"packages/**/*.{ts,tsx,js,jsx,json,md,css}\"",
     "test": "pnpm --recursive test"
   },
   "workspaces": [
@@ -41,7 +41,8 @@
   "dependencies": {
     "admin": "workspace:*",
     "client": "workspace:*",
-    "server": "workspace:*"
+    "server": "workspace:*",
+    "shadcn-admin": "workspace:*"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.14.0",
