@@ -9,6 +9,7 @@ CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
+    "pushNotificationToken" TEXT,
     "firstName" TEXT,
     "lastName" TEXT,
     "phoneNumber" TEXT,
@@ -34,7 +35,6 @@ CREATE TABLE "Role" (
 -- CreateTable
 CREATE TABLE "RolePermission" (
     "id" SERIAL NOT NULL,
-    "name" TEXT,
     "description" TEXT,
     "action" "PermissionOperation",
     "roleId" INTEGER NOT NULL,
@@ -51,7 +51,7 @@ CREATE TABLE "MediaFile" (
     "originalFileName" TEXT,
     "altName" TEXT,
     "url" TEXT,
-    "type" "FileType" NOT NULL DEFAULT 'IMAGE',
+    "type" "FileType" DEFAULT 'IMAGE',
     "width" INTEGER DEFAULT 0,
     "height" INTEGER DEFAULT 0,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -60,23 +60,8 @@ CREATE TABLE "MediaFile" (
     CONSTRAINT "MediaFile_pkey" PRIMARY KEY ("id")
 );
 
--- CreateTable
-CREATE TABLE "Language" (
-    "id" SERIAL NOT NULL,
-    "name" TEXT NOT NULL,
-    "code" TEXT NOT NULL,
-    "isDefault" BOOLEAN NOT NULL DEFAULT false,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-
-    CONSTRAINT "Language_pkey" PRIMARY KEY ("id")
-);
-
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-
--- CreateIndex
-CREATE UNIQUE INDEX "Language_code_key" ON "Language"("code");
 
 -- AddForeignKey
 ALTER TABLE "User" ADD CONSTRAINT "User_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE SET NULL ON UPDATE CASCADE;

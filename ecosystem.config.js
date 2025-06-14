@@ -1,3 +1,4 @@
+//TODO: Adjust to match the new structure
 module.exports = {
   apps: [
     {

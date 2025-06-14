@@ -12,6 +12,7 @@ model User {
 
   email    String @unique
   password String
+  pushNotificationToken String?
 
   firstName   String?
   lastName    String?
@@ -60,7 +61,7 @@ model MediaFile {
   originalFileName String?
   altName          String?
   url              String?
-  type             FileType @default(IMAGE)
+  type             FileType? @default(IMAGE)
 
   width  Int? @default(0)
   height Int? @default(0)
