@@ -16,7 +16,7 @@ export const galleryRouter: any = router({
     }),
 
   deleteMediaFile: protectedPermissionProcedure(["DELETE_GALLERY"])
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: z.string() }))
     .mutation(async ({ input }) => {
       return db.mediaFile.delete({
         where: { id: input.id },

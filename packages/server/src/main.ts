@@ -11,6 +11,7 @@ import { mediaRouter } from "./api/media.router";
 import fastifyMultipart from "@fastify/multipart";
 import sendsible from "@fastify/sensible";
 import { CONSTANTS } from "./common/constants";
+import { authRouter } from "./api/auth.router";
 
 dotenv.config();
 
@@ -27,7 +28,11 @@ server.register(fastifyMultipart, {
 });
 server.register(sendsible);
 server.register(cors, {
-  origin: ["*"],
+  origin: ["http://localhost:3000", "http://localhost:5174"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  credentials: true,
+  maxAge: 86400,
 });
 
 /* TRPC */
@@ -47,10 +52,16 @@ server.register(mediaRouter, {
   prefix: "/api/media",
 });
 
+server.register(authRouter, {
+  prefix: "/api/auth",
+});
+
 server.get("/api/up", async (_, reply) => {
-  console.log("HEALTH-CHECK", new Date().toISOString());
+  const timestamp = new Date().toISOString();
+  console.log("HEALTH-CHECK", timestamp);
   return reply.send({
     message: "up",
+    timestamp,
   });
 });
 

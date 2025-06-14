@@ -1,60 +1,44 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+import { fromNodeHeaders } from "better-auth/node";
 import { TRPCError, initTRPC } from "@trpc/server";
 import { Context } from "./context";
-import { verifyJWT } from "../common/jwt";
 import { $Enums, db, User, Prisma } from "../common/prisma";
-
-export async function getUserByToken(token: string) {
-  try {
-    const decoded = verifyJWT(token);
-    if (!decoded?.userId) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "Invalid token payload",
-      });
-    }
-
-    const user = await db.user.findUnique({
-      where: { id: decoded.userId },
-      include: {
-        role: {
-          include: {
-            permissions: true,
-          },
-        },
-      },
-    });
-
-    if (!user) {
-      throw new TRPCError({
-        code: "UNAUTHORIZED",
-        message: "User not found",
-      });
-    }
-
-    return user;
-  } catch (error) {
-    throw new TRPCError({
-      code: "UNAUTHORIZED",
-      message: "Invalid token",
-      cause: error,
-    });
-  }
-}
+import { auth } from "../lib/auth";
 
 const t = initTRPC.context<Context>().create();
 
 const isAuthed = t.middleware(async ({ next, ctx }) => {
-  if (!ctx.token) {
+  const session = await auth.api.getSession({
+    headers: fromNodeHeaders(ctx.req.raw.headers),
+  });
+
+  if (!session) {
     throw new TRPCError({
       code: "UNAUTHORIZED",
       message: "Authentication token is missing",
     });
   }
 
-  const user = await getUserByToken(ctx.token);
+  const user = await db.user.findUnique({
+    where: { id: session.user.id },
+    include: {
+      role: {
+        include: {
+          permissions: true,
+        },
+      },
+    },
+  });
+
+  if (!user) {
+    throw new TRPCError({
+      code: "UNAUTHORIZED",
+      message: "User not found",
+    });
+  }
+
   return next({ ctx: { user } });
 });
 

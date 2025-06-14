@@ -17,7 +17,7 @@ export default function UserPage() {
     trpc.admin.users.createUser.useMutation();
   const { data, isLoading } = trpc.admin.users.getUserById.useQuery(
     {
-      id: Number(id),
+      id: id!,
     },
     { enabled: isEdit, gcTime: 0 }
   );
@@ -26,7 +26,7 @@ export default function UserPage() {
     if (isEdit) {
       updateUser(
         {
-          id: Number(id),
+          id: id!,
           //@ts-expect-error types TODO: fix types
           data,
         },
@@ -71,7 +71,7 @@ export default function UserPage() {
 
   const handleDelete = () => {
     deleteUser(
-      { id: Number(id) },
+      { id: id! },
       {
         onSuccess: () => {
           notifications.show({

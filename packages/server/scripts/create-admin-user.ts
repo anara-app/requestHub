@@ -1,10 +1,8 @@
 import { PrismaClient, PermissionOperation } from "@prisma/client";
 import * as readline from "readline";
-import * as bcrypt from "bcrypt";
+import { auth } from "../src/lib/auth";
 
 const prisma = new PrismaClient();
-
-//TODO: Implement this script later on
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -65,20 +63,28 @@ async function createAdminUser() {
   const firstName = await askQuestion("Enter first name: ");
   const lastName = await askQuestion("Enter last name: ");
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const body = {
+    email,
+    password,
+    name: `${firstName} ${lastName}`,
+  };
 
   try {
-    const user = await prisma.user.create({
+    // Use better-auth to create the user
+    const response = await auth.api.signUpEmail({
+      body,
+    });
+
+    const userId = response.user.id;
+
+    await prisma.user.update({
+      where: { id: userId },
       data: {
-        email,
-        password: hashedPassword,
-        firstName,
-        lastName,
         roleId: adminRole.id,
       },
     });
 
-    console.log("Admin user created successfully:", user.email);
+    console.log("Admin user created successfully:", email);
   } catch (error) {
     console.error("Error creating admin user:", error);
   } finally {

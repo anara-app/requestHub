@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { httpBatchLink } from "@trpc/client";
 import { notifications, Notifications } from "@mantine/notifications";
 import { ENV_KEYS } from "./common/constants";
-import { TokenManager } from "./common/tokens";
+import { ROUTES } from "./router/routes";
 
 function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -16,18 +16,23 @@ function App() {
       links: [
         httpBatchLink({
           url: ENV_KEYS.TRPC_URL,
-          async headers() {
-            const token = TokenManager.getToken();
-            return {
-              Authorization: token ? `Bearer ${token}` : undefined,
-            };
-          },
           fetch: async (input, init) => {
-            const response = await fetch(input, init);
+            const modifiedInit = {
+              ...init,
+              credentials: "include", // <-- THIS IS WHERE IT BELONGS
+            };
+
+            //@ts-expect-error types on credentials
+            const response = await fetch(input, modifiedInit);
+
             if (response.status === 401) {
-              router.navigate("/auth");
+              router.navigate({
+                pathname: ROUTES.AUTH,
+                search: `?redirectedFrom=${window.location.pathname}`,
+              });
               return response;
             }
+
             if (response.status === 403) {
               notifications.show({
                 title: "Доступ запрещен",
@@ -36,6 +41,7 @@ function App() {
               });
               return response;
             }
+
             return response;
           },
         }),

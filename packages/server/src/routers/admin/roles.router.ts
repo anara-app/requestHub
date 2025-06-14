@@ -21,7 +21,6 @@ export const rolesRouter = router({
             name: input.name,
             permissions: {
               create: input.permissions.map((permission) => ({
-                name: permission,
                 action: permission,
               })),
             },
@@ -38,7 +37,7 @@ export const rolesRouter = router({
 
   // Get single role by ID
   getRole: protectedPermissionProcedure(["READ_ROLES"])
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: z.string() }))
     .query(async ({ input }) => {
       const role = await db.role.findUnique({
         where: { id: input.id },
@@ -78,7 +77,7 @@ export const rolesRouter = router({
   updateRole: protectedPermissionProcedure(["UPDATE_ROLE"])
     .input(
       z.object({
-        id: z.number(),
+        id: z.string(),
         name: z.string().min(1),
         permissions: z.array(z.nativeEnum(PermissionOperation)),
       })
@@ -103,7 +102,6 @@ export const rolesRouter = router({
             permissions: {
               deleteMany: {},
               create: input.permissions.map((permission) => ({
-                name: permission,
                 action: permission,
               })),
             },
@@ -122,7 +120,7 @@ export const rolesRouter = router({
 
   // Delete role
   deleteRole: protectedPermissionProcedure(["DELETE_ROLE"])
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: z.string() }))
     .mutation(async ({ input }) => {
       try {
         const role = await db.role.findUnique({

@@ -20,7 +20,7 @@ export default function RolePage() {
     trpc.admin.roles.createRole.useMutation();
 
   const { data: role, isLoading } = trpc.admin.roles.getRole.useQuery(
-    { id: Number(id) },
+    { id: id! },
     {
       enabled: isEdit,
       gcTime: 0,
@@ -33,7 +33,7 @@ export default function RolePage() {
     if (isEdit) {
       updateRole(
         {
-          id: Number(id),
+          id: id!,
           name: values.name,
           permissions,
         },
@@ -82,7 +82,7 @@ export default function RolePage() {
     if (!id) return;
 
     deleteRole(
-      { id: Number(id) },
+      { id: id! },
       {
         onSuccess: () => {
           notifications.show({

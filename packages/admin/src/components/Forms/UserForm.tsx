@@ -24,7 +24,7 @@ const schema = z.object({
     .min(6, "Пароль должен быть не менее 6 символов")
     .optional()
     .or(z.literal("")),
-  roleId: z.number(),
+  roleId: z.string(),
 });
 
 export type UserFormData = z.infer<typeof schema>;
@@ -142,7 +142,7 @@ UserFormProps) {
             label: role.name,
           }))}
           onChange={(value) => {
-            form.setValue("roleId", Number(value));
+            form.setValue("roleId", value ?? "");
           }}
         />
       </Box>

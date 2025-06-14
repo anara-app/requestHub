@@ -64,7 +64,7 @@ export const usersRouter = router({
     }),
 
   deleteUser: protectedPermissionProcedure(["DELETE_USER"])
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: z.string() }))
     .mutation(async ({ input: { id } }) => {
       try {
         await db.user.delete({
@@ -81,7 +81,7 @@ export const usersRouter = router({
     }),
 
   getUserById: protectedPermissionProcedure(["READ_USERS"])
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: z.string() }))
     .query(async ({ input: { id } }) => {
       const user = await db.user.findUnique({
         where: { id },
@@ -101,13 +101,13 @@ export const usersRouter = router({
   updateUser: protectedPermissionProcedure(["UPDATE_USER"])
     .input(
       z.object({
-        id: z.number(),
+        id: z.string(),
         data: z.object({
           firstName: z.string(),
           lastName: z.string(),
           email: z.string().email(),
           phoneNumber: z.string(),
-          roleId: z.number(),
+          roleId: z.string(),
           password: z
             .string()
             .min(6, "Пароль должен быть не менее 6 символов")
@@ -154,7 +154,7 @@ export const usersRouter = router({
         email: z.string().email(),
         phoneNumber: z.string(),
         password: z.string().min(6, "Пароль должен быть не менее 6 символов"),
-        roleId: z.number(),
+        roleId: z.string(),
       })
     )
     .mutation(async ({ input }) => {

@@ -11,14 +11,13 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../router/routes";
 import ProtectedRoute from "../ProtectedRoute";
 import { ImagesIcon, LogOutIcon, UserCog, Users } from "lucide-react";
-import { TokenManager } from "../../common/tokens";
-import { useAuthStore } from "../../store/useAuth";
 import logo from "../../assets/logo.png";
 import ThemeSwitch from "../ThemeSwith";
 import { $Enums } from "../../common/database.types";
 import { trpc } from "../../common/trpc";
 import { useDashboardLayout } from "../../store/useDashboardLayout";
 import classes from "./NavbarMinimal.module.css";
+import { authClient } from "../../common/auth";
 
 type WebAppRoutesTypes = keyof typeof ROUTES;
 
@@ -81,7 +80,6 @@ export default function DashboardLayout() {
   const [opened] = useDisclosure();
   const [_, setActive] = useState(0);
 
-  const { logout } = useAuthStore();
   const { isEnabled } = useDashboardLayout();
 
   const isMobile = useMediaQuery("(max-width: 767px)");
@@ -89,8 +87,7 @@ export default function DashboardLayout() {
   const { data } = trpc.admin.users.getMyPermissions.useQuery();
 
   const handleLogout = () => {
-    TokenManager.removeToken();
-    logout();
+    authClient.signOut();
     navigate(ROUTES.AUTH);
   };
 

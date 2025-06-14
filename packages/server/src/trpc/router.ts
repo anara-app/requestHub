@@ -1,7 +1,6 @@
 import { router } from "./trpc";
 import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 /* Admin routers */
-import { authRouter } from "../routers/admin/auth.router";
 import { usersRouter } from "../routers/admin/users.router";
 import { rolesRouter } from "../routers/admin/roles.router";
 import { languageRouter } from "../routers/admin/languages.router";
@@ -11,7 +10,6 @@ import { galleryRouter } from "../routers/admin/gallery.router";
 
 export const appRouter = router({
   admin: {
-    auth: authRouter,
     users: usersRouter,
     roles: rolesRouter,
     languages: languageRouter,

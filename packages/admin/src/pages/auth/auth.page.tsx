@@ -10,16 +10,14 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../router/routes";
-import { trpc } from "../../common/trpc";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
-import { useAuthStore } from "../../store/useAuth";
-import { TokenManager } from "../../common/tokens";
-import { Prisma } from "server/src/common/database-types";
 import logo from "../../assets/logo.png";
 import { Typography } from "../../components/Typography";
 import { useLingui } from "@lingui/react/macro";
+import { authClient } from "../../common/auth";
+import { useState } from "react";
+import { ROUTES } from "../../router/routes";
 
 const defaultValues = {
   email: "",
@@ -32,11 +30,11 @@ const validationSchema = z.object({
 });
 
 export default function AuthPage() {
-  const navigate = useNavigate();
   const { t } = useLingui();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const { mutate, isPending } = trpc.admin.auth.login.useMutation();
-  const { setUser } = useAuthStore();
+  const [isPending, setIsPending] = useState(false);
 
   const {
     register,
@@ -48,20 +46,31 @@ export default function AuthPage() {
   });
 
   const handleLogIn = async (formData: typeof defaultValues) => {
-    mutate(formData, {
-      onSuccess: ({ user, token }) => {
-        TokenManager.setToken(token);
-        setUser(user as unknown as Prisma.User);
+    try {
+      setIsPending(true);
+      await authClient.signIn.email({
+        email: formData.email,
+        password: formData.password,
+      });
+      await authClient.getSession();
+
+      const redirectedFrom = searchParams.get("redirectedFrom");
+      if (redirectedFrom) {
+        navigate(redirectedFrom);
+      } else {
         navigate(ROUTES.DASHBOARD_HOME);
-      },
-      onError: (error) => {
+      }
+    } catch (error) {
+      if (error instanceof Error) {
         notifications.show({
           title: "Ошибка",
           message: error.message,
           color: "red",
         });
-      },
-    });
+      }
+    } finally {
+      setIsPending(false);
+    }
   };
 
   return (

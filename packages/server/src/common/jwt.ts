@@ -5,7 +5,7 @@ import { User } from "@prisma/client";
 export function verifyJWT(token: string) {
   const publicKey = CONSTANTS.JWT_KEY;
   try {
-    return jwt.verify(token, publicKey) as { userId: number } | null;
+    return jwt.verify(token, publicKey) as { userId: string } | null;
   } catch (error) {
     return;
   }
