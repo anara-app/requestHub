@@ -1,0 +1,106 @@
+---
+description: 
+globs: **/admin/*
+alwaysApply: false
+---
+# Admin Package Rules
+
+## Architecture Overview
+The admin panel is built with React + Vite, using tRPC for type-safe API calls, and Mantine UI for the component library.
+
+## Directory Structure
+- `/src/assets` - Static assets and images
+- `/src/common` - Shared utilities, constants, and configurations
+- `/src/components` - Reusable UI components
+- `/src/pages` - Page components and layouts
+- `/src/router` - React Router configuration and routes
+- `/src/store` - State management (Zustand)
+- `/src/types` - TypeScript type definitions
+
+### UI Framework
+- Mantine UI as primary component library, always use latest version at least v7 and up
+- Tailwind CSS for custom styling, only use when necessary
+- Responsive design patterns
+- Dark/Light theme support
+
+### State Management
+- Zustand for global state
+- React Query for server state
+- Local state with React hooks
+
+### API Integration
+- tRPC for type-safe API calls
+- Automatic error handling
+
+### Form Handling
+- Always use react-hook-form for form management
+- Always use Zod for schema validation
+- Custom form components
+<!-- - Form state persistence -->
+
+### Rich Text Editing
+- TipTap for rich text editing
+- Use rich text editor built in mantine UI
+
+### Internationalization
+- Lingui for translations
+- Multiple language support
+- Dynamic language switching
+- Translation extraction/compilation
+
+## Development Guidelines
+- When new creating general components files place them in `/src/components`
+- When creating a new form component place in the folder `/src/components/Forms`
+- When creating new page alwasy add filename.page.tsx
+
+### Adding New Features
+1. Create page component in `/src/pages`
+2. Add route in `/src/router/routes.ts`
+3. Create necessary components in `/src/components`
+4. Add types in `/src/types`
+5. Update translations if needed
+
+### Component Structure
+1. Use functional components
+2. Implement proper TypeScript types
+3. Follow Mantine UI patterns
+4. Use Tailwind for custom styling only when required
+5. Implement proper error boundaries
+
+### State Management
+1. Use Zustand for global state
+2. React Query for server state
+3. Local state for component-specific data
+4. Implement proper loading states
+5. Handle error states consistently
+
+### API Integration
+1. Use tRPC for type-safe calls
+2. Implement proper error handling
+3. Handle loading states
+
+### Form Development
+1. Use React Hook Form
+2. Implement Zod validation
+3. Create reusable form components
+4. Handle form state properly
+5. Implement proper error messages
+
+## Best Practices
+1. Follow TypeScript best practices
+2. Use proper error handling
+3. Implement proper loading states
+4. Follow accessibility guidelines
+5. Use proper code splitting
+6. Follow security best practices
+7. Use proper logging
+8. Implement proper documentation
+9. Make emphasis on code readability and ease of maintenance rather than performance.
+
+## Performance
+- Code splitting
+- Lazy loading
+- Image optimization
+- Bundle size optimization
+- Caching strategies
+- Performance monitoring

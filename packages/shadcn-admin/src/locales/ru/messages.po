@@ -1,0 +1,713 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2025-06-15 22:35+0600\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: ru\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/routes/(auth)/sign-in-2.tsx:161
+#~ msgid "\"This template has saved me countless hours of work and helped me deliver stunning designs to my clients faster than ever before.\""
+#~ msgstr "\"Этот шаблон сэкономил мне бесчисленное количество часов работы и помог мне быстрее, чем когда-либо, создавать потрясающие дизайны для моих клиентов.\""
+
+#: src/routes/(auth)/sign-in-2.tsx:161
+msgid "“This template has saved me countless hours of work and helped me deliver stunning designs to my clients faster than ever before.”"
+msgstr "Этот шаблон сэкономил мне бесчисленное количество часов работы и помог мне быстрее, чем когда-либо, создавать потрясающие дизайны для моих клиентов."
+
+#. placeholder {0}: app.desc
+#: src/routes/_authenticated/apps/index.tsx:247
+msgid "{0}"
+msgstr "{0}"
+
+#: src/routes/_authenticated/settings/index.tsx:80
+#: src/components/content-section.tsx:19
+msgid "{desc}"
+msgstr "{desc}"
+
+#: src/components/search.tsx:28
+msgid "{placeholder}"
+msgstr "{placeholder}"
+
+#: src/routes/_authenticated/settings/index.tsx:79
+#: src/components/content-section.tsx:18
+msgid "{title}"
+msgstr "{title}"
+
+#: src/routes/_authenticated/index.tsx:303
+msgid "+180.1% from last month"
+msgstr "+180.1% с прошлого месяца"
+
+#: src/routes/_authenticated/index.tsx:327
+msgid "+19% from last month"
+msgstr "+19% с прошлого месяца"
+
+#: src/routes/_authenticated/index.tsx:276
+msgid "+20.1% from last month"
+msgstr "+20.1% с прошлого месяца"
+
+#: src/routes/_authenticated/index.tsx:352
+msgid "+201 since last hour"
+msgstr "+201 с прошлого часа"
+
+#: src/routes/(errors)/403.tsx:13
+msgid "Access Forbidden!"
+msgstr "Доступ запрещен!"
+
+#: src/components/layout/nav-user.tsx:90
+#: src/components/layout/data/sidebar-data.ts:156
+msgid "Account"
+msgstr "Аккаунт"
+
+#: src/components/layout/data/sidebar-data.ts:44
+msgid "Acme Corp."
+msgstr "Акми Корп."
+
+#: src/components/layout/data/sidebar-data.ts:39
+msgid "Acme Inc"
+msgstr "Акми Инк"
+
+#: src/routes/_authenticated/index.tsx:334
+msgid "Active Now"
+msgstr "Активно сейчас"
+
+#: src/routes/_authenticated/settings/index.tsx:183
+msgid "Add links to your website, blog, or social media profiles."
+msgstr "Добавьте ссылки на ваш веб-сайт, блог или профили в социальных сетях."
+
+#: src/routes/_authenticated/tasks/index.tsx:29
+msgid "Add Task"
+msgstr "Добавить задачу"
+
+#: src/components/layout/team-switcher.tsx:80
+msgid "Add team"
+msgstr "Добавить команду"
+
+#: src/routes/_authenticated/settings/index.tsx:200
+msgid "Add URL"
+msgstr "Добавить URL"
+
+#: src/routes/_authenticated/users/index.tsx:30
+msgid "Add User"
+msgstr "Добавить пользователя"
+
+#: src/routes/_authenticated/apps/index.tsx:195
+msgid "All Apps"
+msgstr "Все приложения"
+
+#: src/routes/(auth)/sign-up.tsx:196
+msgid "Already have an account?"
+msgstr "Уже есть аккаунт?"
+
+#: src/routes/_authenticated/index.tsx:243
+msgid "Analytics"
+msgstr "Аналитика"
+
+#: src/routes/(auth)/sign-up.tsx:217
+#: src/routes/(auth)/sign-in.tsx:185
+#: src/routes/(auth)/sign-in-2.tsx:185
+msgid "and"
+msgstr "и"
+
+#: src/routes/_authenticated/apps/index.tsx:176
+msgid "App Integrations"
+msgstr "Интеграции приложений"
+
+#: src/components/layout/data/sidebar-data.ts:161
+msgid "Appearance"
+msgstr "Внешний вид"
+
+#: src/components/layout/data/sidebar-data.ts:64
+msgid "Apps"
+msgstr "Приложения"
+
+#: src/routes/_authenticated/apps/index.tsx:212
+msgid "Ascending"
+msgstr "По возрастанию"
+
+#: src/components/layout/data/sidebar-data.ts:85
+msgid "Auth"
+msgstr "Авторизация"
+
+#: src/routes/__root.tsx:37
+#: src/routes/__root.tsx:61
+#: src/routes/(errors)/503.tsx:21
+#: src/routes/(errors)/500.tsx:32
+#: src/routes/(errors)/404.tsx:22
+#: src/routes/(errors)/403.tsx:21
+#: src/routes/(errors)/401.tsx:21
+msgid "Back to Home"
+msgstr "Вернуться на главную"
+
+#: src/components/profile-dropdown.tsx:46
+#: src/components/layout/nav-user.tsx:96
+msgid "Billing"
+msgstr "Оплата"
+
+#: src/routes/_authenticated/settings/index.tsx:156
+msgid "Bio"
+msgstr "О себе"
+
+#: src/routes/(auth)/sign-up.tsx:210
+msgid "By clicking continue, you agree to our"
+msgstr "Нажимая продолжить, вы соглашаетесь с нашими"
+
+#: src/routes/(auth)/sign-in.tsx:178
+#: src/routes/(auth)/sign-in-2.tsx:178
+msgid "By clicking login, you agree to our"
+msgstr "Нажимая войти, вы соглашаетесь с нашими"
+
+#: src/components/confirm-dialog.tsx:55
+msgid "Cancel"
+msgstr "Отмена"
+
+#: src/routes/_authenticated/chats/index.tsx:154
+msgid "Chat"
+msgstr "Чат"
+
+#: src/routes/_authenticated/chats/index.tsx:422
+msgid "Chat Text Box"
+msgstr "Поле ввода чата"
+
+#: src/components/layout/data/sidebar-data.ts:69
+msgid "Chats"
+msgstr "Чаты"
+
+#: src/components/coming-soon.tsx:9
+msgid "Coming Soon 👀"
+msgstr "Скоро 👀"
+
+#: src/routes/(auth)/sign-up.tsx:139
+msgid "Confirm Password"
+msgstr "Подтвердите пароль"
+
+#: src/routes/_authenticated/apps/index.tsx:242
+msgid "Connect"
+msgstr "Подключить"
+
+#: src/routes/_authenticated/apps/index.tsx:196
+#: src/routes/_authenticated/apps/index.tsx:242
+msgid "Connected"
+msgstr "Подключено"
+
+#: src/routes/(auth)/forgot-password.tsx:102
+#: src/components/confirm-dialog.tsx:62
+msgid "Continue"
+msgstr "Продолжить"
+
+#: src/routes/(auth)/sign-up.tsx:148
+msgid "Create Account"
+msgstr "Создать аккаунт"
+
+#: src/routes/(auth)/sign-up.tsx:192
+msgid "Create an account"
+msgstr "Создать аккаунт"
+
+#: src/components/theme-switch.tsx:43
+#: src/components/command-menu.tsx:88
+msgid "Dark"
+msgstr "Темная"
+
+#: src/routes/_authenticated/index.tsx:229
+#: src/components/layout/data/sidebar-data.ts:54
+msgid "Dashboard"
+msgstr "Панель управления"
+
+#: src/routes/_authenticated/apps/index.tsx:218
+msgid "Descending"
+msgstr "По убыванию"
+
+#: src/components/layout/data/sidebar-data.ts:171
+msgid "Display"
+msgstr "Отображение"
+
+#: src/routes/__root.tsx:55
+#: src/routes/(errors)/404.tsx:16
+msgid "does not exist or might have been removed."
+msgstr "не существует или мог быть удален."
+
+#: src/routes/(auth)/forgot-password.tsx:129
+msgid "Don't have an account?"
+msgstr "Нет аккаунта?"
+
+#: src/routes/_authenticated/index.tsx:231
+msgid "Download"
+msgstr "Скачать"
+
+#: src/routes/_authenticated/settings/index.tsx:130
+#: src/routes/(auth)/sign-up.tsx:113
+#: src/routes/(auth)/sign-in.tsx:106
+#: src/routes/(auth)/sign-in-2.tsx:73
+#: src/routes/(auth)/forgot-password.tsx:93
+msgid "Email"
+msgstr "Email"
+
+#: src/routes/_authenticated/settings/index.tsx:145
+msgid "email settings"
+msgstr "настройки email"
+
+#: src/routes/(auth)/sign-in-2.tsx:172
+msgid "Enter your email and password below"
+msgstr "Введите ваш email и пароль ниже"
+
+#: src/routes/(auth)/sign-in.tsx:169
+msgid "Enter your email and password below to"
+msgstr "Введите ваш email и пароль ниже, чтобы"
+
+#: src/routes/(auth)/sign-up.tsx:195
+msgid "Enter your email and password to create an account."
+msgstr "Введите ваш email и пароль для создания аккаунта."
+
+#: src/routes/(auth)/forgot-password.tsx:119
+msgid "Enter your registered email and"
+msgstr "Введите ваш зарегистрированный email и"
+
+#: src/components/layout/data/sidebar-data.ts:41
+msgid "Enterprise"
+msgstr "Корпоративный"
+
+#: src/components/layout/data/sidebar-data.ts:111
+msgid "Errors"
+msgstr "Ошибки"
+
+#: src/routes/(auth)/sign-up.tsx:177
+#: src/routes/(auth)/sign-in.tsx:153
+#: src/routes/(auth)/sign-in-2.tsx:120
+msgid "Facebook"
+msgstr "Facebook"
+
+#: src/components/layout/data/sidebar-data.ts:120
+msgid "Forbidden"
+msgstr "Запрещено"
+
+#: src/routes/(auth)/forgot-password.tsx:116
+#: src/components/layout/data/sidebar-data.ts:101
+msgid "Forgot Password"
+msgstr "Забыли пароль"
+
+#: src/routes/(auth)/sign-in.tsx:128
+#: src/routes/(auth)/sign-in-2.tsx:95
+msgid "Forgot password?"
+msgstr "Забыли пароль?"
+
+#: src/components/layout/data/sidebar-data.ts:51
+msgid "General"
+msgstr "Общие"
+
+#: src/routes/(auth)/sign-up.tsx:169
+#: src/routes/(auth)/sign-in.tsx:150
+#: src/routes/(auth)/sign-in-2.tsx:117
+msgid "GitHub"
+msgstr "GitHub"
+
+#: src/routes/__root.tsx:35
+#: src/routes/__root.tsx:59
+#: src/routes/(errors)/503.tsx:19
+#: src/routes/(errors)/500.tsx:30
+#: src/routes/(errors)/404.tsx:20
+#: src/routes/(errors)/403.tsx:19
+#: src/routes/(errors)/401.tsx:19
+msgid "Go Back"
+msgstr "Вернуться назад"
+
+#: src/routes/(auth)/otp.tsx:152
+msgid "Haven't received it?"
+msgstr "Не получили?"
+
+#: src/components/layout/data/sidebar-data.ts:178
+msgid "Help Center"
+msgstr "Центр помощи"
+
+#: src/routes/_authenticated/apps/index.tsx:179
+msgid "Here's a list of your apps for the integration!"
+msgstr "Вот список ваших приложений для интеграции!"
+
+#: src/routes/_authenticated/tasks/index.tsx:52
+msgid "Here's a list of your tasks for this month!"
+msgstr "Вот список ваших задач на этот месяц!"
+
+#: src/routes/_authenticated/users/index.tsx:27
+#: src/routes/_authenticated/tasks/index.tsx:26
+msgid "Import"
+msgstr "Импорт"
+
+#: src/routes/_authenticated/chats/index.tsx:214
+msgid "Inbox"
+msgstr "Входящие"
+
+#: src/components/layout/data/sidebar-data.ts:130
+msgid "Internal Server Error"
+msgstr "Внутренняя ошибка сервера"
+
+#: src/routes/__root.tsx:54
+#: src/routes/(errors)/404.tsx:15
+msgid "It seems like the page you're looking for"
+msgstr "Похоже, страница, которую вы ищете"
+
+#: src/routes/(auth)/sign-in-2.tsx:163
+msgid "John Doe"
+msgstr "John Doe"
+
+#: src/components/layout/nav-user.tsx:118
+#~ msgid "Language"
+#~ msgstr "Язык"
+
+#: src/components/learn-more.tsx:31
+msgid "Learn more"
+msgstr "Узнать больше"
+
+#: src/components/theme-switch.tsx:36
+#: src/components/command-menu.tsx:84
+msgid "Light"
+msgstr "Светлая"
+
+#: src/components/select-dropdown.tsx:50
+msgid "Loading..."
+msgstr "Загрузка..."
+
+#: src/routes/(auth)/sign-in.tsx:170
+msgid "log into your account"
+msgstr "войти в свой аккаунт"
+
+#: src/components/profile-dropdown.tsx:60
+#: src/components/layout/nav-user.tsx:112
+msgid "Log out"
+msgstr "Выйти"
+
+#: src/routes/(auth)/sign-in.tsx:134
+#: src/routes/(auth)/sign-in.tsx:167
+#: src/routes/(auth)/sign-in-2.tsx:101
+#: src/routes/(auth)/sign-in-2.tsx:170
+msgid "Login"
+msgstr "Вход"
+
+#: src/components/layout/data/sidebar-data.ts:135
+msgid "Maintenance Error"
+msgstr "Ошибка обслуживания"
+
+#: src/routes/_authenticated/users/index.tsx:56
+msgid "Manage your users and their roles here."
+msgstr "Управляйте пользователями и их ролями здесь."
+
+#: src/routes/_authenticated/chats/index.tsx:89
+msgid "New message"
+msgstr "Новое сообщение"
+
+#: src/components/profile-dropdown.tsx:56
+msgid "New Team"
+msgstr "Новая команда"
+
+#: src/routes/_authenticated/chats/index.tsx:117
+msgid "No people found."
+msgstr "Люди не найдены."
+
+#: src/components/command-menu.tsx:44
+msgid "No results found."
+msgstr "Результатов не найдено."
+
+#: src/routes/_authenticated/apps/index.tsx:197
+msgid "Not Connected"
+msgstr "Не подключено"
+
+#: src/components/layout/data/sidebar-data.ts:125
+msgid "Not Found"
+msgstr "Не найдено"
+
+#: src/routes/_authenticated/index.tsx:249
+#: src/components/layout/nav-user.tsx:102
+#: src/components/layout/data/sidebar-data.ts:166
+msgid "Notifications"
+msgstr "Уведомления"
+
+#: src/routes/(auth)/otp.tsx:99
+msgid "One-Time Password"
+msgstr "Одноразовый пароль"
+
+#: src/routes/__root.tsx:52
+#: src/routes/(errors)/404.tsx:13
+msgid "Oops! Page Not Found!"
+msgstr "Упс! Страница не найдена!"
+
+#: src/routes/__root.tsx:28
+#: src/routes/(errors)/500.tsx:23
+msgid "Oops! Something went wrong :')"
+msgstr "Упс! Что-то пошло не так :')"
+
+#: src/routes/(auth)/sign-up.tsx:157
+#: src/routes/(auth)/sign-in.tsx:143
+#: src/routes/(auth)/sign-in-2.tsx:110
+msgid "Or continue with"
+msgstr "Или продолжить с"
+
+#: src/components/layout/data/sidebar-data.ts:144
+msgid "Other"
+msgstr "Другое"
+
+#: src/components/layout/data/sidebar-data.ts:105
+msgid "OTP"
+msgstr "OTP"
+
+#: src/routes/_authenticated/index.tsx:241
+#: src/routes/_authenticated/index.tsx:360
+msgid "Overview"
+msgstr "Обзор"
+
+#: src/components/layout/data/sidebar-data.ts:82
+msgid "Pages"
+msgstr "Страницы"
+
+#: src/routes/(auth)/sign-up.tsx:126
+#: src/routes/(auth)/sign-in.tsx:119
+#: src/routes/(auth)/sign-in-2.tsx:86
+msgid "Password"
+msgstr "Пароль"
+
+#: src/routes/(auth)/otp.tsx:144
+msgid "Please enter the authentication code."
+msgstr "Пожалуйста, введите код аутентификации."
+
+#: src/routes/__root.tsx:30
+#: src/routes/(errors)/500.tsx:25
+msgid "Please try again later."
+msgstr "Пожалуйста, попробуйте позже."
+
+#: src/routes/(auth)/sign-up.tsx:222
+#: src/routes/(auth)/sign-in.tsx:190
+#: src/routes/(auth)/sign-in-2.tsx:190
+msgid "Privacy Policy"
+msgstr "Политика конфиденциальности"
+
+#: src/components/profile-dropdown.tsx:40
+#: src/components/layout/data/sidebar-data.ts:151
+msgid "Profile"
+msgstr "Профиль"
+
+#: src/routes/_authenticated/index.tsx:368
+msgid "Recent Sales"
+msgstr "Последние продажи"
+
+#: src/routes/_authenticated/index.tsx:246
+msgid "Reports"
+msgstr "Отчеты"
+
+#: src/routes/(auth)/otp.tsx:157
+msgid "Resend a new code."
+msgstr "Отправить новый код."
+
+#: src/components/layout/nav-user.tsx:125
+#~ msgid "Russian"
+#~ msgstr "Русский"
+
+#: src/routes/_authenticated/index.tsx:309
+msgid "Sales"
+msgstr "Продажи"
+
+#: src/routes/_authenticated/chats/index.tsx:230
+msgid "Search"
+msgstr "Поиск"
+
+#: src/routes/_authenticated/chats/index.tsx:438
+msgid "Send"
+msgstr "Отправить"
+
+#: src/routes/_authenticated/chats/index.tsx:456
+msgid "Send a message to start a chat."
+msgstr "Отправьте сообщение, чтобы начать чат."
+
+#: src/routes/_authenticated/chats/index.tsx:463
+msgid "Send message"
+msgstr "Отправить сообщение"
+
+#: src/routes/(errors)/503.tsx:13
+msgid "Service Unavailable!"
+msgstr "Сервис недоступен!"
+
+#: src/components/profile-dropdown.tsx:52
+#: src/components/layout/data/sidebar-data.ts:147
+msgid "Settings"
+msgstr "Настройки"
+
+#: src/routes/(auth)/sign-up.tsx:48
+#: src/routes/(auth)/sign-in.tsx:48
+#: src/routes/(auth)/sign-in-2.tsx:147
+#: src/routes/(auth)/otp.tsx:52
+#: src/routes/(auth)/forgot-password.tsx:46
+#: src/components/layout/data/sidebar-data.ts:34
+msgid "Shadcn Admin"
+msgstr "Shadcn Admin"
+
+#: src/routes/(auth)/sign-up.tsx:201
+#: src/components/layout/data/sidebar-data.ts:89
+msgid "Sign In"
+msgstr "Войти"
+
+#: src/components/layout/data/sidebar-data.ts:93
+msgid "Sign In (2 Col)"
+msgstr "Вход (2 колонки)"
+
+#: src/routes/(auth)/forgot-password.tsx:134
+msgid "Sign up"
+msgstr "Зарегистрироваться"
+
+#: src/components/layout/data/sidebar-data.ts:97
+msgid "Sign Up"
+msgstr "Регистрация"
+
+#: src/components/skip-to-main.tsx:9
+msgid "Skip to Main"
+msgstr "Перейти к основному"
+
+#: src/components/layout/data/sidebar-data.ts:46
+msgid "Startup"
+msgstr "Стартап"
+
+#: src/components/coming-soon.tsx:12
+msgid "Stay tuned though!"
+msgstr "Следите за обновлениями!"
+
+#: src/routes/_authenticated/index.tsx:283
+msgid "Subscriptions"
+msgstr "Подписки"
+
+#: src/components/theme-switch.tsx:50
+#: src/components/command-menu.tsx:92
+msgid "System"
+msgstr "Система"
+
+#: src/routes/_authenticated/tasks/index.tsx:50
+#: src/components/layout/data/sidebar-data.ts:59
+msgid "Tasks"
+msgstr "Задачи"
+
+#: src/components/layout/team-switcher.tsx:60
+msgid "Teams"
+msgstr "Команды"
+
+#: src/routes/(auth)/sign-up.tsx:215
+#: src/routes/(auth)/sign-in.tsx:183
+#: src/routes/(auth)/sign-in-2.tsx:183
+msgid "Terms of Service"
+msgstr "Условия использования"
+
+#: src/routes/(errors)/503.tsx:15
+msgid "The service is temporarily unavailable. Please try again later."
+msgstr "Сервис временно недоступен. Пожалуйста, попробуйте позже."
+
+#: src/components/command-menu.tsx:82
+msgid "Theme"
+msgstr "Тема"
+
+#: src/routes/_authenticated/settings/index.tsx:119
+msgid "This is your public display name. It can be your real name or a pseudonym. You can only change this once every 30 days."
+msgstr "Это ваше публичное отображаемое имя. Это может быть ваше настоящее имя или псевдоним. Вы можете изменить его только раз в 30 дней."
+
+#: src/components/coming-soon.tsx:11
+msgid "This page has not been created yet."
+msgstr "Эта страница еще не создана."
+
+#: src/routes/(auth)/sign-in-2.tsx:173
+msgid "to log into your account"
+msgstr "чтобы войти в свой аккаунт"
+
+#: src/routes/_authenticated/chats/index.tsx:93
+msgid "To:"
+msgstr "Кому:"
+
+#: src/components/theme-switch.tsx:31
+msgid "Toggle theme"
+msgstr "Переключить тему"
+
+#: src/routes/_authenticated/index.tsx:258
+msgid "Total Revenue"
+msgstr "Общий доход"
+
+#: src/routes/(auth)/otp.tsx:141
+msgid "Two-factor Authentication"
+msgstr "Двухфакторная аутентификация"
+
+#: src/components/command-menu.tsx:41
+msgid "Type a command or search..."
+msgstr "Введите команду или поиск..."
+
+#: src/components/layout/data/sidebar-data.ts:115
+msgid "Unauthorized"
+msgstr "Неавторизован"
+
+#: src/routes/(errors)/401.tsx:13
+msgid "Unauthorized Access!"
+msgstr "Неавторизованный доступ!"
+
+#: src/routes/_authenticated/settings/index.tsx:203
+msgid "Update profile"
+msgstr "Обновить профиль"
+
+#: src/components/layout/nav-user.tsx:82
+msgid "Upgrade to Pro"
+msgstr "Перейти на Pro"
+
+#: src/routes/_authenticated/settings/index.tsx:180
+msgid "URLs"
+msgstr "URL-адреса"
+
+#: src/routes/_authenticated/users/index.tsx:54
+msgid "User List"
+msgstr "Список пользователей"
+
+#: src/routes/_authenticated/settings/index.tsx:114
+msgid "Username"
+msgstr "Имя пользователя"
+
+#: src/components/layout/data/sidebar-data.ts:75
+msgid "Users"
+msgstr "Пользователи"
+
+#: src/routes/(auth)/otp.tsx:127
+msgid "Verify"
+msgstr "Проверить"
+
+#: src/components/layout/data/sidebar-data.ts:36
+msgid "Vite + ShadcnUI"
+msgstr "Vite + ShadcnUI"
+
+#: src/routes/__root.tsx:30
+#: src/routes/(errors)/500.tsx:25
+msgid "We apologize for the inconvenience."
+msgstr "Приносим извинения за неудобства."
+
+#: src/routes/(auth)/otp.tsx:144
+msgid "We have sent the authentication code to your email."
+msgstr "Мы отправили код аутентификации на вашу электронную почту."
+
+#: src/routes/(auth)/forgot-password.tsx:121
+msgid "we will send you a link to reset your password."
+msgstr "мы отправим вам ссылку для сброса пароля."
+
+#: src/routes/_authenticated/settings/index.tsx:165
+msgid "You can <0>@mention</0> other users and organizations to link to them."
+msgstr "Вы можете <0>@упомянуть</0> других пользователей и организации, чтобы связаться с ними."
+
+#: src/routes/_authenticated/settings/index.tsx:144
+msgid "You can manage verified email addresses in your"
+msgstr "Вы можете управлять подтвержденными адресами электронной почты в вашем"
+
+#: src/routes/(errors)/401.tsx:15
+msgid "You don't have permission to access this resource."
+msgstr "У вас нет разрешения на доступ к этому ресурсу."
+
+#: src/routes/(errors)/403.tsx:15
+msgid "You don't have the necessary permissions to access this page."
+msgstr "У вас нет необходимых разрешений для доступа к этой странице."
+
+#: src/routes/_authenticated/index.tsx:370
+msgid "You made 265 sales this month."
+msgstr "Вы совершили 265 продаж в этом месяце."
+
+#: src/routes/_authenticated/chats/index.tsx:454
+msgid "Your messages"
+msgstr "Ваши сообщения"

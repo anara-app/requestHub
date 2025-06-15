@@ -10,7 +10,7 @@ export const languageRouter = router({
         name: z.string().optional(),
       })
     )
-    .query(async ({ input }) => {
+    .query(async () => {
       try {
         return [];
       } catch (error) {

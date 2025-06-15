@@ -1,0 +1,71 @@
+---
+description: 
+globs: **/server/*
+alwaysApply: false
+---
+# Server Package Rules
+
+## Architecture Overview
+The server is built using Fastify with tRPC integration, following a modular architecture pattern.
+
+## Directory Structure
+- `/src/api` - REST API endpoints
+- `/src/common` - Shared utilities and constants
+- `/src/lib` - Core libraries and services
+- `/src/modules` - Feature modules
+- `/src/trpc` - tRPC router and context setup
+- `/src/trigger` - Background job handlers
+- `/src/routers` - TRPC routers
+- `/prisma` - Database schema and migrations
+
+### API Structure
+- REST endpoints are prefixed with `/api/*`
+- tRPC endpoints are available at `/trpc/*`
+- Media handling at `/api/media/*`
+- Authentication at `/api/auth/*`
+
+### Authentication
+- better-auth is used to handle authentication
+- Protected routes require a valid better-auth session
+- Session validation happens in tRPC context
+
+### Database
+- Uses Prisma as ORM
+- Schema defined in `/prisma/schema.prisma`
+- Run migrations with `prisma migrate`
+- Access Prisma Studio at port 5555
+
+### File Upload
+- Supports multipart file uploads
+- Maximum file size: 1GB
+- Configured in main.ts
+
+### CORS Configuration
+- Allowed origins: localhost:3000, localhost:5174
+- Methods: GET, POST, PUT, DELETE, OPTIONS
+- Credentials: enabled
+- Max age: 86400 seconds
+
+### Adding New Features
+1. Think of logic
+2. Create a router for the need always name file as ***.router.ts
+3. Add router in `/src/trpc/routers`
+4. Register in main router
+
+### Error Handling
+- Use @fastify/sensible for HTTP errors
+- tRPC errors are logged with path information
+- Custom error types in `/src/common/errors`
+
+### Environment Variables
+- Required variables in `.env.example`
+- Loaded via dotenv in main.ts
+- Constants defined in `/src/common/constants`
+
+## Best Practices
+1. Keep modules independent and focused
+2. Use TypeScript for type safety
+3. Follow RESTful principles for REST endpoints
+4. Use tRPC for type-safe RPC calls
+5. Handle errors consistently
+6. Use proper logging for debugging
