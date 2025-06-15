@@ -7,6 +7,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import { Trans } from '@lingui/react/macro'
 
 interface Props extends React.ComponentProps<typeof Root> {
   contentProps?: React.ComponentProps<typeof Content>
@@ -27,7 +28,7 @@ export function LearnMore({
         className={cn('size-5 rounded-full', triggerProps?.className)}
       >
         <Button variant='outline' size='icon'>
-          <span className='sr-only'>Learn more</span>
+          <span className='sr-only'><Trans>Learn more</Trans></span>
           <IconQuestionMark className='size-3' />
         </Button>
       </PopoverTrigger>

@@ -1,4 +1,5 @@
 import { Separator } from '@/components/ui/separator'
+import { Trans } from '@lingui/react/macro'
 
 interface ContentSectionProps {
   title: string
@@ -14,8 +15,8 @@ export default function ContentSection({
   return (
     <div className='flex flex-1 flex-col'>
       <div className='flex-none'>
-        <h3 className='text-lg font-medium'>{title}</h3>
-        <p className='text-muted-foreground text-sm'>{desc}</p>
+        <h3 className='text-lg font-medium'><Trans>{title}</Trans></h3>
+        <p className='text-muted-foreground text-sm'><Trans>{desc}</Trans></p>
       </div>
       <Separator className='my-4 flex-none' />
       <div className='faded-bottom h-full w-full overflow-y-auto scroll-smooth pr-4 pb-12'>

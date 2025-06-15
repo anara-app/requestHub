@@ -9,6 +9,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
+import { Trans } from '@lingui/react/macro'
 
 interface ConfirmDialogProps {
   open: boolean
@@ -51,14 +52,14 @@ export function ConfirmDialog(props: ConfirmDialogProps) {
         {children}
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isLoading}>
-            {cancelBtnText ?? 'Cancel'}
+            {cancelBtnText ?? <Trans>Cancel</Trans>}
           </AlertDialogCancel>
           <Button
             variant={destructive ? 'destructive' : 'default'}
             onClick={handleConfirm}
             disabled={disabled || isLoading}
           >
-            {confirmText ?? 'Continue'}
+            {confirmText ?? <Trans>Continue</Trans>}
           </Button>
         </AlertDialogFooter>
       </AlertDialogContent>

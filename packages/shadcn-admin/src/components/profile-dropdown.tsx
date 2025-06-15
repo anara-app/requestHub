@@ -11,6 +11,7 @@ import {
   DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Trans } from '@lingui/react/macro'
 
 export function ProfileDropdown() {
   return (
@@ -36,27 +37,27 @@ export function ProfileDropdown() {
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
             <Link to='/settings'>
-              Profile
+              <Trans>Profile</Trans>
               <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link to='/settings'>
-              Billing
+              <Trans>Billing</Trans>
               <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link to='/settings'>
-              Settings
+              <Trans>Settings</Trans>
               <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem>New Team</DropdownMenuItem>
+          <DropdownMenuItem><Trans>New Team</Trans></DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          Log out
+          <Trans>Log out</Trans>
           <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
         </DropdownMenuItem>
       </DropdownMenuContent>

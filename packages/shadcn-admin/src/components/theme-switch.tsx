@@ -9,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { Trans } from '@lingui/react/macro'
 
 export function ThemeSwitch() {
   const { theme, setTheme } = useTheme()
@@ -27,26 +28,26 @@ export function ThemeSwitch() {
         <Button variant='ghost' size='icon' className='scale-95 rounded-full'>
           <IconSun className='size-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90' />
           <IconMoon className='absolute size-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0' />
-          <span className='sr-only'>Toggle theme</span>
+          <span className='sr-only'><Trans>Toggle theme</Trans></span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align='end'>
         <DropdownMenuItem onClick={() => setTheme('light')}>
-          Light{' '}
+          <Trans>Light</Trans>{' '}
           <IconCheck
             size={14}
             className={cn('ml-auto', theme !== 'light' && 'hidden')}
           />
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme('dark')}>
-          Dark
+          <Trans>Dark</Trans>
           <IconCheck
             size={14}
             className={cn('ml-auto', theme !== 'dark' && 'hidden')}
           />
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme('system')}>
-          System
+          <Trans>System</Trans>
           <IconCheck
             size={14}
             className={cn('ml-auto', theme !== 'system' && 'hidden')}

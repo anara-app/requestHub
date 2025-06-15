@@ -23,6 +23,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/ui/sidebar'
+import { Trans } from '@lingui/react/macro'
+import { LocaleSelector } from '../locale-selector'
 
 export function NavUser({
   user,
@@ -33,7 +35,7 @@ export function NavUser({
     avatar: string
   }
 }) {
-  const { isMobile } = useSidebar()
+  const { isMobile } = useSidebar();
 
   return (
     <SidebarMenu>
@@ -77,7 +79,7 @@ export function NavUser({
             <DropdownMenuGroup>
               <DropdownMenuItem>
                 <Sparkles />
-                Upgrade to Pro
+                <Trans>Upgrade to Pro</Trans>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
@@ -85,26 +87,29 @@ export function NavUser({
               <DropdownMenuItem asChild>
                 <Link to='/settings/account'>
                   <BadgeCheck />
-                  Account
+                  <Trans>Account</Trans>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link to='/settings'>
                   <CreditCard />
-                  Billing
+                  <Trans>Billing</Trans>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link to='/settings/notifications'>
                   <Bell />
-                  Notifications
+                  <Trans>Notifications</Trans>
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
+            <DropdownMenuItem asChild>
+            <LocaleSelector />
+            </DropdownMenuItem>
             <DropdownMenuItem>
               <LogOut />
-              Log out
+              <Trans>Log out</Trans>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

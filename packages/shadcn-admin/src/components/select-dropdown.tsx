@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Trans } from '@lingui/react/macro'
 
 interface SelectDropdownProps {
   onValueChange?: (value: string) => void
@@ -46,7 +47,7 @@ export function SelectDropdown({
             <div className='flex items-center justify-center gap-2'>
               <IconLoader className='h-5 w-5 animate-spin' />
               {'  '}
-              Loading...
+              <Trans>Loading...</Trans>
             </div>
           </SelectItem>
         ) : (
