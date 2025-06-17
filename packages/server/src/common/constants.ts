@@ -14,12 +14,6 @@ export const CONSTANTS = {
     S3_SECRET: process.env.AWS_S3_SECRET!,
   },
 
-  //REDIS
-  REDIS: {
-    HOST: process.env.REDIS_HOST || "localhost",
-    PORT: process.env.REDIS_PORT || 6379,
-  },
-
   //CLOUDFLARE
   CLOUDFLARE: {
     ZONE_ID: process.env.CLOUDFLARE_ZONE_ID!,

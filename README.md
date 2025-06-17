@@ -5,11 +5,11 @@ Full system
 The current tech stack consists of 3 workspaces set up using pnpm. Each workspace is described below:
 
 1.  Client: Next.js
-    - Tech stack: Next.js, React Query, shadcn/ui, Socket.IO, react-hook-form, tRPC
+    - Tech stack: Next.js, React Query, shadcn/ui, react-hook-form, tRPC
 2.  Admin: React.js (Vite)
     - Tech stack: React.js, React Query, MantineUI, react-hook-form, Zustand, tRPC, react-router
 3.  Server: API with all the business logic
-    - Tech stack: Node.js, Fastify, tRPC, Prisma, Socket.IO, Bull MQ, PostgreSQL, Redis
+    - Tech stack: Node.js, Fastify, tRPC, Prisma, PostgreSQL
 
 For authentication we use _Supabase_
 
@@ -21,15 +21,14 @@ The system utilizes pnpm to manage the workspaces and dependencies across the pr
 
 2. Each project (workspace) requires its own set of environment variables to be set. In the root of each project (workspace), you can find a `.env.example` file which consists of all the variables required for the project to start. Replace empty values with the required keys and be sure to rename the file to `.env` or `.env.local` (for frontend's).
 
-3. Make sure the database is set up and running. In our case, it's PostgreSQL. We also use Redis for workers and scaling of the WebSocket instances.
+3. Make sure the database is set up and running. In our case, it's PostgreSQL.
 
-4. After installing dependencies, filling all the required environment variables, and making sure the database and Redis are running, you can run the `pnpm dev` command inside the root of the repo. This will start all the projects in dev mode (with watch). After successful launch, you can access all the projects by their links specified below:
+4. After installing dependencies, filling all the required environment variables, and making sure the database is running, you can run the `pnpm dev` command inside the root of the repo. This will start all the projects in dev mode (with watch). After successful launch, you can access all the projects by their links specified below:
 
    1. Frontend at `http://localhost:3000`
    2. Admin panel at `http://localhost:5173`
    3. API at `http://localhost:8080`
    4. Prisma Studio at `http://localhost:5555`
-   5. WebSocket at `http://localhost:8081`
 
 ## How to build and deploy the project
 
