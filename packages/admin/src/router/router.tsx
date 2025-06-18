@@ -8,6 +8,8 @@ import UserPage from "../pages/dashboard/users/user.page";
 import RolesPage from "../pages/dashboard/roles/roles";
 import RolePage from "../pages/dashboard/roles/role";
 import GalleryPage from "../pages/dashboard/gallery/gallery.page";
+import WorkflowTemplatesPage from "../pages/dashboard/workflows/workflow-templates.page";
+import WorkflowRequestsPage from "../pages/dashboard/workflows/workflow-requests.page";
 
 export const router = createBrowserRouter([
   {
@@ -45,6 +47,16 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.DASHBOARD_GALLERY,
         element: <GalleryPage />,
+      },
+
+      /* Workflows */
+      {
+        path: ROUTES.DASHBOARD_WORKFLOW_TEMPLATES,
+        element: <WorkflowTemplatesPage />,
+      },
+      {
+        path: ROUTES.DASHBOARD_WORKFLOW_REQUESTS,
+        element: <WorkflowRequestsPage />,
       },
     ],
   },

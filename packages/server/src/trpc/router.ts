@@ -4,6 +4,7 @@ import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 import { usersRouter } from "../routers/admin/users.router";
 import { rolesRouter } from "../routers/admin/roles.router";
 import { languageRouter } from "../routers/admin/languages.router";
+import { adminWorkflowRouter } from "../routers/admin/workflow.router";
 /* Client routers */
 import { clientArticleRouter } from "../routers/client/article.router";
 import { galleryRouter } from "../routers/admin/gallery.router";
@@ -15,6 +16,7 @@ export const appRouter = router({
     roles: rolesRouter,
     languages: languageRouter,
     gallery: galleryRouter,
+    workflows: adminWorkflowRouter,
   },
 
   nextClient: {

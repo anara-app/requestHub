@@ -1,6 +1,14 @@
 import { db } from "../src/common/prisma";
 
 async function main() {
+  // Check if templates already exist
+  const existingTemplates = await db.workflowTemplate.count();
+  
+  if (existingTemplates > 0) {
+    console.log("✅ Workflow templates already exist, skipping seed");
+    return;
+  }
+
   // Create workflow templates
   const templates = [
     {
@@ -42,20 +50,17 @@ async function main() {
   ];
 
   for (const template of templates) {
-    await db.workflowTemplate.upsert({
-      where: { name: template.name },
-      update: template,
-      create: template,
+    await db.workflowTemplate.create({
+      data: template,
     });
   }
 
-  console.log("✅ Database has been seeded");
+  console.log("✅ Database has been seeded with workflow templates");
 }
 
 main()
   .catch((e) => {
     console.error(e);
-    process.exit(1);
   })
   .finally(async () => {
     await db.$disconnect();
