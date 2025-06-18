@@ -135,4 +135,251 @@ export const adminWorkflowRouter = router({
         },
       };
     }),
+
+  // Get single workflow request by ID
+  getRequestById: protectedPermissionProcedure(["READ_WORKFLOW_REQUESTS" as any])
+    .input(z.object({ id: z.string() }))
+    .query(async ({ input }) => {
+      const request = await db.workflowRequest.findUnique({
+        where: { id: input.id },
+        include: {
+          template: true,
+          initiator: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+          approvals: {
+            include: {
+              approver: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+            orderBy: {
+              step: "asc",
+            },
+          },
+          comments: {
+            include: {
+              author: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "desc",
+            },
+          },
+        },
+      });
+
+      if (!request) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Request not found",
+        });
+      }
+
+      return request;
+    }),
+
+  // Approve a workflow request
+  approveRequest: protectedPermissionProcedure(["APPROVE_WORKFLOW_REQUEST" as any])
+    .input(
+      z.object({
+        requestId: z.string(),
+        comment: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { requestId, comment } = input;
+      const userId = ctx.token; // Current user ID
+
+      // Get the request with current approvals
+      const request = await db.workflowRequest.findUnique({
+        where: { id: requestId },
+        include: {
+          template: true,
+          approvals: true,
+        },
+      });
+
+      if (!request) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Request not found",
+        });
+      }
+
+      // Find the current step approval
+      const currentApproval = await db.workflowApproval.findFirst({
+        where: {
+          requestId,
+          step: request.currentStep,
+          status: "PENDING",
+        },
+      });
+
+      if (!currentApproval) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No pending approval found for current step",
+        });
+      }
+
+      // Update the approval
+      await db.workflowApproval.update({
+        where: { id: currentApproval.id },
+        data: {
+          status: "APPROVED",
+          comment,
+          approverId: userId,
+        },
+      });
+
+      // Parse template steps
+      const templateSteps = JSON.parse(request.template.steps as string);
+      
+      // Check if this was the last step
+      const isLastStep = request.currentStep === templateSteps.length - 1;
+
+      if (isLastStep) {
+        // Complete the request
+        await db.workflowRequest.update({
+          where: { id: requestId },
+          data: {
+            status: "APPROVED",
+          },
+        });
+      } else {
+        // Move to next step
+        const nextStep = request.currentStep + 1;
+        const nextStepTemplate = templateSteps[nextStep];
+
+        await db.$transaction([
+          // Update request to next step
+          db.workflowRequest.update({
+            where: { id: requestId },
+            data: {
+              currentStep: nextStep,
+              status: "IN_PROGRESS",
+            },
+          }),
+          // Create next approval record
+          db.workflowApproval.create({
+            data: {
+              requestId,
+              step: nextStep,
+              role: nextStepTemplate.role,
+              actionLabel: nextStepTemplate.label,
+              status: "PENDING",
+            },
+          }),
+        ]);
+      }
+
+      return { success: true };
+    }),
+
+  // Reject a workflow request
+  rejectRequest: protectedPermissionProcedure(["APPROVE_WORKFLOW_REQUEST" as any])
+    .input(
+      z.object({
+        requestId: z.string(),
+        comment: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { requestId, comment } = input;
+      const userId = ctx.token;
+
+      // Find the current step approval
+      const currentApproval = await db.workflowApproval.findFirst({
+        where: {
+          requestId,
+          status: "PENDING",
+        },
+      });
+
+      if (!currentApproval) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No pending approval found",
+        });
+      }
+
+      // Update the approval and request
+      await db.$transaction([
+        db.workflowApproval.update({
+          where: { id: currentApproval.id },
+          data: {
+            status: "REJECTED",
+            comment,
+            approverId: userId,
+          },
+        }),
+        db.workflowRequest.update({
+          where: { id: requestId },
+          data: {
+            status: "REJECTED",
+          },
+        }),
+      ]);
+
+      return { success: true };
+    }),
+
+  // Add comment to workflow request
+  addComment: protectedPermissionProcedure(["READ_WORKFLOW_REQUESTS" as any])
+    .input(
+      z.object({
+        requestId: z.string(),
+        text: z.string().min(1),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { requestId, text } = input;
+      const userId = ctx.token;
+
+      // Verify request exists
+      const request = await db.workflowRequest.findUnique({
+        where: { id: requestId },
+      });
+
+      if (!request) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Request not found",
+        });
+      }
+
+      const comment = await db.workflowComment.create({
+        data: {
+          requestId,
+          text,
+          authorId: userId!,
+        },
+        include: {
+          author: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      });
+
+      return comment;
+    }),
 }); 

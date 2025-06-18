@@ -10,7 +10,7 @@ import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../router/routes";
 import ProtectedRoute from "../ProtectedRoute";
-import { ImagesIcon, LogOutIcon, UserCog, Users, Workflow, FileText } from "lucide-react";
+import { ImagesIcon, LogOutIcon, UserCog, Users, Workflow, FileText, Plus } from "lucide-react";
 import logo from "../../assets/logo.png";
 import ThemeSwitch from "../ThemeSwith";
 import { $Enums } from "../../common/database.types";
@@ -51,6 +51,13 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 }
 
 const NavItems: NavItemType[] = [
+  {
+    icon: Plus,
+    label: "Raise Request",
+    path: ROUTES.DASHBOARD_RAISE_REQUEST,
+    activePaths: [ROUTES.DASHBOARD_RAISE_REQUEST],
+    permissionRequired: "CREATE_WORKFLOW_REQUEST" as any,
+  },
   {
     icon: FileText,
     label: "Template creation",

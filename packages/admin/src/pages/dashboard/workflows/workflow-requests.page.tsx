@@ -1,12 +1,15 @@
 import { Container, Title, Table, Badge, Text, Button, Group, Pagination, Select, TextInput } from "@mantine/core";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { trpc } from "../../../common/trpc";
+import { ROUTES } from "../../../router/routes";
 import LoadingPlaceholder from "../../../components/LoadingPlaceholder";
 import EmptyPlaceholder from "../../../components/EmptyPlaceholder";
 
 type RequestStatus = "DRAFT" | "PENDING" | "IN_PROGRESS" | "APPROVED" | "REJECTED" | "CANCELLED";
 
 export default function WorkflowRequestsPage() {
+  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<RequestStatus | "">("");
   const [searchTerm, setSearchTerm] = useState("");
@@ -116,7 +119,11 @@ export default function WorkflowRequestsPage() {
                 {new Date(request.createdAt).toLocaleDateString()}
               </Table.Td>
               <Table.Td>
-                <Button size="xs" variant="light">
+                <Button 
+                  size="xs" 
+                  variant="light"
+                  onClick={() => navigate(`${ROUTES.DASHBOARD_WORKFLOW_REQUEST}/${request.id}`)}
+                >
                   View Details
                 </Button>
               </Table.Td>
