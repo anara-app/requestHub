@@ -31,6 +31,10 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
+  initiatedRequests WorkflowRequest[] @relation("RequestInitiator")
+  approvals         WorkflowApproval[]
+  comments          WorkflowComment[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -131,7 +135,8 @@ model MediaFile {
   width  Int? @default(0)
   height Int? @default(0)
 
-  users User[]
+  users     User[]
+  requests  WorkflowRequest[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -163,4 +168,108 @@ enum PermissionOperation {
   READ_GALLERY
   UPDATE_GALLERY
   DELETE_GALLERY
+
+  //Workflows
+  CREATE_WORKFLOW_REQUEST
+  READ_WORKFLOW_REQUESTS
+  UPDATE_WORKFLOW_REQUEST
+  DELETE_WORKFLOW_REQUEST
+  APPROVE_WORKFLOW_REQUEST
+  REJECT_WORKFLOW_REQUEST
+  MANAGE_WORKFLOW_TEMPLATES
+}
+
+model WorkflowTemplate {
+  id String @id @default(uuid())
+
+  name        String
+  description String?
+  steps       Json    @default("[]")
+  isActive    Boolean @default(true)
+
+  requests WorkflowRequest[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("workflow_template")
+}
+
+model WorkflowRequest {
+  id String @id @default(uuid())
+
+  title       String
+  description String?
+  status      RequestStatus @default(PENDING)
+  data        Json         @default("{}")
+  currentStep Int          @default(0)
+
+  templateId String
+  template   WorkflowTemplate @relation(fields: [templateId], references: [id])
+
+  initiatorId String
+  initiator   User   @relation("RequestInitiator", fields: [initiatorId], references: [id])
+
+  approvals WorkflowApproval[]
+  comments  WorkflowComment[]
+  files     MediaFile[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("workflow_request")
+}
+
+model WorkflowApproval {
+  id String @id @default(uuid())
+
+  status      ApprovalStatus @default(PENDING)
+  comment     String?
+  step        Int
+  role        String
+  actionLabel String?
+
+  requestId String
+  request   WorkflowRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  approverId String?
+  approver   User?   @relation(fields: [approverId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("workflow_approval")
+}
+
+model WorkflowComment {
+  id String @id @default(uuid())
+
+  text String
+
+  requestId String
+  request   WorkflowRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("workflow_comment")
+}
+
+enum RequestStatus {
+  DRAFT
+  PENDING
+  IN_PROGRESS
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SKIPPED
 }

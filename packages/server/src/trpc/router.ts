@@ -7,6 +7,7 @@ import { languageRouter } from "../routers/admin/languages.router";
 /* Client routers */
 import { clientArticleRouter } from "../routers/client/article.router";
 import { galleryRouter } from "../routers/admin/gallery.router";
+import { workflowRouter } from "../routers/client/workflow.router";
 
 export const appRouter = router({
   admin: {
@@ -18,6 +19,7 @@ export const appRouter = router({
 
   nextClient: {
     articles: clientArticleRouter,
+    workflows: workflowRouter,
   },
 });
 
