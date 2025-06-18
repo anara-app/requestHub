@@ -15,4 +15,6 @@ export const ROUTES = {
   DASHBOARD_WORKFLOW_REQUESTS: "/workflow-requests",
   DASHBOARD_WORKFLOW_REQUEST: "/workflow-request",
   DASHBOARD_RAISE_REQUEST: "/raise-request",
+  DASHBOARD_MY_REQUESTS: "/my-requests",
+  DASHBOARD_PENDING_APPROVALS: "/pending-approvals",
 };

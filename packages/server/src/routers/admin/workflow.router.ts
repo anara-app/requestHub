@@ -4,6 +4,31 @@ import { TRPCError } from "@trpc/server";
 import { db } from "../../common/prisma";
 import { RequestStatus } from "@prisma/client";
 
+// Helper function to create audit trail entries
+async function createAuditTrail(
+  requestId: string,
+  userId: string,
+  action: string,
+  description: string,
+  details?: string
+) {
+  try {
+    const result = await db.workflowAuditTrail.create({
+      data: {
+        requestId,
+        userId,
+        action: action as any,
+        description,
+        details,
+      },
+    });
+    return result;
+  } catch (error) {
+    console.error("Error creating audit trail:", error);
+    throw error;
+  }
+}
+
 const createTemplateSchema = z.object({
   name: z.string().min(1),
   description: z.string().optional(),
@@ -203,7 +228,7 @@ export const adminWorkflowRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       const { requestId, comment } = input;
-      const userId = ctx.token; // Current user ID
+      const userId = ctx.user.id; // Current user ID
 
       // Get the request with current approvals
       const request = await db.workflowRequest.findUnique({
@@ -261,6 +286,15 @@ export const adminWorkflowRouter = router({
             status: "APPROVED",
           },
         });
+
+        // Log audit trail - Request fully approved
+        await createAuditTrail(
+          requestId,
+          userId,
+          "REQUEST_APPROVED",
+          "Request fully approved and completed",
+          comment || undefined
+        );
       } else {
         // Move to next step
         const nextStep = request.currentStep + 1;
@@ -286,6 +320,15 @@ export const adminWorkflowRouter = router({
             },
           }),
         ]);
+
+        // Log audit trail - Step approved and progressed
+        await createAuditTrail(
+          requestId,
+          userId,
+          "STEP_PROGRESSED",
+          `Approved step ${request.currentStep + 1} (${currentApproval.role}) and moved to step ${nextStep + 1} (${nextStepTemplate.role})`,
+          comment || undefined
+        );
       }
 
       return { success: true };
@@ -301,7 +344,7 @@ export const adminWorkflowRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       const { requestId, comment } = input;
-      const userId = ctx.token;
+      const userId = ctx.user.id;
 
       // Find the current step approval
       const currentApproval = await db.workflowApproval.findFirst({
@@ -336,6 +379,15 @@ export const adminWorkflowRouter = router({
         }),
       ]);
 
+      // Log audit trail - Request rejected
+      await createAuditTrail(
+        requestId,
+        userId,
+        "REQUEST_REJECTED",
+        `Request rejected at step ${currentApproval.step + 1} (${currentApproval.role})`,
+        comment || undefined
+      );
+
       return { success: true };
     }),
 
@@ -349,7 +401,7 @@ export const adminWorkflowRouter = router({
     )
     .mutation(async ({ input, ctx }) => {
       const { requestId, text } = input;
-      const userId = ctx.token;
+      const userId = ctx.user.id;
 
       // Verify request exists
       const request = await db.workflowRequest.findUnique({
@@ -367,7 +419,7 @@ export const adminWorkflowRouter = router({
         data: {
           requestId,
           text,
-          authorId: userId!,
+          authorId: userId,
         },
         include: {
           author: {
@@ -380,6 +432,43 @@ export const adminWorkflowRouter = router({
         },
       });
 
+      // Log audit trail - Comment added
+      await createAuditTrail(
+        requestId,
+        userId,
+        "COMMENT_ADDED",
+        "Added a comment to the request",
+        text.length > 100 ? text.substring(0, 100) + "..." : text
+      );
+
       return comment;
+    }),
+
+  // Get audit trail for a workflow request
+  getAuditTrail: protectedPermissionProcedure(["READ_WORKFLOW_REQUESTS" as any])
+    .input(z.object({ requestId: z.string() }))
+    .query(async ({ input }) => {
+      const auditTrails = await db.workflowAuditTrail.findMany({
+        where: { requestId: input.requestId },
+        include: {
+          user: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              role: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      });
+
+      return auditTrails;
     }),
 }); 

@@ -75,6 +75,17 @@ export const workflowRouter = router({
         )
       );
 
+      // Log audit trail - Request created
+      await db.workflowAuditTrail.create({
+        data: {
+          requestId: request.id,
+          userId: ctx.user.id,
+          action: "REQUEST_CREATED" as any,
+          description: `Created new ${template.name} request`,
+          details: input.title,
+        },
+      });
+
       return request;
     }),
 
@@ -100,12 +111,71 @@ export const workflowRouter = router({
       });
     }),
 
-  // Get requests that need user's approval - simplified for now
+  // Get requests that need user's approval - filtered by user's role
   getPendingApprovals: protectedPermissionProcedure(["APPROVE_WORKFLOW_REQUEST" as any])
     .query(async ({ ctx }) => {
-      return db.workflowRequest.findMany({
+      console.log("getPendingApprovals called for user:", ctx.user.id);
+      
+      // Get user's role
+      const user = await db.user.findUnique({
+        where: { id: ctx.user.id },
+        include: { role: true },
+      });
+
+      console.log("User details:", { email: user?.email, role: user?.role?.name });
+
+      if (!user?.role) {
+        console.log("No role found for user");
+        return [];
+      }
+
+      const userRoleName = user.role.name.toLowerCase();
+      console.log("User role name (lowercase):", userRoleName);
+
+      // Admin can see all requests that have pending approvals
+      if (userRoleName === "admin") {
+        return db.workflowRequest.findMany({
+          where: {
+            status: {
+              in: ["PENDING", "IN_PROGRESS"],
+            },
+            approvals: {
+              some: {
+                status: "PENDING",
+              },
+            },
+          },
+          include: {
+            template: true,
+            initiator: true,
+            approvals: {
+              include: {
+                approver: true,
+              },
+            },
+            files: true,
+          },
+          orderBy: {
+            createdAt: "desc",
+          },
+        });
+      }
+
+      // For other roles, filter by requests that need their approval
+      const result = await db.workflowRequest.findMany({
         where: {
-          status: "PENDING",
+          status: {
+            in: ["PENDING", "IN_PROGRESS"],
+          },
+          approvals: {
+            some: {
+              status: "PENDING",
+              role: {
+                equals: userRoleName,
+                mode: "insensitive",
+              },
+            },
+          },
         },
         include: {
           template: true,
@@ -121,5 +191,12 @@ export const workflowRouter = router({
           createdAt: "desc",
         },
       });
+
+      console.log(`Returning ${result.length} requests for ${userRoleName} user`);
+      result.forEach((req, index) => {
+        console.log(`${index + 1}. ${req.title} (${req.status})`);
+      });
+
+      return result;
     }),
 }); 

@@ -14,8 +14,8 @@ export const auth = betterAuth({
   trustedOrigins: ["http://localhost:8080", "http://localhost:5174"],
   advanced: {
     defaultCookieAttributes: {
-      sameSite: "None",
-      secure: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
     },
     cookies: {
       session_token: {

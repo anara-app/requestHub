@@ -5,6 +5,7 @@ import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { trpc } from "../../../common/trpc";
 import LoadingPlaceholder from "../../../components/LoadingPlaceholder";
+import AuditTrail from "../../../components/AuditTrail";
 import { CheckCircle, XCircle, Clock, MessageCircle, ArrowLeft, User } from "lucide-react";
 
 export default function WorkflowRequestPage() {
@@ -19,6 +20,15 @@ export default function WorkflowRequestPage() {
 
   const { data: userPermissions } = trpc.admin.users.getMyPermissions.useQuery();
   const { data: currentUser } = trpc.admin.users.getMe.useQuery();
+  const { data: auditTrail, isLoading: auditTrailLoading, refetch: refetchAuditTrail } = trpc.admin.workflows.getAuditTrail.useQuery(
+    { requestId: id! },
+    { enabled: !!id }
+  );
+
+  const refetchAll = () => {
+    refetch();
+    refetchAuditTrail();
+  };
 
   const approveRequestMutation = trpc.admin.workflows.approveRequest.useMutation({
     onSuccess: () => {
@@ -27,7 +37,7 @@ export default function WorkflowRequestPage() {
         message: "Request approved successfully",
         color: "green",
       });
-      refetch();
+      refetchAll();
       setActionType(null);
       commentForm.reset();
     },
@@ -47,7 +57,7 @@ export default function WorkflowRequestPage() {
         message: "Request rejected successfully",
         color: "green",
       });
-      refetch();
+      refetchAll();
       setActionType(null);
       commentForm.reset();
     },
@@ -67,7 +77,7 @@ export default function WorkflowRequestPage() {
         message: "Comment added successfully",
         color: "green",
       });
-      refetch();
+      refetchAll();
       commentForm.reset();
     },
     onError: (error: any) => {
@@ -410,6 +420,9 @@ export default function WorkflowRequestPage() {
             </Text>
           )}
         </Paper>
+
+        {/* Audit Trail */}
+        <AuditTrail auditTrail={auditTrail || []} isLoading={auditTrailLoading} />
       </Stack>
     </Container>
   );

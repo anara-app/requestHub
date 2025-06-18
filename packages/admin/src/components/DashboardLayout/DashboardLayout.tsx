@@ -10,7 +10,7 @@ import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../router/routes";
 import ProtectedRoute from "../ProtectedRoute";
-import { ImagesIcon, LogOutIcon, UserCog, Users, Workflow, FileText, Plus } from "lucide-react";
+import { ImagesIcon, LogOutIcon, UserCog, Users, Workflow, FileText, Plus, Clock, FileCheck } from "lucide-react";
 import logo from "../../assets/logo.png";
 import ThemeSwitch from "../ThemeSwith";
 import { $Enums } from "../../common/database.types";
@@ -52,11 +52,18 @@ function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
 
 const NavItems: NavItemType[] = [
   {
-    icon: Plus,
-    label: "Raise Request",
-    path: ROUTES.DASHBOARD_RAISE_REQUEST,
-    activePaths: [ROUTES.DASHBOARD_RAISE_REQUEST],
+    icon: FileCheck,
+    label: "My Requests",
+    path: ROUTES.DASHBOARD_MY_REQUESTS,
+    activePaths: [ROUTES.DASHBOARD_MY_REQUESTS],
     permissionRequired: "CREATE_WORKFLOW_REQUEST" as any,
+  },
+  {
+    icon: Clock,
+    label: "Pending Approvals",
+    path: ROUTES.DASHBOARD_PENDING_APPROVALS,
+    activePaths: [ROUTES.DASHBOARD_PENDING_APPROVALS],
+    permissionRequired: "APPROVE_WORKFLOW_REQUEST" as any,
   },
   {
     icon: FileText,
@@ -70,14 +77,7 @@ const NavItems: NavItemType[] = [
     label: "Workflow Requests",
     path: ROUTES.DASHBOARD_WORKFLOW_REQUESTS,
     activePaths: [ROUTES.DASHBOARD_WORKFLOW_REQUESTS],
-    permissionRequired: "READ_WORKFLOW_REQUESTS" as any,
-  },
-  {
-    icon: ImagesIcon,
-    label: "Галерея",
-    path: ROUTES.DASHBOARD_GALLERY,
-    activePaths: [ROUTES.DASHBOARD_GALLERY],
-    permissionRequired: "READ_GALLERY",
+    permissionRequired: "MANAGE_WORKFLOW_TEMPLATES" as any, // Only admins can see all workflow requests
   },
   {
     icon: Users,
