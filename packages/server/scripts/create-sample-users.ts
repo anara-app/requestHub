@@ -86,24 +86,14 @@ async function createSampleUsers() {
         console.log(`✅ Created role: ${role.name}`);
       }
 
-      // Use better-auth to create the user properly
-      // This will handle password hashing correctly
-      const authUser = await auth.api.signUpEmail({
-        body: {
-          email: userData.email,
-          password: userData.password,
-          name: `${userData.firstName} ${userData.lastName}`,
-        },
-      });
+      // Hash the password with bcrypt
+      const hashedPassword = await bcrypt.hash(userData.password, 10);
 
-      if (!authUser) {
-        throw new Error(`Failed to create auth user for ${userData.email}`);
-      }
-
-      // Update the user with additional fields
-      const user = await prisma.user.update({
-        where: { email: userData.email },
+      // Create the user directly in the database
+      const user = await prisma.user.create({
         data: {
+          email: userData.email,
+          password: hashedPassword,
           firstName: userData.firstName,
           lastName: userData.lastName,
           emailVerified: true,

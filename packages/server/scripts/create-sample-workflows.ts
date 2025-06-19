@@ -7,43 +7,44 @@ const sampleWorkflows = [
     name: "Leave Request",
     description: "Employee leave request approval workflow",
     steps: [
-      { role: "manager", label: "Manager Approval", type: "approval" },
-      { role: "hr", label: "HR Review", type: "approval" },
+      { role: "MANAGER", label: "Manager Approval", type: "approval" },
+      { role: "HR_SPECIALIST", label: "HR Review", type: "approval" },
     ],
   },
   {
     name: "Contract Approval",
     description: "Contract review and approval process",
     steps: [
-      { role: "manager", label: "Manager Review", type: "approval" },
-      { role: "lawyer", label: "Legal Review", type: "approval" },
-      { role: "ceo", label: "CEO Approval", type: "approval" },
+      { role: "MANAGER", label: "Manager Review", type: "approval" },
+      { role: "LEGAL", label: "Legal Review", type: "approval" },
+      { role: "CEO", label: "CEO Approval", type: "approval" },
     ],
   },
   {
     name: "Payment Request",
     description: "Payment authorization workflow",
     steps: [
-      { role: "manager", label: "Manager Approval", type: "approval" },
-      { role: "finance", label: "Finance Review", type: "approval" },
-      { role: "accountant", label: "Accountant Processing", type: "task" },
+      { role: "MANAGER", label: "Manager Approval", type: "approval" },
+      { role: "FINANCE_MANAGER", label: "Finance Review", type: "approval" },
+      { role: "ACCOUNTING", label: "Accountant Processing", type: "task" },
     ],
   },
   {
     name: "Procurement Request",
     description: "Purchase order approval process",
     steps: [
-      { role: "manager", label: "Manager Approval", type: "approval" },
-      { role: "finance", label: "Budget Approval", type: "approval" },
-      { role: "ceo", label: "Executive Approval", type: "approval" },
+      { role: "MANAGER", label: "Manager Approval", type: "approval" },
+      { role: "PROCUREMENT", label: "Procurement Review", type: "approval" },
+      { role: "FINANCE_MANAGER", label: "Budget Approval", type: "approval" },
+      { role: "CEO", label: "Executive Approval", type: "approval" },
     ],
   },
   {
     name: "Fuel Request (GSM)",
     description: "Vehicle fuel request workflow",
     steps: [
-      { role: "manager", label: "Manager Approval", type: "approval" },
-      { role: "finance", label: "Finance Authorization", type: "approval" },
+      { role: "MANAGER", label: "Manager Approval", type: "approval" },
+      { role: "FINANCE", label: "Finance Authorization", type: "approval" },
     ],
   },
 ];

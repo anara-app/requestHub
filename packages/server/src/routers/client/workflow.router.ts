@@ -129,11 +129,21 @@ export const workflowRouter = router({
         return [];
       }
 
-      const userRoleName = user.role.name.toLowerCase();
-      console.log("User role name (lowercase):", userRoleName);
+      const userRoleName = user.role.name.toUpperCase();
+      // Validate against allowed enum values
+      const allowedRoles = [
+        "INITIATOR", "INITIATOR_SUPERVISOR", "CEO", "LEGAL", "PROCUREMENT", "FINANCE_MANAGER",
+        "ACCOUNTING", "HR_SPECIALIST", "SYSTEM_AUTOMATION", "SECURITY_REVIEW", "SECURITY_GUARD",
+        "INDUSTRIAL_SAFETY", "MANAGER", "FINANCE"
+      ];
+      if (!allowedRoles.includes(userRoleName)) {
+        console.log("Invalid user role for workflow approvals:", userRoleName);
+        return [];
+      }
+      console.log("User role name (uppercase):", userRoleName);
 
       // Admin can see all requests that have pending approvals
-      if (userRoleName === "admin") {
+      if (userRoleName === "ADMIN") {
         return db.workflowRequest.findMany({
           where: {
             status: {
@@ -170,10 +180,7 @@ export const workflowRouter = router({
           approvals: {
             some: {
               status: "PENDING",
-              role: {
-                equals: userRoleName,
-                mode: "insensitive",
-              },
+              role: userRoleName as any,
             },
           },
         },

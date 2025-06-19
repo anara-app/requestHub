@@ -2,7 +2,7 @@ import { z } from "zod";
 import { protectedPermissionProcedure, router } from "../../trpc/trpc";
 import { TRPCError } from "@trpc/server";
 import { db } from "../../common/prisma";
-import { RequestStatus } from "@prisma/client";
+import { RequestStatus, WorkflowRole } from "@prisma/client";
 
 // Helper function to create audit trail entries
 async function createAuditTrail(
@@ -34,7 +34,7 @@ const createTemplateSchema = z.object({
   description: z.string().optional(),
   steps: z.array(
     z.object({
-      role: z.string(),
+      role: z.nativeEnum(WorkflowRole),
       type: z.string(),
       label: z.string(),
     })

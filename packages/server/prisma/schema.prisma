@@ -228,7 +228,7 @@ model WorkflowApproval {
   status      ApprovalStatus @default(PENDING)
   comment     String?
   step        Int
-  role        String
+  role        WorkflowRole
   actionLabel String?
 
   requestId String
@@ -305,4 +305,32 @@ enum AuditAction {
   REQUEST_CANCELLED
   COMMENT_ADDED
   STEP_PROGRESSED
+}
+
+enum WorkflowRole {
+  // Initiator - can be from any department
+  INITIATOR
+
+  // Supervisors and Management
+  INITIATOR_SUPERVISOR  // Direct manager of initiator
+  CEO                   // Генеральный директор
+
+  // Specialized Roles
+  LEGAL                 // Юрист - Юридический отдел
+  PROCUREMENT           // Сотрудник отдела закупок
+  FINANCE_MANAGER       // Финансовый менеджер
+  ACCOUNTING            // Бухгалтерия
+  HR_SPECIALIST         // HR Specialist - Отдел по работе с персоналом
+
+  // IT and Automation
+  SYSTEM_AUTOMATION     // Система - Сектор информационных технологий
+
+  // Security and Safety
+  SECURITY_REVIEW       // Служба безопасности
+  SECURITY_GUARD        // Охрана / Пост охраны
+  INDUSTRIAL_SAFETY     // Служба промышленной, экологической безопасности
+
+  // Legacy roles for backward compatibility
+  MANAGER               // General manager role
+  FINANCE               // General finance role
 }
