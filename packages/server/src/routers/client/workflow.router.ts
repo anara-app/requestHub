@@ -91,10 +91,21 @@ export const workflowRouter = router({
 
   // Get user's requests
   getMyRequests: protectedPermissionProcedure(["READ_WORKFLOW_REQUESTS" as any])
-    .query(async ({ ctx }) => {
-      return db.workflowRequest.findMany({
+    .input(z.object({
+      search: z.string().optional(),
+      cursor: z.string().optional(),
+      limit: z.number().min(1).max(100).default(10),
+    }))
+    .query(async ({ ctx, input }) => {
+      const requests = await db.workflowRequest.findMany({
         where: {
           initiatorId: ctx.user.id,
+          ...(input.search && {
+            OR: [
+              { title: { contains: input.search, mode: "insensitive" } },
+              { description: { contains: input.search, mode: "insensitive" } },
+            ],
+          }),
         },
         include: {
           template: true,
@@ -109,6 +120,7 @@ export const workflowRouter = router({
           createdAt: "desc",
         },
       });
+      return requests;
     }),
 
   // Get requests that need user's approval - filtered by user's role

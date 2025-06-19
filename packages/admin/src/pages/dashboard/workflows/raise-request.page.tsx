@@ -17,6 +17,8 @@ export default function RaiseRequestPage() {
   const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
   const [modalOpened, setModalOpened] = useState(false);
 
+  const utils = trpc.useUtils();
+
   const form = useForm<RequestFormData>({
     initialValues: {
       templateId: "",
@@ -41,6 +43,7 @@ export default function RaiseRequestPage() {
       setModalOpened(false);
       form.reset();
       setSelectedTemplate(null);
+      utils.nextClient.workflows.getMyRequests.invalidate();
     },
     onError: (error: any) => {
       notifications.show({

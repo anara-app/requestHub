@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
+import { auth } from "../src/lib/auth";
 
 const prisma = new PrismaClient();
 
@@ -86,14 +87,24 @@ async function createSampleUsers() {
         console.log(`✅ Created role: ${role.name}`);
       }
 
-      // Hash the password with bcrypt
-      const hashedPassword = await bcrypt.hash(userData.password, 10);
-
-      // Create the user directly in the database
-      const user = await prisma.user.create({
-        data: {
+      // Use better-auth to create the user properly
+      // This will handle password hashing correctly for better-auth
+      const authUser = await auth.api.signUpEmail({
+        body: {
           email: userData.email,
-          password: hashedPassword,
+          password: userData.password,
+          name: `${userData.firstName} ${userData.lastName}`,
+        },
+      });
+
+      if (!authUser) {
+        throw new Error(`Failed to create auth user for ${userData.email}`);
+      }
+
+      // Update the user with additional fields that better-auth doesn't handle
+      const user = await prisma.user.update({
+        where: { email: userData.email },
+        data: {
           firstName: userData.firstName,
           lastName: userData.lastName,
           emailVerified: true,

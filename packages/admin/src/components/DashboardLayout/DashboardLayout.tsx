@@ -107,9 +107,16 @@ export default function DashboardLayout() {
 
   const { data } = trpc.admin.users.getMyPermissions.useQuery();
 
-  const handleLogout = () => {
-    authClient.signOut();
-    navigate(ROUTES.AUTH);
+  const handleLogout = async () => {
+    try {
+      await authClient.signOut();
+      // Clear any cached data
+      window.location.href = ROUTES.AUTH;
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Force logout even if server request fails
+      window.location.href = ROUTES.AUTH;
+    }
   };
 
   const currentPath = location.pathname.split("/")?.[1]

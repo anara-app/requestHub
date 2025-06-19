@@ -22,7 +22,7 @@ export default function PendingApprovalsPage() {
   const myPendingRequests = requests || [];
 
   return (
-    <Container size="xl">
+    <Container size="xl" my="lg">
       <Title order={1} mb="lg">Pending Approvals</Title>
 
       <Paper shadow="sm" p="lg" withBorder pos="relative">
