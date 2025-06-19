@@ -36,6 +36,11 @@ model User {
   comments          WorkflowComment[]
   auditTrails       WorkflowAuditTrail[]
 
+  // Template audit relations
+  createdTemplates  WorkflowTemplate[] @relation("TemplateCreator")
+  updatedTemplates  WorkflowTemplate[] @relation("TemplateUpdater")
+  archivedTemplates WorkflowTemplate[] @relation("TemplateArchiver")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -187,6 +192,18 @@ model WorkflowTemplate {
   description String?
   steps       Json    @default("[]")
   isActive    Boolean @default(true)
+  archivedAt  DateTime?
+  archiveReason String?
+
+  // Audit fields
+  createdById String
+  createdBy   User   @relation("TemplateCreator", fields: [createdById], references: [id])
+  
+  updatedById String?
+  updatedBy   User?   @relation("TemplateUpdater", fields: [updatedById], references: [id])
+  
+  archivedById String?
+  archivedBy   User?   @relation("TemplateArchiver", fields: [archivedById], references: [id])
 
   requests WorkflowRequest[]
 
@@ -303,6 +320,8 @@ enum AuditAction {
   REQUEST_APPROVED
   REQUEST_REJECTED
   REQUEST_CANCELLED
+  TEMPLATE_ARCHIVED
+  TEMPLATE_RESTORED
   COMMENT_ADDED
   STEP_PROGRESSED
 }

@@ -18,8 +18,9 @@ import {
   Paper,
   Divider,
   Select,
+  Switch,
 } from "@mantine/core";
-import { Eye, Plus, Edit, Trash2, X, User, ArrowRight, CheckCircle } from "lucide-react";
+import { Eye, Plus, Edit, Archive, RotateCcw, X, User, ArrowRight, CheckCircle } from "lucide-react";
 import { notifications } from "@mantine/notifications";
 import Container from "../../../components/Container";
 import PageTitle from "../../../components/PageTitle";
@@ -56,16 +57,23 @@ export default function WorkflowTemplatesPage() {
   const [opened, setOpened] = useState(false);
   const [viewOpened, setViewOpened] = useState(false);
   const [editOpened, setEditOpened] = useState(false);
-  const [deleteOpened, setDeleteOpened] = useState(false);
+  const [archiveOpened, setArchiveOpened] = useState(false);
+  const [restoreOpened, setRestoreOpened] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
+  const [showArchived, setShowArchived] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [steps, setSteps] = useState<WorkflowStep[]>([{ role: "MANAGER", type: "approval", label: "" }]);
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editSteps, setEditSteps] = useState<WorkflowStep[]>([{ role: "MANAGER", type: "approval", label: "" }]);
+  const [archiveReason, setArchiveReason] = useState("");
 
   const { data: templates, isLoading, refetch } = trpc.admin.workflows.getTemplates.useQuery();
+  const { data: archivedTemplates, refetch: refetchArchived } = trpc.admin.workflows.getArchivedTemplates.useQuery();
+
+  // Filter templates based on showArchived toggle
+  const displayTemplates = showArchived ? archivedTemplates || [] : templates || [];
 
   const createTemplateMutation = trpc.admin.workflows.createTemplate.useMutation({
     onSuccess: () => {
@@ -97,34 +105,48 @@ export default function WorkflowTemplatesPage() {
     },
   });
 
-  const deleteTemplateMutation = trpc.admin.workflows.deleteTemplate.useMutation({
+  const archiveTemplateMutation = trpc.admin.workflows.archiveTemplate.useMutation({
     onSuccess: () => {
-      setDeleteOpened(false);
+      setArchiveOpened(false);
       setSelectedTemplate(null);
+      setArchiveReason("");
       refetch();
+      refetchArchived();
       notifications.show({
         title: "Success",
-        message: "Workflow template deleted successfully",
+        message: "Workflow template archived successfully",
         color: "green",
       });
     },
     onError: (error: any) => {
       notifications.show({
         title: "Error",
-        message: error.message || "Failed to delete workflow template",
+        message: error.message || "Failed to archive workflow template",
         color: "red",
       });
     },
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    createTemplateMutation.mutate({
-      name,
-      description,
-      steps,
-    });
-  };
+  const restoreTemplateMutation = trpc.admin.workflows.restoreTemplate.useMutation({
+    onSuccess: () => {
+      setRestoreOpened(false);
+      setSelectedTemplate(null);
+      refetch();
+      refetchArchived();
+      notifications.show({
+        title: "Success",
+        message: "Workflow template restored successfully",
+        color: "green",
+      });
+    },
+    onError: (error: any) => {
+      notifications.show({
+        title: "Error",
+        message: error.message || "Failed to restore workflow template",
+        color: "red",
+      });
+    },
+  });
 
   const addStep = () => {
     setSteps([...steps, { role: "MANAGER", type: "approval", label: "" }]);
@@ -137,58 +159,9 @@ export default function WorkflowTemplatesPage() {
   };
 
   const updateStep = (index: number, field: keyof WorkflowStep, value: string) => {
-    const newSteps = [...steps];
-    newSteps[index] = { ...newSteps[index], [field]: value };
-    setSteps(newSteps);
-  };
-
-  const handleViewTemplate = (template: any) => {
-    setSelectedTemplate(template);
-    setViewOpened(true);
-  };
-
-  const handleEditTemplate = (template: any) => {
-    setSelectedTemplate(template);
-    setEditName(template.name);
-    setEditDescription(template.description || "");
-    setEditSteps(JSON.parse(template.steps || "[]"));
-    setEditOpened(true);
-  };
-
-  const handleEditSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Validate form
-    if (!editName.trim()) {
-      notifications.show({
-        title: "Validation Error",
-        message: "Template name is required",
-        color: "red",
-      });
-      return;
-    }
-
-    // Validate steps
-    const hasEmptySteps = editSteps.some(step => !step.role.trim() || !step.label.trim());
-    if (hasEmptySteps) {
-      notifications.show({
-        title: "Validation Error",
-        message: "All steps must have a role and label",
-        color: "red",
-      });
-      return;
-    }
-
-    if (selectedTemplate) {
-      updateTemplateMutation.mutate({
-        id: selectedTemplate.id,
-        data: {
-          name: editName,
-          description: editDescription,
-          steps: editSteps,
-        },
-      });
-    }
+    const updatedSteps = [...steps];
+    updatedSteps[index] = { ...updatedSteps[index], [field]: value };
+    setSteps(updatedSteps);
   };
 
   const addEditStep = () => {
@@ -202,435 +175,556 @@ export default function WorkflowTemplatesPage() {
   };
 
   const updateEditStep = (index: number, field: keyof WorkflowStep, value: string) => {
-    const newSteps = [...editSteps];
-    newSteps[index] = { ...newSteps[index], [field]: value };
-    setEditSteps(newSteps);
+    const updatedSteps = [...editSteps];
+    updatedSteps[index] = { ...updatedSteps[index], [field]: value };
+    setEditSteps(updatedSteps);
   };
 
-  const hasUnsavedChanges = () => {
-    if (!selectedTemplate) return false;
-    
-    const originalSteps = JSON.parse(selectedTemplate.steps || "[]");
-    return (
-      editName !== selectedTemplate.name ||
-      editDescription !== (selectedTemplate.description || "") ||
-      JSON.stringify(editSteps) !== JSON.stringify(originalSteps)
-    );
+  const handleCreate = () => {
+    if (!name.trim()) return;
+
+    createTemplateMutation.mutate({
+      name,
+      description,
+      steps,
+    });
   };
 
-  const handleEditClose = () => {
-    if (hasUnsavedChanges()) {
-      const confirmed = window.confirm("You have unsaved changes. Are you sure you want to close?");
-      if (!confirmed) return;
-    }
-    setEditOpened(false);
-    setSelectedTemplate(null);
-  };
-
-  const handleDeleteTemplate = (template: any) => {
+  const handleEdit = (template: any) => {
     setSelectedTemplate(template);
-    setDeleteOpened(true);
-  };
+    setEditName(template.name);
+    setEditDescription(template.description || "");
 
-  const handleDeleteConfirm = () => {
-    if (selectedTemplate) {
-      deleteTemplateMutation.mutate({
-        id: selectedTemplate.id,
-      });
+    try {
+      const parsedSteps = JSON.parse(template.steps);
+      setEditSteps(parsedSteps);
+    } catch (error) {
+      setEditSteps([{ role: "MANAGER", type: "approval", label: "" }]);
     }
+
+    setEditOpened(true);
   };
 
-  const rows = templates?.map((template: any) => (
-    <Table.Tr key={template.id}>
-      <Table.Td>{template.name}</Table.Td>
-      <Table.Td>{template.description || "-"}</Table.Td>
-      <Table.Td>
-        <Badge color={template.isActive ? "green" : "red"}>
-          {template.isActive ? "Active" : "Inactive"}
-        </Badge>
-      </Table.Td>
-      <Table.Td>{JSON.parse(template.steps || "[]").length} steps</Table.Td>
-      <Table.Td>
-        <Group gap="xs">
-          <ActionIcon 
-            variant="light" 
-            size="sm"
-            onClick={() => handleViewTemplate(template)}
-          >
-            <Eye size={14} />
-          </ActionIcon>
-          <ActionIcon 
-            variant="light" 
-            size="sm" 
-            color="yellow"
-            onClick={() => handleEditTemplate(template)}
-          >
-            <Edit size={14} />
-          </ActionIcon>
-          <ActionIcon 
-            variant="light" 
-            size="sm" 
-            color="red"
-            onClick={() => handleDeleteTemplate(template)}
-          >
-            <Trash2 size={14} />
-          </ActionIcon>
-        </Group>
-      </Table.Td>
-    </Table.Tr>
-  ));
+  const handleUpdate = () => {
+    if (!selectedTemplate || !editName.trim()) return;
+
+    updateTemplateMutation.mutate({
+      id: selectedTemplate.id,
+      data: {
+        name: editName,
+        description: editDescription,
+        steps: editSteps,
+      },
+    });
+  };
+
+  const handleArchive = (template: any) => {
+    setSelectedTemplate(template);
+    setArchiveOpened(true);
+  };
+
+  const confirmArchive = () => {
+    if (!selectedTemplate) return;
+
+    archiveTemplateMutation.mutate({
+      id: selectedTemplate.id,
+      reason: archiveReason,
+    });
+  };
+
+  const handleRestore = (template: any) => {
+    setSelectedTemplate(template);
+    setRestoreOpened(true);
+  };
+
+  const confirmRestore = () => {
+    if (!selectedTemplate) return;
+
+    restoreTemplateMutation.mutate({
+      id: selectedTemplate.id,
+    });
+  };
+
+  const handleView = (template: any) => {
+    setSelectedTemplate(template);
+    setViewOpened(true);
+  };
+
+  if (isLoading) {
+    return (
+      <Container>
+        <Center style={{ height: 400 }}>
+          <Loader size="lg" />
+        </Center>
+      </Container>
+    );
+  }
 
   return (
     <Container>
-      <PageTitle
-        title="Workflow Templates"
-        right={
-          <Button leftSection={<Plus size={14} />} onClick={() => setOpened(true)}>
+      <Group justify="space-between" align="center" mb="lg">
+        <PageTitle title="Workflow Templates" />
+        <Group>
+          <Switch
+            label={showArchived ? "Show Active" : "Show Archived"}
+            checked={showArchived}
+            onChange={(event) => setShowArchived(event.currentTarget.checked)}
+          />
+          <Button leftSection={<Plus size={16} />} onClick={() => setOpened(true)}>
             Create Template
           </Button>
-        }
-      />
+        </Group>
+      </Group>
 
-      <Box>
-        {isLoading && (
-          <Center>
-            <Loader />
-          </Center>
-        )}
+      {displayTemplates.length === 0 ? (
+        <Center style={{ height: 200 }}>
+          <Text c="dimmed">
+            {showArchived ? "No archived templates found" : "No workflow templates found. Create one to get started."}
+          </Text>
+        </Center>
+      ) : (
+        <ScrollArea>
+          <Table striped highlightOnHover>
+            <Table.Thead>
+              <Table.Tr>
+                <Table.Th>Name</Table.Th>
+                <Table.Th>Description</Table.Th>
+                <Table.Th>Steps</Table.Th>
+                <Table.Th>Status</Table.Th>
+                <Table.Th>Created By</Table.Th>
+                {showArchived && <Table.Th>Archived Date</Table.Th>}
+                {showArchived && <Table.Th>Archived By</Table.Th>}
+                <Table.Th>Actions</Table.Th>
+              </Table.Tr>
+            </Table.Thead>
+            <Table.Tbody>
+              {displayTemplates.map((template: any) => {
+                let steps: any[] = [];
+                try {
+                  steps = JSON.parse(template.steps);
+                } catch (error) {
+                  steps = [];
+                }
 
-        {templates && (
-          <ScrollArea>
-            <Table mb="md" withTableBorder>
-              <Table.Thead>
-                <Table.Tr>
-                  <Table.Th>Name</Table.Th>
-                  <Table.Th>Description</Table.Th>
-                  <Table.Th>Status</Table.Th>
-                  <Table.Th>Steps</Table.Th>
-                  <Table.Th>Actions</Table.Th>
-                </Table.Tr>
-              </Table.Thead>
-              <Table.Tbody>{rows}</Table.Tbody>
-            </Table>
-          </ScrollArea>
-        )}
-      </Box>
+                return (
+                  <Table.Tr key={template.id}>
+                    <Table.Td>
+                      <Text fw={500}>{template.name}</Text>
+                    </Table.Td>
+                    <Table.Td>
+                      <Text size="sm" c="dimmed" lineClamp={2}>
+                        {template.description || "No description"}
+                      </Text>
+                    </Table.Td>
+                    <Table.Td>
+                      <Badge variant="light">{steps.length} steps</Badge>
+                    </Table.Td>
+                    <Table.Td>
+                      <Badge color={template.isActive ? "green" : "gray"} variant="light">
+                        {template.isActive ? "Active" : "Archived"}
+                      </Badge>
+                    </Table.Td>
+                    <Table.Td>
+                      <Text size="sm" c="dimmed">
+                        {template.createdBy
+                          ? `${template.createdBy.firstName || ''} ${template.createdBy.lastName || ''}`.trim() || template.createdBy.email
+                          : "Unknown"
+                        }
+                      </Text>
+                    </Table.Td>
+                    {showArchived && (
+                      <Table.Td>
+                        <Text size="sm" c="dimmed">
+                          {template.archivedAt
+                            ? new Date(template.archivedAt).toLocaleDateString()
+                            : "N/A"
+                          }
+                        </Text>
+                      </Table.Td>
+                    )}
+                    {showArchived && (
+                      <Table.Td>
+                        <Text size="sm" c="dimmed">
+                          {template.archivedBy
+                            ? `${template.archivedBy.firstName || ''} ${template.archivedBy.lastName || ''}`.trim() || template.archivedBy.email
+                            : "N/A"
+                          }
+                        </Text>
+                      </Table.Td>
+                    )}
+                    <Table.Td>
+                      <Group gap={4}>
+                        <ActionIcon
+                          variant="subtle"
+                          onClick={() => handleView(template)}
+                          title="View Template"
+                        >
+                          <Eye size={16} />
+                        </ActionIcon>
+                        {template.isActive && (
+                          <>
+                            <ActionIcon
+                              variant="subtle"
+                              onClick={() => handleEdit(template)}
+                              title="Edit Template"
+                            >
+                              <Edit size={16} />
+                            </ActionIcon>
+                            <ActionIcon
+                              variant="subtle"
+                              color="red"
+                              onClick={() => handleArchive(template)}
+                              title="Archive Template"
+                            >
+                              <Archive size={16} />
+                            </ActionIcon>
+                          </>
+                        )}
+                        {!template.isActive && (
+                          <ActionIcon
+                            variant="subtle"
+                            color="green"
+                            onClick={() => handleRestore(template)}
+                            title="Restore Template"
+                          >
+                            <RotateCcw size={16} />
+                          </ActionIcon>
+                        )}
+                      </Group>
+                    </Table.Td>
+                  </Table.Tr>
+                );
+              })}
+            </Table.Tbody>
+          </Table>
+        </ScrollArea>
+      )}
 
-      <Modal
-        opened={opened}
-        onClose={() => setOpened(false)}
-        title="Create Workflow Template"
-        size="lg"
-      >
-        <form onSubmit={handleSubmit}>
-          <Stack gap="md">
-            <TextInput
-              label="Template Name"
-              placeholder="Enter template name"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+      {/* Create Template Modal */}
+      <Modal opened={opened} onClose={() => setOpened(false)} title="Create Workflow Template" size="lg">
+        <Stack gap="md">
+          <TextInput
+            label="Template Name"
+            placeholder="Enter template name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+          />
+          <Textarea
+            label="Description"
+            placeholder="Enter template description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
 
-            <Textarea
-              label="Description"
-              placeholder="Enter template description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
-
-            <Box>
-              <Text fw={500} mb="sm">
-                Workflow Steps
-              </Text>
-              {steps.map((step, index) => (
-                                  <Group key={index} mb="sm" align="end">
-                    <Select
-                      label="Role"
-                      placeholder="Select a role"
-                      required
-                      data={WORKFLOW_ROLES}
-                      value={step.role}
-                      onChange={(value) => updateStep(index, "role", value || "")}
-                      searchable
-                      style={{ minWidth: 250 }}
-                    />
-                  <TextInput
-                    label="Label"
-                    placeholder="e.g., Manager Approval"
-                    required
-                    value={step.label}
-                    onChange={(e) => updateStep(index, "label", e.target.value)}
-                  />
-                  <ActionIcon
-                    color="red"
-                    variant="light"
-                    onClick={() => removeStep(index)}
-                    disabled={steps.length === 1}
-                  >
-                    <X size={14} />
-                  </ActionIcon>
-                </Group>
-              ))}
-              <Button variant="light" onClick={addStep}>
-                Add Step
-              </Button>
-            </Box>
-
-            <Group justify="flex-end">
-              <Button variant="outline" onClick={() => setOpened(false)}>
-                Cancel
-              </Button>
-              <Button type="submit" loading={createTemplateMutation.isPending}>
-                Create Template
-              </Button>
+          <Text fw={500}>Workflow Steps</Text>
+          {steps.map((step, index) => (
+            <Group key={index} align="end">
+              <Select
+                label={`Step ${index + 1} Role`}
+                data={WORKFLOW_ROLES}
+                value={step.role}
+                onChange={(value) => updateStep(index, "role", value || "MANAGER")}
+                style={{ flex: 1 }}
+              />
+              <TextInput
+                label="Step Label"
+                placeholder="Enter step label"
+                value={step.label}
+                onChange={(e) => updateStep(index, "label", e.target.value)}
+                style={{ flex: 1 }}
+              />
+              {steps.length > 1 && (
+                <ActionIcon color="red" onClick={() => removeStep(index)}>
+                  <X size={16} />
+                </ActionIcon>
+              )}
             </Group>
-          </Stack>
-        </form>
+          ))}
+
+          <Button variant="outline" onClick={addStep}>
+            Add Step
+          </Button>
+
+          <Group justify="flex-end">
+            <Button variant="outline" onClick={() => setOpened(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleCreate} loading={createTemplateMutation.isPending}>
+              Create Template
+            </Button>
+          </Group>
+        </Stack>
       </Modal>
 
-      {/* View Template Modal */}
+      {/* Archive Template Modal */}
       <Modal
-        opened={viewOpened}
-        onClose={() => setViewOpened(false)}
-        title={selectedTemplate ? `Template: ${selectedTemplate.name}` : "Template Details"}
-        size="md"
-      >
-        {selectedTemplate && (
-          <Stack gap="lg">
-            {/* Template Info */}
-            <Paper p="md" withBorder>
-              <Stack gap="sm">
-                <Group justify="space-between" align="flex-start">
-                  <Box>
-                    <Text fw={600} size="lg">{selectedTemplate.name}</Text>
-                    {selectedTemplate.description && (
-                      <Text size="sm" c="dimmed" mt={4}>
-                        {selectedTemplate.description}
-                      </Text>
-                    )}
-                  </Box>
-                  <Badge color={selectedTemplate.isActive ? "green" : "red"} variant="light">
-                    {selectedTemplate.isActive ? "Active" : "Inactive"}
-                  </Badge>
-                </Group>
-              </Stack>
-            </Paper>
-
-            {/* Workflow Steps */}
-            <Box>
-              <Text fw={500} size="md" mb="md">
-                Approval Flow
-              </Text>
-              <Paper p="md" withBorder>
-                <Timeline bulletSize={28} lineWidth={2}>
-                  {JSON.parse(selectedTemplate.steps || "[]").map((step: WorkflowStep, index: number) => (
-                    <Timeline.Item
-                      key={index}
-                      bullet={<User size={16} />}
-                      title={step.label}
-                      color="blue"
-                    >
-                      <Group gap="xs" mt={4}>
-                        <Badge variant="outline" size="sm">
-                          {step.role}
-                        </Badge>
-                        <Text size="xs" c="dimmed">
-                          Step {index + 1}
-                        </Text>
-                      </Group>
-                      <Text size="sm" c="dimmed" mt={4}>
-                        Requires approval from <strong>{step.role}</strong> role
-                      </Text>
-                    </Timeline.Item>
-                  ))}
-                </Timeline>
-              </Paper>
-            </Box>
-
-            {/* Summary */}
-            <Paper p="md" withBorder bg="gray.0">
-              <Group justify="space-between">
-                <Box>
-                  <Text size="sm" fw={500}>Total Steps</Text>
-                  <Text size="lg" fw={600} c="blue">
-                    {JSON.parse(selectedTemplate.steps || "[]").length}
-                  </Text>
-                </Box>
-                <Box>
-                  <Text size="sm" fw={500}>Roles Involved</Text>
-                  <Text size="lg" fw={600} c="green">
-                    {new Set(JSON.parse(selectedTemplate.steps || "[]").map((s: WorkflowStep) => s.role)).size}
-                  </Text>
-                </Box>
-                <Box>
-                  <Text size="sm" fw={500}>Status</Text>
-                  <Text size="lg" fw={600} c={selectedTemplate.isActive ? "green" : "red"}>
-                    {selectedTemplate.isActive ? "Active" : "Inactive"}
-                  </Text>
-                </Box>
-              </Group>
-            </Paper>
-
-            {/* Roles List */}
-            <Box>
-              <Text fw={500} size="sm" mb="sm" c="dimmed">
-                Involved Roles
-              </Text>
-              <Group gap="xs">
-                {Array.from(new Set(JSON.parse(selectedTemplate.steps || "[]").map((s: WorkflowStep) => s.role))).map((role) => (
-                  <Badge key={role as string} variant="filled" size="sm">
-                    {role as string}
-                  </Badge>
-                ))}
-              </Group>
-                         </Box>
-           </Stack>
-         )}
-       </Modal>
-
-      {/* Edit Template Modal */}
-      <Modal
-        opened={editOpened}
-        onClose={handleEditClose}
-        title={selectedTemplate ? `Edit Template: ${selectedTemplate.name}` : "Edit Template"}
-        size="lg"
-      >
-        {selectedTemplate && (
-          <form onSubmit={handleEditSubmit}>
-            <Stack gap="md">
-              <TextInput
-                label="Template Name"
-                placeholder="Enter template name"
-                required
-                value={editName}
-                onChange={(e) => setEditName(e.target.value)}
-              />
-
-              <Textarea
-                label="Description"
-                placeholder="Enter template description"
-                value={editDescription}
-                onChange={(e) => setEditDescription(e.target.value)}
-              />
-
-              <Box>
-                <Text fw={500} mb="sm">
-                  Workflow Steps
-                </Text>
-                {editSteps.map((step, index) => (
-                                     <Group key={index} mb="sm" align="end">
-                     <Select
-                       label="Role"
-                       placeholder="Select a role"
-                       required
-                       data={WORKFLOW_ROLES}
-                       value={step.role}
-                       onChange={(value) => updateEditStep(index, "role", value || "")}
-                       searchable
-                       style={{ minWidth: 250 }}
-                     />
-                    <TextInput
-                      label="Label"
-                      placeholder="e.g., Manager Approval"
-                      required
-                      value={step.label}
-                      onChange={(e) => updateEditStep(index, "label", e.target.value)}
-                    />
-                    <ActionIcon
-                      color="red"
-                      variant="light"
-                      onClick={() => removeEditStep(index)}
-                      disabled={editSteps.length === 1}
-                    >
-                      <X size={14} />
-                    </ActionIcon>
-                  </Group>
-                ))}
-                <Button variant="light" onClick={addEditStep}>
-                  Add Step
-                </Button>
-              </Box>
-
-              {/* Preview of changes */}
-              <Paper p="md" withBorder bg="blue.0">
-                <Text fw={500} size="sm" mb="sm" c="blue">
-                  Preview: Updated Approval Flow
-                </Text>
-                <Timeline bulletSize={20} lineWidth={2}>
-                  {editSteps.map((step, index) => (
-                    <Timeline.Item
-                      key={index}
-                      bullet={<User size={12} />}
-                      title={step.label || `Step ${index + 1}`}
-                      color="blue"
-                    >
-                      <Group gap="xs">
-                        <Badge variant="outline" size="xs">
-                          {step.role || "Role not set"}
-                        </Badge>
-                        <Text size="xs" c="dimmed">
-                          Step {index + 1}
-                        </Text>
-                      </Group>
-                    </Timeline.Item>
-                  ))}
-                </Timeline>
-              </Paper>
-
-                             <Group justify="flex-end">
-                 <Button variant="outline" onClick={handleEditClose}>
-                   Cancel
-                 </Button>
-                <Button type="submit" loading={updateTemplateMutation.isPending}>
-                  Update Template
-                </Button>
-              </Group>
-            </Stack>
-          </form>
-                   )}
-         </Modal>
-
-      {/* Delete Confirmation Modal */}
-      <Modal
-        opened={deleteOpened}
-        onClose={() => setDeleteOpened(false)}
-        title="Delete Workflow Template"
+        opened={archiveOpened}
+        onClose={() => setArchiveOpened(false)}
+        title="Archive Template"
         size="md"
       >
         {selectedTemplate && (
           <Stack gap="md">
             <Text>
-              Are you sure you want to delete the workflow template{" "}
+              Are you sure you want to archive the template{" "}
               <Text component="span" fw={700} c="red">
                 "{selectedTemplate.name}"
               </Text>
               ?
             </Text>
-            
+
             <Text size="sm" c="dimmed">
-              This action cannot be undone. All workflow requests using this template will be affected.
+              Archived templates will no longer be available for creating new requests, but existing requests using this template will continue to work.
             </Text>
 
+            <Textarea
+              label="Reason for archiving (optional)"
+              placeholder="Enter a reason for archiving this template..."
+              value={archiveReason}
+              onChange={(e) => setArchiveReason(e.target.value)}
+            />
+
             <Group justify="flex-end" gap="sm">
-              <Button 
-                variant="outline" 
-                onClick={() => setDeleteOpened(false)}
-                disabled={deleteTemplateMutation.isPending}
+              <Button
+                variant="outline"
+                onClick={() => setArchiveOpened(false)}
+                disabled={archiveTemplateMutation.isPending}
               >
                 Cancel
               </Button>
-              <Button 
-                color="red" 
-                onClick={handleDeleteConfirm}
-                loading={deleteTemplateMutation.isPending}
+              <Button
+                color="red"
+                onClick={confirmArchive}
+                loading={archiveTemplateMutation.isPending}
               >
-                Delete Template
+                Archive Template
               </Button>
             </Group>
           </Stack>
         )}
       </Modal>
-      </Container>
-    );
-  } 
+
+      {/* Restore Template Modal */}
+      <Modal
+        opened={restoreOpened}
+        onClose={() => setRestoreOpened(false)}
+        title="Restore Template"
+        size="md"
+      >
+        {selectedTemplate && (
+          <Stack gap="md">
+            <Text>
+              Are you sure you want to restore the template{" "}
+              <Text component="span" fw={700} c="green">
+                "{selectedTemplate.name}"
+              </Text>
+              ?
+            </Text>
+
+            <Text size="sm" c="dimmed">
+              This will make the template available for creating new workflow requests again.
+            </Text>
+
+            <Group justify="flex-end" gap="sm">
+              <Button
+                variant="outline"
+                onClick={() => setRestoreOpened(false)}
+                disabled={restoreTemplateMutation.isPending}
+              >
+                Cancel
+              </Button>
+              <Button
+                color="green"
+                onClick={confirmRestore}
+                loading={restoreTemplateMutation.isPending}
+              >
+                Restore Template
+              </Button>
+            </Group>
+          </Stack>
+        )}
+      </Modal>
+
+      {/* View Template Modal */}
+      <Modal opened={viewOpened} onClose={() => setViewOpened(false)} title="Template Details" size="lg">
+        {selectedTemplate && (
+          <Stack gap="md">
+            <div>
+              <Text fw={500}>Template Name</Text>
+              <Text>{selectedTemplate.name}</Text>
+            </div>
+
+            <div>
+              <Text fw={500}>Description</Text>
+              <Text>{selectedTemplate.description || "No description"}</Text>
+            </div>
+
+            <div>
+              <Text fw={500}>Status</Text>
+              <Badge color={selectedTemplate.isActive ? "green" : "gray"} variant="light">
+                {selectedTemplate.isActive ? "Active" : "Archived"}
+              </Badge>
+            </div>
+
+            {!selectedTemplate.isActive && selectedTemplate.archiveReason && (
+              <div>
+                <Text fw={500}>Archive Reason</Text>
+                <Text size="sm" c="dimmed">{selectedTemplate.archiveReason}</Text>
+              </div>
+            )}
+
+            <Divider />
+
+            <div>
+              <Text fw={500} mb="sm">Workflow Steps</Text>
+              <Timeline>
+                {(() => {
+                  try {
+                    const steps = JSON.parse(selectedTemplate.steps);
+                    return steps.map((step: any, index: number) => (
+                      <Timeline.Item
+                        key={index}
+                        bullet={<User size={14} />}
+                        title={`Step ${index + 1}: ${step.label || step.role}`}
+                      >
+                        <Text size="sm" c="dimmed">
+                          Role: {WORKFLOW_ROLES.find(r => r.value === step.role)?.label || step.role}
+                        </Text>
+                        <Text size="sm" c="dimmed">
+                          Type: {step.type}
+                        </Text>
+                      </Timeline.Item>
+                    ));
+                  } catch (error) {
+                    return <Text c="red">Error parsing workflow steps</Text>;
+                  }
+                })()}
+              </Timeline>
+            </div>
+
+            <Divider />
+
+            {/* Audit Trail Section */}
+            <div>
+              <Text fw={500} mb="sm">Audit Trail</Text>
+              <Paper p="md" withBorder>
+                <Stack gap="sm">
+                  {/* Created */}
+                  <Group justify="space-between">
+                    <Group gap="xs">
+                      <Badge color="blue" variant="light" size="sm">Created</Badge>
+                      <Text size="sm">
+                        by {selectedTemplate.createdBy
+                          ? `${selectedTemplate.createdBy.firstName || ''} ${selectedTemplate.createdBy.lastName || ''}`.trim() || selectedTemplate.createdBy.email
+                          : "Unknown"
+                        }
+                      </Text>
+                    </Group>
+                    <Text size="sm" c="dimmed">
+                      {new Date(selectedTemplate.createdAt).toLocaleString()}
+                    </Text>
+                  </Group>
+
+                  {/* Last Updated */}
+                  {selectedTemplate.updatedAt && selectedTemplate.updatedAt !== selectedTemplate.createdAt && (
+                    <Group justify="space-between">
+                      <Group gap="xs">
+                        <Badge color="yellow" variant="light" size="sm">Updated</Badge>
+                        <Text size="sm">
+                          by {selectedTemplate.updatedBy
+                            ? `${selectedTemplate.updatedBy.firstName || ''} ${selectedTemplate.updatedBy.lastName || ''}`.trim() || selectedTemplate.updatedBy.email
+                            : "Unknown"
+                          }
+                        </Text>
+                      </Group>
+                      <Text size="sm" c="dimmed">
+                        {new Date(selectedTemplate.updatedAt).toLocaleString()}
+                      </Text>
+                    </Group>
+                  )}
+
+                  {/* Archived */}
+                  {!selectedTemplate.isActive && selectedTemplate.archivedAt && (
+                    <Group justify="space-between">
+                      <Group gap="xs">
+                        <Badge color="red" variant="light" size="sm">Archived</Badge>
+                        <Text size="sm">
+                          by {selectedTemplate.archivedBy
+                            ? `${selectedTemplate.archivedBy.firstName || ''} ${selectedTemplate.archivedBy.lastName || ''}`.trim() || selectedTemplate.archivedBy.email
+                            : "Unknown"
+                          }
+                        </Text>
+                      </Group>
+                      <Text size="sm" c="dimmed">
+                        {new Date(selectedTemplate.archivedAt).toLocaleString()}
+                      </Text>
+                    </Group>
+                  )}
+                </Stack>
+              </Paper>
+            </div>
+
+          </Stack>
+        )}
+      </Modal>
+
+      {/* Edit Template Modal */}
+      <Modal opened={editOpened} onClose={() => setEditOpened(false)} title="Edit Workflow Template" size="lg">
+        <Stack gap="md">
+          <TextInput
+            label="Template Name"
+            placeholder="Enter template name"
+            value={editName}
+            onChange={(e) => setEditName(e.target.value)}
+            required
+          />
+          <Textarea
+            label="Description"
+            placeholder="Enter template description"
+            value={editDescription}
+            onChange={(e) => setEditDescription(e.target.value)}
+          />
+
+          <Text fw={500}>Workflow Steps</Text>
+          {editSteps.map((step, index) => (
+            <Group key={index} align="end">
+              <Select
+                label={`Step ${index + 1} Role`}
+                data={WORKFLOW_ROLES}
+                value={step.role}
+                onChange={(value) => updateEditStep(index, "role", value || "MANAGER")}
+                style={{ flex: 1 }}
+              />
+              <TextInput
+                label="Step Label"
+                placeholder="Enter step label"
+                value={step.label}
+                onChange={(e) => updateEditStep(index, "label", e.target.value)}
+                style={{ flex: 1 }}
+              />
+              {editSteps.length > 1 && (
+                <ActionIcon color="red" onClick={() => removeEditStep(index)}>
+                  <X size={16} />
+                </ActionIcon>
+              )}
+            </Group>
+          ))}
+
+          <Button variant="outline" onClick={addEditStep}>
+            Add Step
+          </Button>
+
+          <Group justify="flex-end">
+            <Button variant="outline" onClick={() => setEditOpened(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleUpdate} loading={updateTemplateMutation.isPending}>
+              Update Template
+            </Button>
+          </Group>
+        </Stack>
+      </Modal>
+    </Container>
+  );
+} 

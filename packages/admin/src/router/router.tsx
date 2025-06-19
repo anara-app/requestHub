@@ -26,7 +26,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: "",
-        element: <Navigate to={ROUTES.DASHBOARD_USERS} />,
+        element: <Navigate to={ROUTES.DASHBOARD_MY_REQUESTS} />,
       },
       /* Users */
       {

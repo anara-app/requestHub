@@ -5,6 +5,7 @@ import { trpc } from "../../../common/trpc";
 import { ROUTES } from "../../../router/routes";
 import LoadingPlaceholder from "../../../components/LoadingPlaceholder";
 import EmptyPlaceholder from "../../../components/EmptyPlaceholder";
+import { Eye } from "lucide-react";
 
 type RequestStatus = "DRAFT" | "PENDING" | "IN_PROGRESS" | "APPROVED" | "REJECTED" | "CANCELLED";
 
@@ -122,6 +123,7 @@ export default function WorkflowRequestsPage() {
                 <Button 
                   size="xs" 
                   variant="light"
+                  leftSection={<Eye size={14} />}
                   onClick={() => navigate(`${ROUTES.DASHBOARD_WORKFLOW_REQUEST}/${request.id}`)}
                 >
                   View Details

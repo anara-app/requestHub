@@ -4,6 +4,40 @@ import { TRPCError } from "@trpc/server";
 import { db } from "../../common/prisma";
 import { RequestStatus, WorkflowRole } from "@prisma/client";
 
+// Type definitions for templates with user relations
+type TemplateWithUsers = {
+  id: string;
+  name: string;
+  description: string | null;
+  steps: any;
+  isActive: boolean;
+  archivedAt: Date | null;
+  archiveReason: string | null;
+  createdById: string;
+  updatedById: string | null;
+  archivedById: string | null;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: {
+    id: string;
+    firstName: string | null;
+    lastName: string | null;
+    email: string;
+  };
+  updatedBy?: {
+    id: string;
+    firstName: string | null;
+    lastName: string | null;
+    email: string;
+  } | null;
+  archivedBy?: {
+    id: string;
+    firstName: string | null;
+    lastName: string | null;
+    email: string;
+  } | null;
+};
+
 // Helper function to create audit trail entries
 async function createAuditTrail(
   requestId: string,
@@ -42,10 +76,29 @@ const createTemplateSchema = z.object({
 });
 
 export const adminWorkflowRouter = router({
-  // Get all workflow templates
+  // Get active workflow templates only
   getTemplates: protectedPermissionProcedure(["MANAGE_WORKFLOW_TEMPLATES" as any])
-    .query(async () => {
-      return db.workflowTemplate.findMany({
+    .query(async (): Promise<TemplateWithUsers[]> => {
+      return await (db.workflowTemplate.findMany as any)({
+        where: { isActive: true },
+        include: {
+          createdBy: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+          updatedBy: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+        },
         orderBy: { createdAt: "desc" },
       });
     }),
@@ -53,13 +106,26 @@ export const adminWorkflowRouter = router({
   // Create a new workflow template
   createTemplate: protectedPermissionProcedure(["MANAGE_WORKFLOW_TEMPLATES" as any])
     .input(createTemplateSchema)
-    .mutation(async ({ input }) => {
-      return db.workflowTemplate.create({
+    .mutation(async ({ input, ctx }): Promise<TemplateWithUsers> => {
+      const userId = ctx.user.id;
+      
+      return await (db.workflowTemplate.create as any)({
         data: {
           name: input.name,
           description: input.description,
           steps: JSON.stringify(input.steps),
           isActive: true,
+          createdById: userId,
+        },
+        include: {
+          createdBy: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
         },
       });
     }),
@@ -72,7 +138,9 @@ export const adminWorkflowRouter = router({
         data: createTemplateSchema,
       })
     )
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }): Promise<TemplateWithUsers> => {
+      const userId = ctx.user.id;
+      
       const template = await db.workflowTemplate.findUnique({
         where: { id: input.id },
       });
@@ -84,22 +152,47 @@ export const adminWorkflowRouter = router({
         });
       }
 
-      return db.workflowTemplate.update({
+      return await (db.workflowTemplate.update as any)({
         where: { id: input.id },
         data: {
           name: input.data.name,
           description: input.data.description,
           steps: JSON.stringify(input.data.steps),
+          updatedById: userId,
+        },
+        include: {
+          createdBy: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+          updatedBy: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
         },
       });
     }),
 
-  // Delete workflow template
-  deleteTemplate: protectedPermissionProcedure(["MANAGE_WORKFLOW_TEMPLATES" as any])
-    .input(z.object({ id: z.string().uuid() }))
-    .mutation(async ({ input }) => {
+  // Archive workflow template (soft delete)
+  archiveTemplate: protectedPermissionProcedure(["MANAGE_WORKFLOW_TEMPLATES" as any])
+    .input(z.object({ 
+      id: z.string().uuid(),
+      reason: z.string().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      const { id, reason } = input;
+      const userId = ctx.user.id;
+
       const template = await db.workflowTemplate.findUnique({
-        where: { id: input.id },
+        where: { id },
       });
 
       if (!template) {
@@ -109,8 +202,127 @@ export const adminWorkflowRouter = router({
         });
       }
 
-      return db.workflowTemplate.delete({
-        where: { id: input.id },
+      if (!template.isActive) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Template is already archived",
+        });
+      }
+
+      // Archive the template
+      const updatedTemplate: TemplateWithUsers = await (db.workflowTemplate.update as any)({
+        where: { id },
+        data: {
+          isActive: false,
+          archivedAt: new Date(),
+          archiveReason: reason,
+          archivedById: userId,
+        },
+        include: {
+          createdBy: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+          archivedBy: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+        },
+      });
+
+      return updatedTemplate;
+    }),
+
+  // Restore archived template
+  restoreTemplate: protectedPermissionProcedure(["MANAGE_WORKFLOW_TEMPLATES" as any])
+    .input(z.object({ 
+      id: z.string().uuid(),
+    }))
+    .mutation(async ({ input }) => {
+      const { id } = input;
+
+      const template = await db.workflowTemplate.findUnique({
+        where: { id },
+      });
+
+      if (!template) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Workflow template not found",
+        });
+      }
+
+      if (template.isActive) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Template is already active",
+        });
+      }
+
+      // Restore the template
+      const updatedTemplate: TemplateWithUsers = await (db.workflowTemplate.update as any)({
+        where: { id },
+        data: {
+          isActive: true,
+          archivedAt: null,
+          archiveReason: null,
+          archivedById: null,
+        },
+        include: {
+          createdBy: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+        },
+      });
+
+      return updatedTemplate;
+    }),
+
+  // Get archived templates
+  getArchivedTemplates: protectedPermissionProcedure(["MANAGE_WORKFLOW_TEMPLATES" as any])
+    .query(async (): Promise<TemplateWithUsers[]> => {
+      return await (db.workflowTemplate.findMany as any)({
+        where: { isActive: false },
+        include: {
+          createdBy: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+          updatedBy: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+          archivedBy: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
+        },
+        orderBy: { archivedAt: "desc" },
       });
     }),
 
@@ -166,7 +378,9 @@ export const adminWorkflowRouter = router({
     .input(z.object({ id: z.string() }))
     .query(async ({ input }) => {
       const request = await db.workflowRequest.findUnique({
-        where: { id: input.id },
+        where: { 
+          id: input.id,
+        },
         include: {
           template: true,
           initiator: {
@@ -471,4 +685,6 @@ export const adminWorkflowRouter = router({
 
       return auditTrails;
     }),
+
+
 }); 
