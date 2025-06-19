@@ -25,8 +25,10 @@ import Container from "../../../components/Container";
 import PageTitle from "../../../components/PageTitle";
 import { trpc } from "../../../common/trpc";
 
+type WorkflowRoleEnum = "INITIATOR" | "INITIATOR_SUPERVISOR" | "CEO" | "LEGAL" | "PROCUREMENT" | "FINANCE_MANAGER" | "ACCOUNTING" | "HR_SPECIALIST" | "SYSTEM_AUTOMATION" | "SECURITY_REVIEW" | "SECURITY_GUARD" | "INDUSTRIAL_SAFETY" | "MANAGER" | "FINANCE";
+
 interface WorkflowStep {
-  role: string;
+  role: WorkflowRoleEnum;
   type: string;
   label: string;
 }
@@ -54,13 +56,14 @@ export default function WorkflowTemplatesPage() {
   const [opened, setOpened] = useState(false);
   const [viewOpened, setViewOpened] = useState(false);
   const [editOpened, setEditOpened] = useState(false);
+  const [deleteOpened, setDeleteOpened] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [steps, setSteps] = useState<WorkflowStep[]>([{ role: "", type: "approval", label: "" }]);
+  const [steps, setSteps] = useState<WorkflowStep[]>([{ role: "MANAGER", type: "approval", label: "" }]);
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
-  const [editSteps, setEditSteps] = useState<WorkflowStep[]>([{ role: "", type: "approval", label: "" }]);
+  const [editSteps, setEditSteps] = useState<WorkflowStep[]>([{ role: "MANAGER", type: "approval", label: "" }]);
 
   const { data: templates, isLoading, refetch } = trpc.admin.workflows.getTemplates.useQuery();
 
@@ -69,7 +72,7 @@ export default function WorkflowTemplatesPage() {
       setOpened(false);
       setName("");
       setDescription("");
-      setSteps([{ role: "", type: "approval", label: "" }]);
+      setSteps([{ role: "MANAGER", type: "approval", label: "" }]);
       refetch();
     },
   });
@@ -94,6 +97,26 @@ export default function WorkflowTemplatesPage() {
     },
   });
 
+  const deleteTemplateMutation = trpc.admin.workflows.deleteTemplate.useMutation({
+    onSuccess: () => {
+      setDeleteOpened(false);
+      setSelectedTemplate(null);
+      refetch();
+      notifications.show({
+        title: "Success",
+        message: "Workflow template deleted successfully",
+        color: "green",
+      });
+    },
+    onError: (error: any) => {
+      notifications.show({
+        title: "Error",
+        message: error.message || "Failed to delete workflow template",
+        color: "red",
+      });
+    },
+  });
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     createTemplateMutation.mutate({
@@ -104,7 +127,7 @@ export default function WorkflowTemplatesPage() {
   };
 
   const addStep = () => {
-    setSteps([...steps, { role: "", type: "approval", label: "" }]);
+    setSteps([...steps, { role: "MANAGER", type: "approval", label: "" }]);
   };
 
   const removeStep = (index: number) => {
@@ -169,7 +192,7 @@ export default function WorkflowTemplatesPage() {
   };
 
   const addEditStep = () => {
-    setEditSteps([...editSteps, { role: "", type: "approval", label: "" }]);
+    setEditSteps([...editSteps, { role: "MANAGER", type: "approval", label: "" }]);
   };
 
   const removeEditStep = (index: number) => {
@@ -204,6 +227,19 @@ export default function WorkflowTemplatesPage() {
     setSelectedTemplate(null);
   };
 
+  const handleDeleteTemplate = (template: any) => {
+    setSelectedTemplate(template);
+    setDeleteOpened(true);
+  };
+
+  const handleDeleteConfirm = () => {
+    if (selectedTemplate) {
+      deleteTemplateMutation.mutate({
+        id: selectedTemplate.id,
+      });
+    }
+  };
+
   const rows = templates?.map((template: any) => (
     <Table.Tr key={template.id}>
       <Table.Td>{template.name}</Table.Td>
@@ -231,7 +267,12 @@ export default function WorkflowTemplatesPage() {
           >
             <Edit size={14} />
           </ActionIcon>
-          <ActionIcon variant="light" size="sm" color="red">
+          <ActionIcon 
+            variant="light" 
+            size="sm" 
+            color="red"
+            onClick={() => handleDeleteTemplate(template)}
+          >
             <Trash2 size={14} />
           </ActionIcon>
         </Group>
@@ -547,8 +588,49 @@ export default function WorkflowTemplatesPage() {
               </Group>
             </Stack>
           </form>
+                   )}
+         </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        opened={deleteOpened}
+        onClose={() => setDeleteOpened(false)}
+        title="Delete Workflow Template"
+        size="md"
+      >
+        {selectedTemplate && (
+          <Stack gap="md">
+            <Text>
+              Are you sure you want to delete the workflow template{" "}
+              <Text component="span" fw={700} c="red">
+                "{selectedTemplate.name}"
+              </Text>
+              ?
+            </Text>
+            
+            <Text size="sm" c="dimmed">
+              This action cannot be undone. All workflow requests using this template will be affected.
+            </Text>
+
+            <Group justify="flex-end" gap="sm">
+              <Button 
+                variant="outline" 
+                onClick={() => setDeleteOpened(false)}
+                disabled={deleteTemplateMutation.isPending}
+              >
+                Cancel
+              </Button>
+              <Button 
+                color="red" 
+                onClick={handleDeleteConfirm}
+                loading={deleteTemplateMutation.isPending}
+              >
+                Delete Template
+              </Button>
+            </Group>
+          </Stack>
         )}
       </Modal>
-    </Container>
-  );
-} 
+      </Container>
+    );
+  } 
