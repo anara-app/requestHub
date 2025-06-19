@@ -277,35 +277,53 @@ export default function WorkflowRequestPage() {
           
           <Timeline active={request.currentStep} bulletSize={24} lineWidth={2}>
             {templateSteps.map((step: any, index: number) => {
-              const approval = request.approvals.find((a: any) => a.step === index);
-              const isActive = index === request.currentStep;
-              const isCompleted = index < request.currentStep;
+              // Find the most recent approval for this step (in case of duplicates)
+              const stepApprovals = request.approvals.filter((a: any) => a.step === index);
+              const approval = stepApprovals.length > 0 
+                ? stepApprovals.reduce((latest, current) => 
+                    new Date(current.updatedAt) > new Date(latest.updatedAt) ? current : latest
+                  )
+                : null;
+              const isActive = index === request.currentStep && request.status !== "APPROVED" && request.status !== "REJECTED";
+              const isCompleted = index < request.currentStep || approval?.status === "APPROVED";
+              
+              // Determine status based on completion and approval
+              let stepStatus = 'not-started';
+              let bullet = <User size={16} />;
+              let color = 'gray';
+              
+              if (isCompleted) {
+                stepStatus = 'completed';
+                bullet = <CheckCircle size={16} />;
+                color = 'green';
+              } else if (approval?.status === "REJECTED") {
+                stepStatus = 'rejected';
+                bullet = <XCircle size={16} />;
+                color = 'red';
+              } else if (isActive) {
+                stepStatus = 'active';
+                bullet = <Clock size={16} />;
+                color = 'blue';
+              }
               
               return (
                 <Timeline.Item 
                   key={index}
-                  bullet={
-                    approval?.status === "APPROVED" ? <CheckCircle size={16} /> :
-                    approval?.status === "REJECTED" ? <XCircle size={16} /> :
-                    isActive ? <Clock size={16} /> : <User size={16} />
-                  }
+                  bullet={bullet}
                   title={`${step.role} - ${step.label}`}
-                  color={
-                    approval?.status === "APPROVED" ? "green" :
-                    approval?.status === "REJECTED" ? "red" :
-                    isActive ? "blue" : "gray"
-                  }
+                  color={color}
                 >
                   <Text size="sm" c="dimmed">
-                    {approval?.status === "APPROVED" && approval.comment && (
+                    {stepStatus === 'completed' && approval?.comment && (
                       <>Approved: {approval.comment}</>
                     )}
-                    {approval?.status === "REJECTED" && approval.comment && (
+                    {stepStatus === 'completed' && !approval?.comment && "Completed"}
+                    {stepStatus === 'rejected' && approval?.comment && (
                       <>Rejected: {approval.comment}</>
                     )}
-                    {approval?.status === "PENDING" && "Pending approval"}
-                    {!approval && !isActive && "Not started"}
-                    {!approval && isActive && "Awaiting action"}
+                    {stepStatus === 'rejected' && !approval?.comment && "Rejected"}
+                    {stepStatus === 'active' && "Pending approval"}
+                    {stepStatus === 'not-started' && "Not started"}
                   </Text>
                   {approval?.approver && (
                     <Text size="xs" c="dimmed">

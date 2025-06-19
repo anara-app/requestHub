@@ -14,8 +14,11 @@ import {
   Group,
   ActionIcon,
   Stack,
+  Timeline,
+  Paper,
+  Divider,
 } from "@mantine/core";
-import { Eye, Plus, Edit, Trash2, X } from "lucide-react";
+import { Eye, Plus, Edit, Trash2, X, User, ArrowRight, CheckCircle } from "lucide-react";
 import Container from "../../../components/Container";
 import PageTitle from "../../../components/PageTitle";
 import { trpc } from "../../../common/trpc";
@@ -28,6 +31,8 @@ interface WorkflowStep {
 
 export default function WorkflowTemplatesPage() {
   const [opened, setOpened] = useState(false);
+  const [viewOpened, setViewOpened] = useState(false);
+  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [steps, setSteps] = useState<WorkflowStep[]>([{ role: "", type: "approval", label: "" }]);
@@ -69,6 +74,11 @@ export default function WorkflowTemplatesPage() {
     setSteps(newSteps);
   };
 
+  const handleViewTemplate = (template: any) => {
+    setSelectedTemplate(template);
+    setViewOpened(true);
+  };
+
   const rows = templates?.map((template: any) => (
     <Table.Tr key={template.id}>
       <Table.Td>{template.name}</Table.Td>
@@ -81,7 +91,11 @@ export default function WorkflowTemplatesPage() {
       <Table.Td>{JSON.parse(template.steps || "[]").length} steps</Table.Td>
       <Table.Td>
         <Group gap="xs">
-          <ActionIcon variant="light" size="sm">
+          <ActionIcon 
+            variant="light" 
+            size="sm"
+            onClick={() => handleViewTemplate(template)}
+          >
             <Eye size={14} />
           </ActionIcon>
           <ActionIcon variant="light" size="sm" color="yellow">
@@ -199,6 +213,106 @@ export default function WorkflowTemplatesPage() {
             </Group>
           </Stack>
         </form>
+      </Modal>
+
+      {/* View Template Modal */}
+      <Modal
+        opened={viewOpened}
+        onClose={() => setViewOpened(false)}
+        title={selectedTemplate ? `Template: ${selectedTemplate.name}` : "Template Details"}
+        size="md"
+      >
+        {selectedTemplate && (
+          <Stack gap="lg">
+            {/* Template Info */}
+            <Paper p="md" withBorder>
+              <Stack gap="sm">
+                <Group justify="space-between" align="flex-start">
+                  <Box>
+                    <Text fw={600} size="lg">{selectedTemplate.name}</Text>
+                    {selectedTemplate.description && (
+                      <Text size="sm" c="dimmed" mt={4}>
+                        {selectedTemplate.description}
+                      </Text>
+                    )}
+                  </Box>
+                  <Badge color={selectedTemplate.isActive ? "green" : "red"} variant="light">
+                    {selectedTemplate.isActive ? "Active" : "Inactive"}
+                  </Badge>
+                </Group>
+              </Stack>
+            </Paper>
+
+            {/* Workflow Steps */}
+            <Box>
+              <Text fw={500} size="md" mb="md">
+                Approval Flow
+              </Text>
+              <Paper p="md" withBorder>
+                <Timeline bulletSize={28} lineWidth={2}>
+                  {JSON.parse(selectedTemplate.steps || "[]").map((step: WorkflowStep, index: number) => (
+                    <Timeline.Item
+                      key={index}
+                      bullet={<User size={16} />}
+                      title={step.label}
+                      color="blue"
+                    >
+                      <Group gap="xs" mt={4}>
+                        <Badge variant="outline" size="sm">
+                          {step.role}
+                        </Badge>
+                        <Text size="xs" c="dimmed">
+                          Step {index + 1}
+                        </Text>
+                      </Group>
+                      <Text size="sm" c="dimmed" mt={4}>
+                        Requires approval from <strong>{step.role}</strong> role
+                      </Text>
+                    </Timeline.Item>
+                  ))}
+                </Timeline>
+              </Paper>
+            </Box>
+
+            {/* Summary */}
+            <Paper p="md" withBorder bg="gray.0">
+              <Group justify="space-between">
+                <Box>
+                  <Text size="sm" fw={500}>Total Steps</Text>
+                  <Text size="lg" fw={600} c="blue">
+                    {JSON.parse(selectedTemplate.steps || "[]").length}
+                  </Text>
+                </Box>
+                <Box>
+                  <Text size="sm" fw={500}>Roles Involved</Text>
+                  <Text size="lg" fw={600} c="green">
+                    {new Set(JSON.parse(selectedTemplate.steps || "[]").map((s: WorkflowStep) => s.role)).size}
+                  </Text>
+                </Box>
+                <Box>
+                  <Text size="sm" fw={500}>Status</Text>
+                  <Text size="lg" fw={600} c={selectedTemplate.isActive ? "green" : "red"}>
+                    {selectedTemplate.isActive ? "Active" : "Inactive"}
+                  </Text>
+                </Box>
+              </Group>
+            </Paper>
+
+            {/* Roles List */}
+            <Box>
+              <Text fw={500} size="sm" mb="sm" c="dimmed">
+                Involved Roles
+              </Text>
+              <Group gap="xs">
+                {Array.from(new Set(JSON.parse(selectedTemplate.steps || "[]").map((s: WorkflowStep) => s.role))).map((role) => (
+                  <Badge key={role as string} variant="filled" size="sm">
+                    {role as string}
+                  </Badge>
+                ))}
+              </Group>
+            </Box>
+          </Stack>
+        )}
       </Modal>
     </Container>
   );
