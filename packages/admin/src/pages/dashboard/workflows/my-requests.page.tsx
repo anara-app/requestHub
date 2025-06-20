@@ -1,10 +1,11 @@
-import { Container, Title, Paper, Text, Badge, Group, Stack, Button, Table, LoadingOverlay, TextInput } from "@mantine/core";
+import { Container, Paper, Text, Badge, Group, Stack, Button, Table, LoadingOverlay, TextInput } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { trpc } from "../../../common/trpc";
 import { ROUTES } from "../../../router/routes";
 import { Eye, Plus } from "lucide-react";
 import { useState } from "react";
 import { useDebouncedValue } from "@mantine/hooks";
+import PageTitle from "../../../components/PageTitle";
 
 
 export default function MyRequestsPage() {
@@ -46,9 +47,10 @@ export default function MyRequestsPage() {
   };
 
   return (
-    <Container size="xl">
-      <Group justify="space-between" my="lg">
-        <Title order={1}>My Requests</Title>
+    <Container size="xl" my="lg">
+      <PageTitle>My Requests</PageTitle>
+      <Group justify="space-between" mb="lg">
+        <div></div>
         <Group>
           <TextInput value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search" />
         <Button 

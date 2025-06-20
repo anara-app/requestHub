@@ -1,8 +1,9 @@
-import { Container, Title, Paper, Text, Badge, Group, Stack, Button, Table, LoadingOverlay, Alert } from "@mantine/core";
+import { Container, Paper, Text, Badge, Group, Stack, Button, Table, LoadingOverlay, Alert } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { trpc } from "../../../common/trpc";
 import { ROUTES } from "../../../router/routes";
 import { Eye, Clock, CheckCircle, AlertCircle } from "lucide-react";
+import PageTitle from "../../../components/PageTitle";
 
 export default function PendingApprovalsPage() {
   const navigate = useNavigate();
@@ -23,7 +24,7 @@ export default function PendingApprovalsPage() {
 
   return (
     <Container size="xl" my="lg">
-      <Title order={1} mb="lg">Pending Approvals</Title>
+      <PageTitle>Pending Approvals</PageTitle>
 
       <Paper shadow="sm" p="lg" withBorder pos="relative">
         <LoadingOverlay visible={isLoading} />

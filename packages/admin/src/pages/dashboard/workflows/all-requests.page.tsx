@@ -1,4 +1,4 @@
-import { Container, Title, Table, Badge, Text, Button, Group, Pagination, Select, TextInput } from "@mantine/core";
+import { Container, Table, Badge, Text, Button, Group, Pagination, Select, TextInput } from "@mantine/core";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { trpc } from "../../../common/trpc";
@@ -6,10 +6,11 @@ import { ROUTES } from "../../../router/routes";
 import LoadingPlaceholder from "../../../components/LoadingPlaceholder";
 import EmptyPlaceholder from "../../../components/EmptyPlaceholder";
 import { Eye } from "lucide-react";
+import PageTitle from "../../../components/PageTitle";
 
 type RequestStatus = "DRAFT" | "PENDING" | "IN_PROGRESS" | "APPROVED" | "REJECTED" | "CANCELLED";
 
-export default function WorkflowRequestsPage() {
+export default function AllRequestsPage() {
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<RequestStatus | "">("");
@@ -28,9 +29,7 @@ export default function WorkflowRequestsPage() {
   if (!response?.requests?.length) {
     return (
       <Container size="xl" my="lg">
-        <Title order={1} mb="lg">
-          Workflow Requests
-        </Title>
+        <PageTitle>All Requests</PageTitle>
         <EmptyPlaceholder
           title="No workflow requests found"
           subtitle="No workflow requests have been submitted yet."
@@ -52,10 +51,8 @@ export default function WorkflowRequestsPage() {
   };
 
   return (
-    <Container size="xl">
-      <Title order={1} mb="lg">
-        Workflow Requests
-      </Title>
+    <Container size="xl" my="lg">
+      <PageTitle>All Requests</PageTitle>
 
       <Group mb="md">
         <TextInput

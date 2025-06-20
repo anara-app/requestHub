@@ -259,7 +259,7 @@ export default function WorkflowTemplatesPage() {
   return (
     <Container>
       <Group justify="space-between" align="center" mb="lg">
-        <PageTitle title="Workflow Templates" />
+        <PageTitle>Workflow Templates</PageTitle>
         <Group>
           <Switch
             label={showArchived ? "Show Active" : "Show Archived"}

@@ -10,7 +10,7 @@ import RolesPage from "../pages/dashboard/roles/roles";
 import RolePage from "../pages/dashboard/roles/role";
 import GalleryPage from "../pages/dashboard/gallery/gallery.page";
 import WorkflowTemplatesPage from "../pages/dashboard/workflows/workflow-templates.page";
-import WorkflowRequestsPage from "../pages/dashboard/workflows/workflow-requests.page";
+import AllRequestsPage from "../pages/dashboard/workflows/all-requests.page";
 import WorkflowRequestPage from "../pages/dashboard/workflows/workflow-request.page";
 import RaiseRequestPage from "../pages/dashboard/workflows/raise-request.page";
 import MyRequestsPage from "../pages/dashboard/workflows/my-requests.page";
@@ -63,10 +63,10 @@ export const router = createBrowserRouter([
         path: ROUTES.DASHBOARD_WORKFLOW_TEMPLATES,
         element: <WorkflowTemplatesPage />,
       },
-      {
-        path: ROUTES.DASHBOARD_WORKFLOW_REQUESTS,
-        element: <WorkflowRequestsPage />,
-      },
+          {
+      path: ROUTES.DASHBOARD_ALL_REQUESTS,
+      element: <AllRequestsPage />,
+    },
       {
         path: `${ROUTES.DASHBOARD_WORKFLOW_REQUEST}/:id`,
         element: <WorkflowRequestPage />,
