@@ -12,7 +12,7 @@ const createRequestSchema = z.object({
   data: z.record(z.any()).optional(),
 });
 
-export const workflowRouter = router({
+export const workflowRouter: any = router({
   // Get available workflow templates
   getTemplates: protectedPermissionProcedure(["CREATE_WORKFLOW_REQUEST" as any])
     .query(async () => {

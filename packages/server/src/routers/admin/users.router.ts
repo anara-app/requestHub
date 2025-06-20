@@ -447,4 +447,82 @@ export const usersRouter = router({
         role: user.role?.name,
       }));
     }),
+
+  // Get complete organization hierarchy
+  getOrganizationHierarchy: protectedPermissionProcedure(["READ_USERS"])
+    .query(async () => {
+      // Get all users with their manager and role information
+      const users = await (db.user.findMany as any)({
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          phoneNumber: true,
+          createdAt: true,
+          managerId: true,
+          role: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+        orderBy: [
+          { firstName: "asc" },
+          { lastName: "asc" },
+        ],
+      });
+
+      // Build hierarchy structure
+      const buildHierarchy = (parentId: string | null, visited: Set<string> = new Set()): any[] => {
+        return users
+          .filter((user: any) => {
+            // For top level, include self-managed users or users with no manager
+            if (parentId === null) {
+              return user.managerId === user.id || user.managerId === null;
+            }
+            // For subordinates, include users whose manager is the current parent
+            return user.managerId === parentId && user.id !== parentId;
+          })
+          .filter((user: any) => !visited.has(user.id)) // Prevent cycles
+          .map((user: any) => {
+            const newVisited = new Set(visited);
+            newVisited.add(user.id);
+            
+            return {
+              id: user.id,
+              firstName: user.firstName,
+              lastName: user.lastName,
+              email: user.email,
+              phoneNumber: user.phoneNumber,
+              createdAt: user.createdAt,
+              role: user.role,
+              managerId: user.managerId,
+              isSelfManaged: user.managerId === user.id,
+              subordinates: buildHierarchy(user.id, newVisited),
+            };
+          });
+      };
+
+      const hierarchy = buildHierarchy(null);
+
+      // Calculate statistics
+      const totalUsers = users.length;
+      const managersCount = users.filter((user: any) => 
+        users.some((u: any) => u.managerId === user.id && u.id !== user.id)
+      ).length;
+      const topLevelCount = hierarchy.length;
+      const rolesCount = new Set(users.filter((u: any) => u.role).map((u: any) => u.role!.name)).size;
+
+      return {
+        hierarchy,
+        statistics: {
+          totalUsers,
+          managersCount,
+          topLevelCount,
+          rolesCount,
+        },
+      };
+    }),
 });
