@@ -77,10 +77,10 @@ const NavItems: NavItemType[] = [
   },
   {
     icon: Workflow,
-    label: "Workflow Requests",
-    path: ROUTES.DASHBOARD_WORKFLOW_REQUESTS,
-    activePaths: [ROUTES.DASHBOARD_WORKFLOW_REQUESTS],
-    permissionRequired: "MANAGE_WORKFLOW_TEMPLATES" as any, // Only admins can see all workflow requests
+    label: "All Requests",
+    path: ROUTES.DASHBOARD_ALL_REQUESTS,
+    activePaths: [ROUTES.DASHBOARD_ALL_REQUESTS],
+    permissionRequired: "MANAGE_WORKFLOW_TEMPLATES" as any, // Only admins can see all requests
   },
   {
     icon: Users,
@@ -147,7 +147,7 @@ export default function DashboardLayout() {
         <AppShell.Header className="flex items-center justify-between px-6 border-b border-gray-200">
           <Group gap="md">
             <img className="h-8 w-auto" src={logo} alt="24.kg" />
-            <Text size="lg" fw={600} c="dark">
+            <Text size="lg" fw={600}>
               Partner Neft
             </Text>
           </Group>

@@ -1,4 +1,4 @@
-import { Container, Title, Paper, Text, Badge, Group, Stack, Button, Textarea, Card, Timeline, Divider, Alert } from "@mantine/core";
+import { Container, Paper, Text, Badge, Group, Stack, Button, Textarea, Card, Timeline, Divider, Alert } from "@mantine/core";
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "@mantine/form";
@@ -7,6 +7,7 @@ import { trpc } from "../../../common/trpc";
 import LoadingPlaceholder from "../../../components/LoadingPlaceholder";
 import AuditTrail from "../../../components/AuditTrail";
 import { CheckCircle, XCircle, Clock, MessageCircle, ArrowLeft, User } from "lucide-react";
+import PageTitle from "../../../components/PageTitle";
 
 export default function WorkflowRequestPage() {
   const { id } = useParams<{ id: string }>();
@@ -104,10 +105,8 @@ export default function WorkflowRequestPage() {
 
   if (!request) {
     return (
-      <Container size="xl">
-        <Title order={1} mb="lg">
-          Request Not Found
-        </Title>
+      <Container size="xl" my="lg">
+        <PageTitle>Request Not Found</PageTitle>
         <Text>The requested workflow request could not be found.</Text>
         <Button mt="md" onClick={() => navigate(-1)}>
           Go Back
@@ -191,16 +190,16 @@ export default function WorkflowRequestPage() {
   }
 
   return (
-    <Container size="xl">
+    <Container size="xl" my="lg">
       <Group mb="lg">
         <Button variant="subtle" leftSection={<ArrowLeft size={16} />} onClick={() => navigate(-1)}>
           Back to Requests
         </Button>
       </Group>
 
-      <Title order={1} mb="lg">
+      <PageTitle>
         {request.title}
-      </Title>
+      </PageTitle>
 
       <Stack gap="lg">
         {/* Request Overview */}

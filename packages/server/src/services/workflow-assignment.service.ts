@@ -135,7 +135,7 @@ export class WorkflowAssignmentService {
     for (const [index, step] of stepDefinitions.entries()) {
       const assigneeId = await this.resolveStepAssignee(step, initiatorId);
       
-      // Temporarily create approvals with minimal data until schema is fully synced
+      // Create approval with proper schema fields
       const approval = await db.workflowApproval.create({
         data: {
           requestId,
@@ -143,7 +143,10 @@ export class WorkflowAssignmentService {
           actionLabel: step.actionLabel,
           approverId: assigneeId, // Resolved user ID
           status: "PENDING",
-        } as any,
+          assigneeType: step.assigneeType,
+          roleBasedAssignee: step.roleBasedAssignee,
+          dynamicAssignee: step.dynamicAssignee,
+        },
       });
 
       approvals.push(approval);

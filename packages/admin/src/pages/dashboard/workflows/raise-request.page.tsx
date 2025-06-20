@@ -1,10 +1,11 @@
-import { Container, Title, Card, Text, Button, Group, Modal, TextInput, Textarea, Select, Stack } from "@mantine/core";
+import { Container, Card, Text, Button, Group, Modal, TextInput, Textarea, Select, Stack } from "@mantine/core";
 import { useState } from "react";
 import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { trpc } from "../../../common/trpc";
 import LoadingPlaceholder from "../../../components/LoadingPlaceholder";
 import EmptyPlaceholder from "../../../components/EmptyPlaceholder";
+import PageTitle from "../../../components/PageTitle";
 
 interface RequestFormData {
   templateId: string;
@@ -70,10 +71,8 @@ export default function RaiseRequestPage() {
 
   if (!templates?.length) {
     return (
-      <Container size="xl">
-        <Title order={1} mb="lg">
-          Raise Request
-        </Title>
+      <Container size="xl" my="lg">
+        <PageTitle>Raise Request</PageTitle>
         <EmptyPlaceholder
           title="No workflow templates available"
           subtitle="No workflow templates have been created yet. Contact your administrator."
@@ -83,10 +82,8 @@ export default function RaiseRequestPage() {
   }
 
   return (
-    <Container size="xl">
-      <Title order={1} mb="lg">
-        Raise Request
-      </Title>
+    <Container size="xl" my="lg">
+      <PageTitle>Raise Request</PageTitle>
 
       <Text size="sm" c="dimmed" mb="xl">
         Select a workflow template to start a new request. Each request will follow the approval process defined in the template.
