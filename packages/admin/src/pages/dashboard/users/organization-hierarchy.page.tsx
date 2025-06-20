@@ -477,57 +477,6 @@ export default function OrganizationHierarchyPage() {
         }
       />
       
-      {/* Statistics Cards */}
-      <Group mb="lg">
-        <Card withBorder p="md" style={{ flex: 1 }}>
-          <Group>
-            <Avatar color="blue" radius="xl">
-              <Users size={20} />
-            </Avatar>
-            <div>
-              <Text size="sm" c="dimmed">Total Users</Text>
-              <Text fw={700} size="lg">{statistics.totalUsers}</Text>
-            </div>
-          </Group>
-        </Card>
-        
-        <Card withBorder p="md" style={{ flex: 1 }}>
-          <Group>
-            <Avatar color="green" radius="xl">
-              <UserCheck size={20} />
-            </Avatar>
-            <div>
-              <Text size="sm" c="dimmed">Managers</Text>
-              <Text fw={700} size="lg">{statistics.managersCount}</Text>
-            </div>
-          </Group>
-        </Card>
-        
-        <Card withBorder p="md" style={{ flex: 1 }}>
-          <Group>
-            <Avatar color="orange" radius="xl">
-              <Building size={20} />
-            </Avatar>
-            <div>
-              <Text size="sm" c="dimmed">Top Level</Text>
-              <Text fw={700} size="lg">{statistics.topLevelCount}</Text>
-            </div>
-          </Group>
-        </Card>
-        
-        <Card withBorder p="md" style={{ flex: 1 }}>
-          <Group>
-            <Avatar color="purple" radius="xl">
-              <Briefcase size={20} />
-            </Avatar>
-            <div>
-              <Text size="sm" c="dimmed">Roles</Text>
-              <Text fw={700} size="lg">{statistics.rolesCount}</Text>
-            </div>
-          </Group>
-        </Card>
-      </Group>
-      
       {/* React Flow Organization Chart */}
       <ReactFlowProvider>
         <OrganizationFlow />

@@ -27,7 +27,7 @@ export default function WorkflowRequestsPage() {
 
   if (!response?.requests?.length) {
     return (
-      <Container size="xl">
+      <Container size="xl" my="lg">
         <Title order={1} mb="lg">
           Workflow Requests
         </Title>
