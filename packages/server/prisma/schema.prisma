@@ -31,6 +31,16 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
+  initiatedRequests WorkflowRequest[] @relation("RequestInitiator")
+  approvals         WorkflowApproval[]
+  comments          WorkflowComment[]
+  auditTrails       WorkflowAuditTrail[]
+
+  // Template audit relations
+  createdTemplates  WorkflowTemplate[] @relation("TemplateCreator")
+  updatedTemplates  WorkflowTemplate[] @relation("TemplateUpdater")
+  archivedTemplates WorkflowTemplate[] @relation("TemplateArchiver")
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -131,7 +141,8 @@ model MediaFile {
   width  Int? @default(0)
   height Int? @default(0)
 
-  users User[]
+  users     User[]
+  requests  WorkflowRequest[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -163,4 +174,182 @@ enum PermissionOperation {
   READ_GALLERY
   UPDATE_GALLERY
   DELETE_GALLERY
+
+  //Workflows
+  CREATE_WORKFLOW_REQUEST
+  READ_WORKFLOW_REQUESTS
+  UPDATE_WORKFLOW_REQUEST
+  DELETE_WORKFLOW_REQUEST
+  APPROVE_WORKFLOW_REQUEST
+  REJECT_WORKFLOW_REQUEST
+  MANAGE_WORKFLOW_TEMPLATES
+}
+
+model WorkflowTemplate {
+  id String @id @default(uuid())
+
+  name        String
+  description String?
+  steps       Json    @default("[]")
+  isActive    Boolean @default(true)
+  archivedAt  DateTime?
+  archiveReason String?
+
+  // Audit fields
+  createdById String
+  createdBy   User   @relation("TemplateCreator", fields: [createdById], references: [id])
+  
+  updatedById String?
+  updatedBy   User?   @relation("TemplateUpdater", fields: [updatedById], references: [id])
+  
+  archivedById String?
+  archivedBy   User?   @relation("TemplateArchiver", fields: [archivedById], references: [id])
+
+  requests WorkflowRequest[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("workflow_template")
+}
+
+model WorkflowRequest {
+  id String @id @default(uuid())
+
+  title       String
+  description String?
+  status      RequestStatus @default(PENDING)
+  data        Json         @default("{}")
+  currentStep Int          @default(0)
+
+  templateId String
+  template   WorkflowTemplate @relation(fields: [templateId], references: [id])
+
+  initiatorId String
+  initiator   User   @relation("RequestInitiator", fields: [initiatorId], references: [id])
+
+  approvals   WorkflowApproval[]
+  comments    WorkflowComment[]
+  auditTrails WorkflowAuditTrail[]
+  files       MediaFile[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("workflow_request")
+}
+
+model WorkflowApproval {
+  id String @id @default(uuid())
+
+  status      ApprovalStatus @default(PENDING)
+  comment     String?
+  step        Int
+  role        WorkflowRole
+  actionLabel String?
+
+  requestId String
+  request   WorkflowRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  approverId String?
+  approver   User?   @relation(fields: [approverId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("workflow_approval")
+}
+
+model WorkflowComment {
+  id String @id @default(uuid())
+
+  text String
+
+  requestId String
+  request   WorkflowRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  authorId String
+  author   User   @relation(fields: [authorId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("workflow_comment")
+}
+
+model WorkflowAuditTrail {
+  id String @id @default(uuid())
+
+  action      AuditAction
+  description String
+  details     String? // Optional additional context
+
+  requestId String
+  request   WorkflowRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@index([requestId])
+  @@index([userId])
+  @@index([createdAt])
+  @@map("workflow_audit_trail")
+}
+
+enum RequestStatus {
+  DRAFT
+  PENDING
+  IN_PROGRESS
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SKIPPED
+}
+
+enum AuditAction {
+  REQUEST_CREATED
+  REQUEST_SUBMITTED
+  REQUEST_APPROVED
+  REQUEST_REJECTED
+  REQUEST_CANCELLED
+  TEMPLATE_ARCHIVED
+  TEMPLATE_RESTORED
+  COMMENT_ADDED
+  STEP_PROGRESSED
+}
+
+enum WorkflowRole {
+  // Initiator - can be from any department
+  INITIATOR
+
+  // Supervisors and Management
+  INITIATOR_SUPERVISOR  // Direct manager of initiator
+  CEO                   // Генеральный директор
+
+  // Specialized Roles
+  LEGAL                 // Юрист - Юридический отдел
+  PROCUREMENT           // Сотрудник отдела закупок
+  FINANCE_MANAGER       // Финансовый менеджер
+  ACCOUNTING            // Бухгалтерия
+  HR_SPECIALIST         // HR Specialist - Отдел по работе с персоналом
+
+  // IT and Automation
+  SYSTEM_AUTOMATION     // Система - Сектор информационных технологий
+
+  // Security and Safety
+  SECURITY_REVIEW       // Служба безопасности
+  SECURITY_GUARD        // Охрана / Пост охраны
+  INDUSTRIAL_SAFETY     // Служба промышленной, экологической безопасности
+
+  // Legacy roles for backward compatibility
+  MANAGER               // General manager role
+  FINANCE               // General finance role
 }

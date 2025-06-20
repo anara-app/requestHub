@@ -10,10 +10,12 @@ export const auth = betterAuth({
     window: 10, // time window in seconds
     max: 100, // max requests in the window
   },
+  // for local development
+  trustedOrigins: ["http://localhost:8080", "http://localhost:5174"],
   advanced: {
     defaultCookieAttributes: {
-      sameSite: "None",
-      secure: true,
+      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
     },
     cookies: {
       session_token: {

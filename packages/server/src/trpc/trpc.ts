@@ -10,8 +10,17 @@ import { auth } from "../lib/auth";
 const t = initTRPC.context<Context>().create();
 
 const isAuthed = t.middleware(async ({ next, ctx }) => {
+  // Convert Fastify headers to Headers object for better-auth
+  const headers = new Headers();
+  Object.entries(ctx.req.headers).forEach(([key, value]) => {
+    if (value !== undefined) {
+      const headerValue = Array.isArray(value) ? value.join(', ') : String(value);
+      headers.set(key, headerValue);
+    }
+  });
+  
   const session = await auth.api.getSession({
-    headers: fromNodeHeaders(ctx.req.raw.headers),
+    headers: headers,
   });
 
   if (!session) {

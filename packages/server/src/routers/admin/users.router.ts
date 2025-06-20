@@ -194,6 +194,35 @@ export const usersRouter = router({
       }
     }),
 
+  getMe: protectedProcedure.query(async ({ ctx }) => {
+    const user = ctx.user;
+
+    if (!user?.id) {
+      throw new TRPCError({
+        code: "UNAUTHORIZED",
+        message: "User not found",
+      });
+    }
+
+    const userWithRole = await db.user.findUnique({
+      where: { id: user.id },
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        role: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+
+    return userWithRole;
+  }),
+
   getMyPermissions: protectedProcedure.query(async ({ ctx }) => {
     const user = ctx.user;
 

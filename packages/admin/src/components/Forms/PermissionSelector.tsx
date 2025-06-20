@@ -37,6 +37,23 @@ const PERMISSION_GROUPS: {
       { operation: "DELETE_GALLERY", description: "Удаление из галереи" },
     ],
   },
+  {
+    label: "Workflow Requests",
+    operations: [
+      { operation: "CREATE_WORKFLOW_REQUEST", description: "Создание новых запросов" },
+      { operation: "READ_WORKFLOW_REQUESTS", description: "Просмотр запросов" },
+      { operation: "UPDATE_WORKFLOW_REQUEST", description: "Редактирование запросов" },
+      { operation: "DELETE_WORKFLOW_REQUEST", description: "Удаление запросов" },
+      { operation: "APPROVE_WORKFLOW_REQUEST", description: "Одобрение запросов" },
+      { operation: "REJECT_WORKFLOW_REQUEST", description: "Отклонение запросов" },
+    ],
+  },
+  {
+    label: "Workflow Templates",
+    operations: [
+      { operation: "MANAGE_WORKFLOW_TEMPLATES", description: "Управление шаблонами workflow" },
+    ],
+  },
 ];
 
 interface PermissionSelectProps {

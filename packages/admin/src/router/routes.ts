@@ -9,4 +9,12 @@ export const ROUTES = {
   DASHBOARD_ROLES_ROLE: "/role",
 
   DASHBOARD_GALLERY: "/gallery",
+
+  DASHBOARD_WORKFLOW_TEMPLATES: "/workflow-templates",
+  DASHBOARD_WORKFLOW_TEMPLATE: "/workflow-template",
+  DASHBOARD_WORKFLOW_REQUESTS: "/workflow-requests",
+  DASHBOARD_WORKFLOW_REQUEST: "/workflow-request",
+  DASHBOARD_RAISE_REQUEST: "/raise-request",
+  DASHBOARD_MY_REQUESTS: "/my-requests",
+  DASHBOARD_PENDING_APPROVALS: "/pending-approvals",
 };

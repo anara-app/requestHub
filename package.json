@@ -40,9 +40,7 @@
   ],
   "dependencies": {
     "admin": "workspace:*",
-    "client": "workspace:*",
-    "server": "workspace:*",
-    "shadcn-admin": "workspace:*"
+    "server": "workspace:*"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^6.14.0",
