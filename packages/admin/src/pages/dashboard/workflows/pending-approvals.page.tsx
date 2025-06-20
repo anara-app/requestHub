@@ -1,14 +1,20 @@
-import { Container, Paper, Text, Badge, Group, Stack, Button, Table, LoadingOverlay, Alert } from "@mantine/core";
+import { Container, Paper, Text, Badge, Group, Stack, Button, Table, LoadingOverlay, Alert, TextInput } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { trpc } from "../../../common/trpc";
 import { ROUTES } from "../../../router/routes";
-import { Eye, Clock, CheckCircle, AlertCircle } from "lucide-react";
+import { Eye, Clock, CheckCircle, AlertCircle, Search } from "lucide-react";
+import { useState } from "react";
+import { useDebouncedValue } from "@mantine/hooks";
 import PageTitle from "../../../components/PageTitle";
 
 export default function PendingApprovalsPage() {
   const navigate = useNavigate();
+  const [search, setSearch] = useState("");
+  const [debouncedSearch] = useDebouncedValue(search, 500);
 
-  const { data: requests, isLoading } = trpc.nextClient.workflows.getPendingApprovals.useQuery();
+  const { data: requests, isLoading } = trpc.nextClient.workflows.getPendingApprovals.useQuery({
+    search: debouncedSearch,
+  });
   const { data: currentUser } = trpc.admin.users.getMe.useQuery();
 
   const getStatusColor = (status: string) => {
@@ -26,6 +32,17 @@ export default function PendingApprovalsPage() {
     <Container size="xl" my="lg">
       <PageTitle>Pending Approvals</PageTitle>
 
+      <Group justify="space-between" mb="lg">
+        <div></div>
+        <TextInput
+          placeholder="Search requests..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          leftSection={<Search size={16} />}
+          style={{ minWidth: 300 }}
+        />
+      </Group>
+
       <Paper shadow="sm" p="lg" withBorder pos="relative">
         <LoadingOverlay visible={isLoading} />
         
@@ -38,11 +55,15 @@ export default function PendingApprovalsPage() {
         {myPendingRequests.length === 0 ? (
           <Stack align="center" py="xl">
             <Clock size={48} color="gray" />
-            <Text size="lg" c="dimmed">No pending approvals</Text>
+            <Text size="lg" c="dimmed">
+              {search ? "No matching requests found" : "No pending approvals"}
+            </Text>
             <Text size="sm" c="dimmed" ta="center">
-              {currentUser?.role 
-                ? `There are no requests waiting for ${currentUser.role.name} approval at this time.`
-                : "You need a role assigned to approve requests."
+              {search 
+                ? "Try adjusting your search terms or clear the search to see all pending approvals."
+                : currentUser?.role 
+                  ? `There are no requests waiting for ${currentUser.role.name} approval at this time.`
+                  : "You need a role assigned to approve requests."
               }
             </Text>
           </Stack>

@@ -136,15 +136,34 @@ export const workflowRouter: any = router({
 
   // Get requests that need user's approval - using new assignment system
   getPendingApprovals: protectedPermissionProcedure(["APPROVE_WORKFLOW_REQUEST" as any])
-    .query(async ({ ctx }) => {
+    .input(z.object({
+      search: z.string().optional(),
+    }))
+    .query(async ({ ctx, input }) => {
       console.log("getPendingApprovals called for user:", ctx.user.id);
       
       // Use the new assignment service to get pending approvals for this user
       const pendingApprovals = await WorkflowAssignmentService.getPendingApprovalsForUser(ctx.user.id);
       
-      console.log(`Found ${pendingApprovals.length} pending approvals for user ${ctx.user.id}`);
+      // Apply search filter if provided
+      let filteredApprovals = pendingApprovals;
+      if (input.search) {
+        const searchTerm = input.search.toLowerCase();
+        filteredApprovals = pendingApprovals.filter((request: any) => {
+          return (
+            request.title?.toLowerCase().includes(searchTerm) ||
+            request.description?.toLowerCase().includes(searchTerm) ||
+            request.template?.name?.toLowerCase().includes(searchTerm) ||
+            request.initiator?.firstName?.toLowerCase().includes(searchTerm) ||
+            request.initiator?.lastName?.toLowerCase().includes(searchTerm) ||
+            request.initiator?.email?.toLowerCase().includes(searchTerm)
+          );
+        });
+      }
       
-      return pendingApprovals;
+      console.log(`Found ${filteredApprovals.length} pending approvals for user ${ctx.user.id} (after search filter)`);
+      
+      return filteredApprovals;
     }),
 
   // Approve a workflow request
