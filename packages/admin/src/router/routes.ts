@@ -4,6 +4,7 @@ export const ROUTES = {
   DASHBOARD_HOME: "/",
   DASHBOARD_USERS: "/users",
   DASHBOARD_USERS_USER: "/user",
+  DASHBOARD_ORGANIZATION_HIERARCHY: "/organization-hierarchy",
 
   DASHBOARD_ROLES: "/roles",
   DASHBOARD_ROLES_ROLE: "/role",

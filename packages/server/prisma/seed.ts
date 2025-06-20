@@ -9,6 +9,19 @@ async function main() {
     return;
   }
 
+  // Get admin user to use as creator
+  const adminUser = await db.user.findFirst({
+    where: {
+      role: {
+        name: "Admin"
+      }
+    }
+  });
+
+  if (!adminUser) {
+    throw new Error("Admin user not found. Please run create-admin-user.ts first.");
+  }
+
   // Create workflow templates
   const templates = [
     {
@@ -18,6 +31,9 @@ async function main() {
         { role: "manager", type: "approval", label: "Manager Approval" },
         { role: "hr", type: "approval", label: "HR Review" },
       ]),
+      createdBy: {
+        connect: { id: adminUser.id }
+      }
     },
     {
       name: "Contract Approval",
@@ -27,6 +43,9 @@ async function main() {
         { role: "finance", type: "approval", label: "Finance Review" },
         { role: "ceo", type: "approval", label: "CEO Approval" },
       ]),
+      createdBy: {
+        connect: { id: adminUser.id }
+      }
     },
     {
       name: "Payment Request",
@@ -36,6 +55,9 @@ async function main() {
         { role: "finance", type: "approval", label: "Finance Review" },
         { role: "accountant", type: "task", label: "Payment Processing" },
       ]),
+      createdBy: {
+        connect: { id: adminUser.id }
+      }
     },
     {
       name: "Fuel Request (GSM)",
@@ -46,6 +68,9 @@ async function main() {
         { role: "ceo", type: "approval", label: "CEO Signature" },
         { role: "corporate", type: "task", label: "Fuel Issuance" },
       ]),
+      createdBy: {
+        connect: { id: adminUser.id }
+      }
     },
   ];
 

@@ -22,6 +22,11 @@ model User {
   roleId String?
   role   Role?   @relation(fields: [roleId], references: [id])
 
+  // Manager hierarchy - self-referential relationship
+  managerId String?
+  manager   User?   @relation("UserManager", fields: [managerId], references: [id])
+  subordinates User[] @relation("UserManager")
+
   profilePictureId String?
   profilePicture   MediaFile? @relation(fields: [profilePictureId], references: [id])
 
@@ -245,12 +250,17 @@ model WorkflowApproval {
   status      ApprovalStatus @default(PENDING)
   comment     String?
   step        Int
-  role        WorkflowRole
-  actionLabel String?
+  
+  // New flexible assignment system
+  assigneeType    AssigneeType
+  roleBasedAssignee String?    // Role name for role-based assignment (e.g., "CEO", "Finance_manager")
+  dynamicAssignee   String?    // Dynamic assignment type (e.g., "INITIATOR_SUPERVISOR")
+  actionLabel     String?
 
   requestId String
   request   WorkflowRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
 
+  // Resolved assignee (set when workflow is created)
   approverId String?
   approver   User?   @relation(fields: [approverId], references: [id])
 
@@ -326,12 +336,18 @@ enum AuditAction {
   STEP_PROGRESSED
 }
 
-enum WorkflowRole {
-  // Initiator - can be from any department
-  INITIATOR
+enum AssigneeType {
+  ROLE_BASED    // Assign to users with specific role (e.g., "CEO", "Finance_manager")
+  DYNAMIC       // Dynamic assignment based on relationships (e.g., "INITIATOR_SUPERVISOR")
+}
 
-  // Supervisors and Management
-  INITIATOR_SUPERVISOR  // Direct manager of initiator
+// Legacy enum - keeping for backward compatibility with existing data
+// New system uses AssigneeType with roleBasedAssignee/dynamicAssignee strings
+enum WorkflowRole {
+  // Dynamic Roles (resolved at runtime)
+  INITIATOR_SUPERVISOR  // Direct manager of initiator (resolved dynamically)
+
+  // Executive Roles
   CEO                   // Генеральный директор
 
   // Specialized Roles
@@ -348,8 +364,4 @@ enum WorkflowRole {
   SECURITY_REVIEW       // Служба безопасности
   SECURITY_GUARD        // Охрана / Пост охраны
   INDUSTRIAL_SAFETY     // Служба промышленной, экологической безопасности
-
-  // Legacy roles for backward compatibility
-  MANAGER               // General manager role
-  FINANCE               // General finance role
 }

@@ -16,9 +16,12 @@
     "start:trigger": "npx trigger.dev@latest dev",
     "auth:generate": "npx @better-auth/cli generate ",
     "create:admin": "tsx ./scripts/create-admin-user.ts",
-    "create:sample-workflows": "tsx ./scripts/create-sample-workflows.ts",
     "create:sample-users": "tsx ./scripts/create-sample-users.ts",
-    "assign:workflow-permissions": "tsx ./scripts/assign-workflow-permissions.ts"
+    "create:sample-workflows": "tsx ./scripts/create-sample-workflows.ts",
+    "create:sample-requests": "tsx ./scripts/create-sample-requests.ts",
+    "assign:workflow-permissions": "tsx ./scripts/assign-workflow-permissions.ts",
+    "create:all": "tsx ./scripts/run-all-create-scripts.ts",
+    "test:manager-hierarchy": "tsx ./scripts/test-manager-hierarchy.ts"
   },
   "keywords": [],
   "author": "",

@@ -68,8 +68,21 @@ export default function PendingApprovalsPage() {
               </Table.Thead>
               <Table.Tbody>
                 {myPendingRequests.map((request: any) => {
-                  const templateSteps = JSON.parse(request.template.steps as string);
-                  const currentStep = templateSteps[request.currentStep];
+                  // Safely parse template steps with fallback
+                  let templateSteps = [];
+                  let currentStep = null;
+                  
+                  try {
+                    if (request.template?.steps) {
+                      templateSteps = JSON.parse(request.template.steps as string);
+                      currentStep = templateSteps[request.currentStep];
+                    }
+                  } catch (error) {
+                    console.error('Error parsing template steps:', error);
+                  }
+
+                  // Use currentApproval info if available (from new system)
+                  const approvalInfo = request.currentApproval;
                   
                   return (
                     <Table.Tr key={request.id}>
@@ -84,20 +97,23 @@ export default function PendingApprovalsPage() {
                         </div>
                       </Table.Td>
                       <Table.Td>
-                        <Text size="sm">{request.template.name}</Text>
+                        <Text size="sm">{request.template?.name || 'Unknown Template'}</Text>
                       </Table.Td>
                       <Table.Td>
                         <Text size="sm">
-                          {request.initiator.firstName} {request.initiator.lastName}
+                          {request.initiator?.firstName} {request.initiator?.lastName}
                         </Text>
                       </Table.Td>
                       <Table.Td>
                         <div>
                           <Text size="sm" fw={500}>
-                            Step {request.currentStep + 1}: {currentStep?.label}
+                            Step {request.currentStep + 1}: {approvalInfo?.actionLabel || currentStep?.label || 'Review Required'}
                           </Text>
                           <Text size="xs" c="dimmed">
-                            Requires {currentStep?.role} approval
+                            {approvalInfo?.roleBasedAssignee && `Role: ${approvalInfo.roleBasedAssignee}`}
+                            {approvalInfo?.dynamicAssignee && `Assignment: ${approvalInfo.dynamicAssignee}`}
+                            {!approvalInfo && currentStep?.role && `Requires ${currentStep.role} approval`}
+                            {!approvalInfo && !currentStep && 'Pending your approval'}
                           </Text>
                         </div>
                       </Table.Td>
@@ -112,15 +128,15 @@ export default function PendingApprovalsPage() {
                         </Text>
                       </Table.Td>
                       <Table.Td>
-                                                 <Button
-                           size="sm"
-                           variant="filled"
-                           color="blue"
-                           leftSection={<Eye size={14} />}
-                           onClick={() => navigate(`${ROUTES.DASHBOARD_WORKFLOW_REQUEST}/${request.id}`)}
-                         >
-                           Review
-                         </Button>
+                        <Button
+                          size="sm"
+                          variant="filled"
+                          color="blue"
+                          leftSection={<Eye size={14} />}
+                          onClick={() => navigate(`${ROUTES.DASHBOARD_WORKFLOW_REQUEST}/${request.id}`)}
+                        >
+                          Review
+                        </Button>
                       </Table.Td>
                     </Table.Tr>
                   );

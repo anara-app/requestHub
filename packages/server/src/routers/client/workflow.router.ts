@@ -2,6 +2,7 @@ import { z } from "zod";
 import { protectedPermissionProcedure, router } from "../../trpc/trpc";
 import { TRPCError } from "@trpc/server";
 import { db } from "../../common/prisma";
+import { WorkflowAssignmentService } from "../../services/workflow-assignment.service";
 
 const createRequestSchema = z.object({
   title: z.string().min(1),
@@ -11,7 +12,7 @@ const createRequestSchema = z.object({
   data: z.record(z.any()).optional(),
 });
 
-export const workflowRouter = router({
+export const workflowRouter: any = router({
   // Get available workflow templates
   getTemplates: protectedPermissionProcedure(["CREATE_WORKFLOW_REQUEST" as any])
     .query(async () => {
@@ -37,6 +38,25 @@ export const workflowRouter = router({
         });
       }
 
+      // Parse template steps and convert to new format
+      const legacySteps = JSON.parse(template.steps as string);
+      const stepDefinitions = legacySteps.map((step: any) => 
+        WorkflowAssignmentService.convertLegacyRoleToStepDefinition(step.role, step.label)
+      );
+
+      // Validate that the workflow can be processed
+      const validation = await WorkflowAssignmentService.validateWorkflowRequest(
+        stepDefinitions,
+        ctx.user.id
+      );
+
+      if (!validation.isValid) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Cannot create workflow request: ${validation.errors.join(", ")}`,
+        });
+      }
+
       // Create the request
       const request = await db.workflowRequest.create({
         data: {
@@ -59,20 +79,11 @@ export const workflowRouter = router({
         },
       });
 
-      // Create approval records for each step
-      const steps = JSON.parse(template.steps as string);
-      await Promise.all(
-        steps.map((step: any, index: number) =>
-          db.workflowApproval.create({
-            data: {
-              requestId: request.id,
-              step: index,
-              role: step.role,
-              actionLabel: step.label,
-              status: index === 0 ? "PENDING" : "SKIPPED",
-            },
-          })
-        )
+      // Create approval records using the new assignment service
+      await WorkflowAssignmentService.createWorkflowApprovals(
+        request.id,
+        stepDefinitions,
+        ctx.user.id
       );
 
       // Log audit trail - Request created
@@ -123,99 +134,178 @@ export const workflowRouter = router({
       return requests;
     }),
 
-  // Get requests that need user's approval - filtered by user's role
+  // Get requests that need user's approval - using new assignment system
   getPendingApprovals: protectedPermissionProcedure(["APPROVE_WORKFLOW_REQUEST" as any])
     .query(async ({ ctx }) => {
       console.log("getPendingApprovals called for user:", ctx.user.id);
       
-      // Get user's role
-      const user = await db.user.findUnique({
-        where: { id: ctx.user.id },
-        include: { role: true },
+      // Use the new assignment service to get pending approvals for this user
+      const pendingApprovals = await WorkflowAssignmentService.getPendingApprovalsForUser(ctx.user.id);
+      
+      console.log(`Found ${pendingApprovals.length} pending approvals for user ${ctx.user.id}`);
+      
+      return pendingApprovals;
+    }),
+
+  // Approve a workflow request
+  approveRequest: protectedPermissionProcedure(["APPROVE_WORKFLOW_REQUEST" as any])
+    .input(
+      z.object({
+        requestId: z.string(),
+        comment: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { requestId, comment } = input;
+      const userId = ctx.user.id;
+
+      // Find the pending approval for this user and request
+      const currentApproval = await db.workflowApproval.findFirst({
+        where: {
+          requestId,
+          approverId: userId,
+          status: "PENDING",
+        },
+        include: {
+          request: {
+            include: {
+              template: true,
+            },
+          },
+        },
       });
 
-      console.log("User details:", { email: user?.email, role: user?.role?.name });
-
-      if (!user?.role) {
-        console.log("No role found for user");
-        return [];
-      }
-
-      const userRoleName = user.role.name.toUpperCase();
-      // Validate against allowed enum values
-      const allowedRoles = [
-        "INITIATOR", "INITIATOR_SUPERVISOR", "CEO", "LEGAL", "PROCUREMENT", "FINANCE_MANAGER",
-        "ACCOUNTING", "HR_SPECIALIST", "SYSTEM_AUTOMATION", "SECURITY_REVIEW", "SECURITY_GUARD",
-        "INDUSTRIAL_SAFETY", "MANAGER", "FINANCE"
-      ];
-      if (!allowedRoles.includes(userRoleName)) {
-        console.log("Invalid user role for workflow approvals:", userRoleName);
-        return [];
-      }
-      console.log("User role name (uppercase):", userRoleName);
-
-      // Admin can see all requests that have pending approvals
-      if (userRoleName === "ADMIN") {
-        return db.workflowRequest.findMany({
-          where: {
-            status: {
-              in: ["PENDING", "IN_PROGRESS"],
-            },
-            approvals: {
-              some: {
-                status: "PENDING",
-              },
-            },
-          },
-          include: {
-            template: true,
-            initiator: true,
-            approvals: {
-              include: {
-                approver: true,
-              },
-            },
-            files: true,
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
+      if (!currentApproval) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No pending approval found for this request",
         });
       }
 
-      // For other roles, filter by requests that need their approval
-      const result = await db.workflowRequest.findMany({
+      const request = currentApproval.request;
+
+      // Update the approval
+      await db.workflowApproval.update({
+        where: { id: currentApproval.id },
+        data: {
+          status: "APPROVED",
+          comment,
+        },
+      });
+
+      // Get all approvals for this request to check if it's the last step
+      const allApprovals = await db.workflowApproval.findMany({
+        where: { requestId },
+        orderBy: { step: "asc" },
+      });
+
+      const currentStepApprovals = allApprovals.filter(a => a.step === currentApproval.step);
+      const allCurrentStepApproved = currentStepApprovals.every(a => a.status === "APPROVED");
+
+      if (allCurrentStepApproved) {
+        const nextStepApprovals = allApprovals.filter(a => a.step === currentApproval.step + 1);
+        
+        if (nextStepApprovals.length > 0) {
+          // Move to next step
+          await db.workflowRequest.update({
+            where: { id: requestId },
+            data: {
+              currentStep: currentApproval.step + 1,
+              status: "IN_PROGRESS",
+            },
+          });
+
+          // Log audit trail - Step progressed
+          await db.workflowAuditTrail.create({
+            data: {
+              requestId,
+              userId,
+              action: "STEP_PROGRESSED" as any,
+              description: `Approved step ${currentApproval.step + 1} and moved to step ${currentApproval.step + 2}`,
+              details: comment || undefined,
+            },
+          });
+        } else {
+          // This was the last step - complete the request
+          await db.workflowRequest.update({
+            where: { id: requestId },
+            data: {
+              status: "APPROVED",
+            },
+          });
+
+          // Log audit trail - Request fully approved
+          await db.workflowAuditTrail.create({
+            data: {
+              requestId,
+              userId,
+              action: "REQUEST_APPROVED" as any,
+              description: "Request fully approved and completed",
+              details: comment || undefined,
+            },
+          });
+        }
+      }
+
+      return { success: true };
+    }),
+
+  // Reject a workflow request
+  rejectRequest: protectedPermissionProcedure(["APPROVE_WORKFLOW_REQUEST" as any])
+    .input(
+      z.object({
+        requestId: z.string(),
+        comment: z.string().optional(),
+      })
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { requestId, comment } = input;
+      const userId = ctx.user.id;
+
+      // Find the pending approval for this user and request
+      const currentApproval = await db.workflowApproval.findFirst({
         where: {
-          status: {
-            in: ["PENDING", "IN_PROGRESS"],
-          },
-          approvals: {
-            some: {
-              status: "PENDING",
-              role: userRoleName as any,
-            },
-          },
-        },
-        include: {
-          template: true,
-          initiator: true,
-          approvals: {
-            include: {
-              approver: true,
-            },
-          },
-          files: true,
-        },
-        orderBy: {
-          createdAt: "desc",
+          requestId,
+          approverId: userId,
+          status: "PENDING",
         },
       });
 
-      console.log(`Returning ${result.length} requests for ${userRoleName} user`);
-      result.forEach((req, index) => {
-        console.log(`${index + 1}. ${req.title} (${req.status})`);
+      if (!currentApproval) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "No pending approval found for this request",
+        });
+      }
+
+      // Update the approval and request
+      await db.$transaction([
+        db.workflowApproval.update({
+          where: { id: currentApproval.id },
+          data: {
+            status: "REJECTED",
+            comment,
+          },
+        }),
+        db.workflowRequest.update({
+          where: { id: requestId },
+          data: {
+            status: "REJECTED",
+          },
+        }),
+      ]);
+
+      // Log audit trail - Request rejected
+      await db.workflowAuditTrail.create({
+        data: {
+          requestId,
+          userId,
+          action: "REQUEST_REJECTED" as any,
+          description: `Request rejected at step ${currentApproval.step + 1}`,
+          details: comment || undefined,
+        },
       });
 
-      return result;
+      return { success: true };
     }),
 }); 

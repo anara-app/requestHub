@@ -49,10 +49,6 @@ const rolePermissions = {
     "APPROVE_WORKFLOW_REQUEST",
     "REJECT_WORKFLOW_REQUEST",
   ],
-  Initiator: [
-    "CREATE_WORKFLOW_REQUEST",
-    "READ_WORKFLOW_REQUESTS",
-  ],
 };
 
 async function assignWorkflowPermissions() {

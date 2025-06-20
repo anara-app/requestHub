@@ -30,7 +30,7 @@ export default function WorkflowRequestPage() {
     refetchAuditTrail();
   };
 
-  const approveRequestMutation = trpc.admin.workflows.approveRequest.useMutation({
+  const approveRequestMutation = trpc.nextClient.workflows.approveRequest.useMutation({
     onSuccess: () => {
       notifications.show({
         title: "Success",
@@ -50,7 +50,7 @@ export default function WorkflowRequestPage() {
     },
   });
 
-  const rejectRequestMutation = trpc.admin.workflows.rejectRequest.useMutation({
+  const rejectRequestMutation = trpc.nextClient.workflows.rejectRequest.useMutation({
     onSuccess: () => {
       notifications.show({
         title: "Success",
@@ -137,35 +137,22 @@ export default function WorkflowRequestPage() {
     // Check if request is in a state that allows approval
     if (!["PENDING", "IN_PROGRESS"].includes(request.status)) return false;
     
-    // Parse template steps
-    let templateSteps: any[] = [];
-    try {
-      templateSteps = JSON.parse(request.template.steps as string);
-    } catch (error) {
-      console.error("Error parsing template steps:", error);
-      return false;
-    }
-    
-    // Get current step from template
-    const currentStepTemplate = templateSteps[request.currentStep];
-    if (!currentStepTemplate) return false;
-    
-    // Check if there's a pending approval for current step
-    const currentStepApproval = request.approvals.find(
-      approval => approval.step === request.currentStep && approval.status === "PENDING"
+    // NEW SYSTEM: Check if user is directly assigned to approve this request
+    // Look for a pending approval where this user is the assignee (approverId)
+    const userAssignedApproval = request.approvals.find(
+      approval => 
+        approval.approverId === currentUser.id && 
+        approval.status === "PENDING" &&
+        approval.step === request.currentStep
     );
     
-    if (!currentStepApproval) return false;
+    // If user is directly assigned to this approval, they can approve
+    if (userAssignedApproval) return true;
     
-    // Check if user's role matches the required role for this step
-    const userRoleName = currentUser.role?.name?.toLowerCase();
-    const requiredRole = currentStepTemplate.role?.toLowerCase();
+    // Special case: Admin can approve any step (fallback)
+    if (currentUser.role?.name?.toLowerCase() === "admin") return true;
     
-    // Special case: Admin can approve any step
-    if (userRoleName === "admin") return true;
-    
-    // Check if user's role matches the step requirement
-    return userRoleName === requiredRole;
+    return false;
   };
 
   const handleApproval = (approve: boolean) => {
