@@ -327,9 +327,6 @@ enum AuditAction {
 }
 
 enum WorkflowRole {
-  // Initiator - can be from any department
-  INITIATOR
-
   // Supervisors and Management
   INITIATOR_SUPERVISOR  // Direct manager of initiator
   CEO                   // Генеральный директор

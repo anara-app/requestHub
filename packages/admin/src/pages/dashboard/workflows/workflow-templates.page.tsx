@@ -26,7 +26,7 @@ import Container from "../../../components/Container";
 import PageTitle from "../../../components/PageTitle";
 import { trpc } from "../../../common/trpc";
 
-type WorkflowRoleEnum = "INITIATOR" | "INITIATOR_SUPERVISOR" | "CEO" | "LEGAL" | "PROCUREMENT" | "FINANCE_MANAGER" | "ACCOUNTING" | "HR_SPECIALIST" | "SYSTEM_AUTOMATION" | "SECURITY_REVIEW" | "SECURITY_GUARD" | "INDUSTRIAL_SAFETY" | "MANAGER" | "FINANCE";
+type WorkflowRoleEnum = "INITIATOR_SUPERVISOR" | "CEO" | "LEGAL" | "PROCUREMENT" | "FINANCE_MANAGER" | "ACCOUNTING" | "HR_SPECIALIST" | "SYSTEM_AUTOMATION" | "SECURITY_REVIEW" | "SECURITY_GUARD" | "INDUSTRIAL_SAFETY" | "MANAGER" | "FINANCE";
 
 interface WorkflowStep {
   role: WorkflowRoleEnum;
@@ -36,7 +36,6 @@ interface WorkflowStep {
 
 // Workflow roles based on the department mapping
 const WORKFLOW_ROLES = [
-  { value: "INITIATOR", label: "Инициатор (Initiator)" },
   { value: "INITIATOR_SUPERVISOR", label: "Руководитель инициатора (Initiator's Supervisor)" },
   { value: "CEO", label: "Генеральный директор (CEO)" },
   { value: "LEGAL", label: "Юрист (Legal)" },
@@ -44,13 +43,12 @@ const WORKFLOW_ROLES = [
   { value: "FINANCE_MANAGER", label: "Финансовый менеджер (Finance Manager)" },
   { value: "ACCOUNTING", label: "Бухгалтерия (Accounting)" },
   { value: "HR_SPECIALIST", label: "HR Specialist" },
-  { value: "SYSTEM_AUTOMATION", label: "Система (System/Automation)" },
+  { value: "SYSTEM_AUTOMATION", label: "Система (System Automation)" },
   { value: "SECURITY_REVIEW", label: "Служба безопасности (Security Review)" },
-  { value: "SECURITY_GUARD", label: "Охрана / Пост охраны" },
-  { value: "INDUSTRIAL_SAFETY", label: "Служба промышленной безопасности" },
-  // Legacy roles for backward compatibility
-  { value: "MANAGER", label: "Manager (Legacy)" },
-  { value: "FINANCE", label: "Finance (Legacy)" },
+  { value: "SECURITY_GUARD", label: "Охрана (Security Guard)" },
+  { value: "INDUSTRIAL_SAFETY", label: "Служба промышленной безопасности (Industrial Safety)" },
+  { value: "MANAGER", label: "Менеджер (Manager)" },
+  { value: "FINANCE", label: "Финансы (Finance)" },
 ];
 
 export default function WorkflowTemplatesPage() {

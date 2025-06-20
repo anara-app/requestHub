@@ -86,7 +86,7 @@ async function runAllCreateScripts() {
     console.log("\n🎉 All create scripts completed successfully!");
     console.log("\n📋 Summary of what was created:");
     console.log("✅ Admin user and role");
-    console.log("✅ Sample users (manager, ceo, lawyer, finance, accountant, hr, initiator)");
+    console.log("✅ Sample users (manager, ceo, lawyer, finance, accountant, hr)");
     console.log("✅ Workflow permissions for all roles");
     console.log("✅ Sample workflow templates");
     console.log("✅ Sample workflow requests");

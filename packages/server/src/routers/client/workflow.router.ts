@@ -144,7 +144,7 @@ export const workflowRouter = router({
       const userRoleName = user.role.name.toUpperCase();
       // Validate against allowed enum values
       const allowedRoles = [
-        "INITIATOR", "INITIATOR_SUPERVISOR", "CEO", "LEGAL", "PROCUREMENT", "FINANCE_MANAGER",
+        "INITIATOR_SUPERVISOR", "CEO", "LEGAL", "PROCUREMENT", "FINANCE_MANAGER",
         "ACCOUNTING", "HR_SPECIALIST", "SYSTEM_AUTOMATION", "SECURITY_REVIEW", "SECURITY_GUARD",
         "INDUSTRIAL_SAFETY", "MANAGER", "FINANCE"
       ];

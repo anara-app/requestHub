@@ -48,13 +48,6 @@ const sampleUsers = [
     lastName: "HR",
     password: "password",
   },
-  {
-    role: "initiator",
-    email: "initiator@g.com",
-    firstName: "Initiator",
-    lastName: "Initiator",
-    password: "password",
-  },
 ];
 
 async function createSampleUsers() {
