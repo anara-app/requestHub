@@ -53,6 +53,19 @@ async function createSampleWorkflows() {
   console.log("Creating sample workflow templates...");
 
   try {
+    // Get admin user to use as creator
+    const adminUser = await prisma.user.findFirst({
+      where: {
+        role: {
+          name: "Admin"
+        }
+      }
+    });
+
+    if (!adminUser) {
+      throw new Error("Admin user not found. Please run create-admin-user.ts first.");
+    }
+
     for (const workflow of sampleWorkflows) {
       const existing = await prisma.workflowTemplate.findFirst({
         where: { name: workflow.name },
@@ -65,6 +78,9 @@ async function createSampleWorkflows() {
             description: workflow.description,
             steps: JSON.stringify(workflow.steps),
             isActive: true,
+            createdBy: {
+              connect: { id: adminUser.id }
+            },
           },
         });
         console.log(`✅ Created workflow template: ${workflow.name}`);
