@@ -27,6 +27,8 @@
     "lint:fix": "pnpm lint --fix",
     "type-check": "pnpm --filter \"client\" tsc --noEmit && pnpm --filter \"admin\" tsc --noEmit && pnpm --filter \"server\" tsc --noEmit",
     "studio": "pnpm --filter server studio",
+    "db:up": "docker compose -f docker-compose.db-only.yml up -d",
+    "db:down": "docker compose -f docker-compose.db-only.yml down",
     "db:generate": "pnpm --filter server generate:client",
     "db:migrate": "pnpm --filter server migrate",
     "db:deploy": "pnpm --filter server deploy:database",
