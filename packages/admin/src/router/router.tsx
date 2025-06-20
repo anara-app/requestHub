@@ -5,6 +5,7 @@ import DashboardLayout from "../components/DashboardLayout/DashboardLayout";
 import AuthPage from "../pages/auth/auth.page";
 import UsersPage from "../pages/dashboard/users/users.page";
 import UserPage from "../pages/dashboard/users/user.page";
+import OrganizationHierarchyPage from "../pages/dashboard/users/organization-hierarchy.page";
 import RolesPage from "../pages/dashboard/roles/roles";
 import RolePage from "../pages/dashboard/roles/role";
 import GalleryPage from "../pages/dashboard/gallery/gallery.page";
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
       {
         path: `${ROUTES.DASHBOARD_USERS_USER}/:id?`,
         element: <UserPage />,
+      },
+      {
+        path: ROUTES.DASHBOARD_ORGANIZATION_HIERARCHY,
+        element: <OrganizationHierarchyPage />,
       },
       /* Roles */
       {

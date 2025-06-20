@@ -28,7 +28,14 @@ server.register(fastifyMultipart, {
 });
 server.register(sendsible);
 server.register(cors, {
-  origin: ["http://localhost:3000", "http://localhost:5174"],
+  origin: [
+    "http://localhost:3000", 
+    "http://localhost:5174",
+    "http://localhost:8080",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5174", 
+    "http://127.0.0.1:8080"
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   credentials: true,

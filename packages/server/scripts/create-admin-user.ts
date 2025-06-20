@@ -81,6 +81,7 @@ async function createAdminUser() {
       where: { id: userId },
       data: {
         roleId: adminRole.id,
+        managerId: userId, // Admin manages themselves
       },
     });
 

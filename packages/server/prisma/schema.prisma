@@ -22,6 +22,11 @@ model User {
   roleId String?
   role   Role?   @relation(fields: [roleId], references: [id])
 
+  // Manager hierarchy - self-referential relationship
+  managerId String?
+  manager   User?   @relation("UserManager", fields: [managerId], references: [id])
+  subordinates User[] @relation("UserManager")
+
   profilePictureId String?
   profilePicture   MediaFile? @relation(fields: [profilePictureId], references: [id])
 

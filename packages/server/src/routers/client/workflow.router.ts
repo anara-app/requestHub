@@ -2,6 +2,7 @@ import { z } from "zod";
 import { protectedPermissionProcedure, router } from "../../trpc/trpc";
 import { TRPCError } from "@trpc/server";
 import { db } from "../../common/prisma";
+import { WorkflowAssignmentService } from "../../services/workflow-assignment.service";
 
 const createRequestSchema = z.object({
   title: z.string().min(1),
@@ -37,6 +38,22 @@ export const workflowRouter = router({
         });
       }
 
+      // Parse template steps
+      const steps = JSON.parse(template.steps as string);
+
+      // Validate that the workflow can be processed
+      const validation = await WorkflowAssignmentService.validateWorkflowRequest(
+        steps,
+        ctx.user.id
+      );
+
+      if (!validation.isValid) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Cannot create workflow request: ${validation.errors.join(", ")}`,
+        });
+      }
+
       // Create the request
       const request = await db.workflowRequest.create({
         data: {
@@ -59,21 +76,25 @@ export const workflowRouter = router({
         },
       });
 
-      // Create approval records for each step
-      const steps = JSON.parse(template.steps as string);
-      await Promise.all(
-        steps.map((step: any, index: number) =>
-          db.workflowApproval.create({
-            data: {
-              requestId: request.id,
-              step: index,
-              role: step.role,
-              actionLabel: step.label,
-              status: index === 0 ? "PENDING" : "SKIPPED",
-            },
-          })
-        )
-      );
+      // Create approval records for each step with dynamic assignment
+      for (let index = 0; index < steps.length; index++) {
+        const step = steps[index];
+        const assigneeId = await WorkflowAssignmentService.resolveStepAssignee(
+          step.role,
+          ctx.user.id
+        );
+
+        await db.workflowApproval.create({
+          data: {
+            requestId: request.id,
+            step: index,
+            role: step.role,
+            actionLabel: step.label,
+            status: index === 0 ? "PENDING" : "SKIPPED",
+            ...(assigneeId && { approverId: assigneeId }),
+          },
+        });
+      }
 
       // Log audit trail - Request created
       await db.workflowAuditTrail.create({

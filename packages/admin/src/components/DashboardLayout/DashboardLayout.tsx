@@ -10,7 +10,7 @@ import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../router/routes";
 import ProtectedRoute from "../ProtectedRoute";
-import { ImagesIcon, LogOutIcon, UserCog, Users, Workflow, FileText, Plus, Clock, FileCheck } from "lucide-react";
+import { ImagesIcon, LogOutIcon, UserCog, Users, Workflow, FileText, Plus, Clock, FileCheck, Network } from "lucide-react";
 import logo from "../../assets/logo.png";
 import ThemeSwitch from "../ThemeSwith";
 import { $Enums } from "../../common/database.types";
@@ -84,6 +84,13 @@ const NavItems: NavItemType[] = [
     label: "Пользователи",
     path: ROUTES.DASHBOARD_USERS,
     activePaths: [ROUTES.DASHBOARD_USERS, ROUTES.DASHBOARD_USERS_USER],
+    permissionRequired: "READ_USERS",
+  },
+  {
+    icon: Network,
+    label: "Organization Hierarchy",
+    path: ROUTES.DASHBOARD_ORGANIZATION_HIERARCHY,
+    activePaths: [ROUTES.DASHBOARD_ORGANIZATION_HIERARCHY],
     permissionRequired: "READ_USERS",
   },
   {

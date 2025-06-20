@@ -7,18 +7,20 @@ const prisma = new PrismaClient();
 // Define the roles and their corresponding user data
 const sampleUsers = [
   {
-    role: "manager",
-    email: "manager@g.com",
-    firstName: "Manager",
-    lastName: "Manager",
-    password: "password",
-  },
-  {
     role: "ceo",
     email: "ceo@g.com",
     firstName: "CEO",
     lastName: "CEO",
     password: "password",
+    managerRole: "ceo", // CEO manages themselves
+  },
+  {
+    role: "manager",
+    email: "manager@g.com",
+    firstName: "Manager",
+    lastName: "Manager",
+    password: "password",
+    managerRole: "ceo", // Reports to CEO
   },
   {
     role: "lawyer",
@@ -26,6 +28,7 @@ const sampleUsers = [
     firstName: "Lawyer",
     lastName: "Lawyer",
     password: "password",
+    managerRole: "ceo", // Reports to CEO
   },
   {
     role: "finance",
@@ -33,6 +36,7 @@ const sampleUsers = [
     firstName: "Finance",
     lastName: "Finance",
     password: "password",
+    managerRole: "manager", // Reports to Manager
   },
   {
     role: "accountant",
@@ -40,6 +44,7 @@ const sampleUsers = [
     firstName: "Accountant",
     lastName: "Accountant",
     password: "password",
+    managerRole: "finance", // Reports to Finance
   },
   {
     role: "hr",
@@ -47,6 +52,7 @@ const sampleUsers = [
     firstName: "HR",
     lastName: "HR",
     password: "password",
+    managerRole: "manager", // Reports to Manager
   },
 ];
 
@@ -54,6 +60,10 @@ async function createSampleUsers() {
   console.log("Creating sample users for workflow testing...");
 
   try {
+    // Map to store created user IDs by role for efficient lookups
+    const userIdsByRole: Record<string, string> = {};
+
+    // First pass: Create all users without manager relationships
     for (const userData of sampleUsers) {
       // Check if user already exists
       const existingUser = await prisma.user.findUnique({
@@ -62,6 +72,7 @@ async function createSampleUsers() {
 
       if (existingUser) {
         console.log(`⚠️  User already exists: ${userData.email}`);
+        userIdsByRole[userData.role] = existingUser.id;
         continue;
       }
 
@@ -105,16 +116,63 @@ async function createSampleUsers() {
         },
       });
 
-      console.log(`✅ Created user: ${userData.email} (${role.name})`);
+      // Store the user ID by role for manager relationship setup
+      userIdsByRole[userData.role] = user.id;
+      console.log(`✅ Created user: ${userData.email} (${role.name}) - ID: ${user.id}`);
     }
 
-    console.log("✅ Sample users created successfully!");
+    // Second pass: Establish manager relationships using user IDs (optimized!)
+    console.log("\n🔗 Establishing manager hierarchy using user IDs...");
+    for (const userData of sampleUsers) {
+      if (userData.managerRole) {
+        const userId = userIdsByRole[userData.role];
+        const managerId = userIdsByRole[userData.managerRole];
+
+        if (userId && managerId) {
+          await prisma.user.update({
+            where: { id: userId },
+            data: { managerId } as any,
+          });
+          console.log(`✅ Set ${userData.email} manager to ${userData.managerRole} (ID: ${managerId})`);
+        } else {
+          console.log(`⚠️  Could not establish manager relationship for ${userData.email}`);
+        }
+      }
+    }
+
+    console.log("✅ Sample users created successfully with optimized user ID relationships!");
     console.log("\n📋 Login credentials for testing:");
     console.log("Email: [role]@g.com | Password: password");
     console.log("Examples:");
     sampleUsers.forEach(user => {
-      console.log(`  - ${user.email} | password`);
+      const managerInfo = user.managerRole ? ` (reports to ${user.managerRole})` : ' (no manager)';
+      console.log(`  - ${user.email} | password${managerInfo}`);
     });
+
+    // Display hierarchy with actual database relationships
+    console.log("\n🏢 Organization Hierarchy (using optimized DB relationships):");
+    const usersWithManagers = await prisma.user.findMany({
+      include: {
+        role: true,
+        manager: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      } as any,
+      orderBy: { firstName: 'asc' },
+    });
+
+    usersWithManagers.forEach(user => {
+      const manager = (user as any).manager;
+      const managerInfo = manager 
+        ? ` → Manager: ${manager.firstName} ${manager.lastName} (ID: ${manager.id})` 
+        : ' → No manager (Top level)';
+      console.log(`👤 ${user.firstName} ${user.lastName} (ID: ${user.id})${managerInfo}`);
+         });
 
   } catch (error) {
     console.error("❌ Error creating sample users:", error);
@@ -123,4 +181,4 @@ async function createSampleUsers() {
   }
 }
 
-createSampleUsers(); 
+createSampleUsers();
