@@ -5,54 +5,55 @@ import { auth } from "../src/lib/auth";
 const prisma = new PrismaClient();
 
 // Define the roles and their corresponding user data
+// Note: "Manager" is not a role - it's inferred from organizational hierarchy
 const sampleUsers = [
   {
     role: "ceo",
     email: "ceo@g.com",
-    firstName: "CEO",
-    lastName: "CEO",
+    firstName: "John",
+    lastName: "Smith",
     password: "password",
     managerRole: "ceo", // CEO manages themselves
   },
   {
-    role: "manager",
-    email: "manager@g.com",
-    firstName: "Manager",
-    lastName: "Manager",
+    role: "operations_director",
+    email: "operations@g.com",
+    firstName: "Sarah",
+    lastName: "Johnson",
     password: "password",
     managerRole: "ceo", // Reports to CEO
   },
   {
     role: "lawyer",
     email: "lawyer@g.com",
-    firstName: "Lawyer",
-    lastName: "Lawyer",
+    firstName: "Michael",
+    lastName: "Brown",
     password: "password",
     managerRole: "ceo", // Reports to CEO
   },
   {
-    role: "finance",
+    role: "finance_manager",
     email: "finance@g.com",
-    firstName: "Finance",
-    lastName: "Finance",
+    firstName: "Emily",
+    lastName: "Davis",
     password: "password",
-    managerRole: "manager", // Reports to Manager
+    managerRole: "operations_director", // Reports to Operations Director
   },
   {
     role: "accountant",
     email: "accountant@g.com",
-    firstName: "Accountant",
-    lastName: "Accountant",
+    firstName: "David",
+    lastName: "Wilson",
     password: "password",
-    managerRole: "finance", // Reports to Finance
+    managerRole: "finance_manager", // Reports to Finance Manager
   },
   {
-    role: "hr",
+    role: "hr_specialist",
     email: "hr@g.com",
-    firstName: "HR",
-    lastName: "HR",
+    firstName: "Lisa",
+    lastName: "Garcia",
     password: "password",
-    managerRole: "manager", // Reports to Manager
+    managerRole: "operations_director", // Reports to Operations Director
   },
 ];
 

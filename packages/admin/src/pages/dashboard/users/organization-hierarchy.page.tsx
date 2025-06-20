@@ -79,12 +79,11 @@ function UserNode({ data }: NodeProps) {
   const roleColors: Record<string, string> = {
     'Admin': '#fa5252',
     'Ceo': '#fab005',
-    'Manager': '#339af0',
-    'Hr': '#51cf66',
-    'Finance': '#22b8cf',
+    'Operations_director': '#339af0',
+    'Hr_specialist': '#51cf66',
+    'Finance_manager': '#22b8cf',
     'Lawyer': '#9775fa',
-    'Accountant': '#ff8787',
-    'Initiator': '#868e96'
+    'Accountant': '#ff8787'
   };
 
   const nodeData = data as HierarchyNode & { subordinateCount: number; level: number };
@@ -400,12 +399,11 @@ function OrganizationFlow() {
             const roleColors: Record<string, string> = {
               'Admin': '#fa5252',
               'Ceo': '#fab005',
-              'Manager': '#339af0',
-              'Hr': '#51cf66',
-              'Finance': '#22b8cf',
+              'Operations_director': '#339af0',
+              'Hr_specialist': '#51cf66',
+              'Finance_manager': '#22b8cf',
               'Lawyer': '#9775fa',
-              'Accountant': '#ff8787',
-              'Initiator': '#868e96'
+              'Accountant': '#ff8787'
             };
             return roleColors[node.data?.role?.name] || '#339af0';
           }}

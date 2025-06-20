@@ -26,7 +26,7 @@ import Container from "../../../components/Container";
 import PageTitle from "../../../components/PageTitle";
 import { trpc } from "../../../common/trpc";
 
-type WorkflowRoleEnum = "INITIATOR_SUPERVISOR" | "CEO" | "LEGAL" | "PROCUREMENT" | "FINANCE_MANAGER" | "ACCOUNTING" | "HR_SPECIALIST" | "SYSTEM_AUTOMATION" | "SECURITY_REVIEW" | "SECURITY_GUARD" | "INDUSTRIAL_SAFETY" | "MANAGER" | "FINANCE";
+type WorkflowRoleEnum = "INITIATOR_SUPERVISOR" | "CEO" | "LEGAL" | "PROCUREMENT" | "FINANCE_MANAGER" | "ACCOUNTING" | "HR_SPECIALIST" | "SYSTEM_AUTOMATION" | "SECURITY_REVIEW" | "SECURITY_GUARD" | "INDUSTRIAL_SAFETY";
 
 interface WorkflowStep {
   role: WorkflowRoleEnum;
@@ -47,8 +47,6 @@ const WORKFLOW_ROLES = [
   { value: "SECURITY_REVIEW", label: "Служба безопасности (Security Review)" },
   { value: "SECURITY_GUARD", label: "Охрана (Security Guard)" },
   { value: "INDUSTRIAL_SAFETY", label: "Служба промышленной безопасности (Industrial Safety)" },
-  { value: "MANAGER", label: "Менеджер (Manager)" },
-  { value: "FINANCE", label: "Финансы (Finance)" },
 ];
 
 export default function WorkflowTemplatesPage() {
@@ -61,10 +59,10 @@ export default function WorkflowTemplatesPage() {
   const [showArchived, setShowArchived] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [steps, setSteps] = useState<WorkflowStep[]>([{ role: "MANAGER", type: "approval", label: "" }]);
+  const [steps, setSteps] = useState<WorkflowStep[]>([{ role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
-  const [editSteps, setEditSteps] = useState<WorkflowStep[]>([{ role: "MANAGER", type: "approval", label: "" }]);
+  const [editSteps, setEditSteps] = useState<WorkflowStep[]>([{ role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
   const [archiveReason, setArchiveReason] = useState("");
 
   const { data: templates, isLoading, refetch } = trpc.admin.workflows.getTemplates.useQuery();
@@ -78,7 +76,7 @@ export default function WorkflowTemplatesPage() {
       setOpened(false);
       setName("");
       setDescription("");
-      setSteps([{ role: "MANAGER", type: "approval", label: "" }]);
+      setSteps([{ role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
       refetch();
     },
   });
@@ -147,7 +145,7 @@ export default function WorkflowTemplatesPage() {
   });
 
   const addStep = () => {
-    setSteps([...steps, { role: "MANAGER", type: "approval", label: "" }]);
+    setSteps([...steps, { role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
   };
 
   const removeStep = (index: number) => {
@@ -163,7 +161,7 @@ export default function WorkflowTemplatesPage() {
   };
 
   const addEditStep = () => {
-    setEditSteps([...editSteps, { role: "MANAGER", type: "approval", label: "" }]);
+    setEditSteps([...editSteps, { role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
   };
 
   const removeEditStep = (index: number) => {
@@ -197,7 +195,7 @@ export default function WorkflowTemplatesPage() {
       const parsedSteps = JSON.parse(template.steps);
       setEditSteps(parsedSteps);
     } catch (error) {
-      setEditSteps([{ role: "MANAGER", type: "approval", label: "" }]);
+      setEditSteps([{ role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
     }
 
     setEditOpened(true);
@@ -422,7 +420,7 @@ export default function WorkflowTemplatesPage() {
                 label={`Step ${index + 1} Role`}
                 data={WORKFLOW_ROLES}
                 value={step.role}
-                onChange={(value) => updateStep(index, "role", value || "MANAGER")}
+                onChange={(value) => updateStep(index, "role", value || "INITIATOR_SUPERVISOR")}
                 style={{ flex: 1 }}
               />
               <TextInput
@@ -691,7 +689,7 @@ export default function WorkflowTemplatesPage() {
                 label={`Step ${index + 1} Role`}
                 data={WORKFLOW_ROLES}
                 value={step.role}
-                onChange={(value) => updateEditStep(index, "role", value || "MANAGER")}
+                onChange={(value) => updateEditStep(index, "role", value || "INITIATOR_SUPERVISOR")}
                 style={{ flex: 1 }}
               />
               <TextInput

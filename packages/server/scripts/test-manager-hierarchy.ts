@@ -49,24 +49,47 @@ async function testManagerHierarchy() {
     }
     console.log();
 
-    // Test 3: Test workflow role resolution
-    console.log("3️⃣ Testing resolveStepAssignee for different roles...");
-    const testRoles = ["MANAGER", "INITIATOR_SUPERVISOR", "CEO", "FINANCE"];
+    // Test 3: Test workflow step assignment resolution
+    console.log("3️⃣ Testing resolveStepAssignee for different assignment types...");
     
-    for (const role of testRoles) {
+    const testStepDefinitions = [
+      {
+        assigneeType: 'DYNAMIC' as const,
+        dynamicAssignee: 'INITIATOR_SUPERVISOR',
+        actionLabel: 'Manager Approval',
+        type: 'approval',
+      },
+      {
+        assigneeType: 'ROLE_BASED' as const,
+        roleBasedAssignee: 'Ceo',
+        actionLabel: 'CEO Approval',
+        type: 'approval',
+      },
+      {
+        assigneeType: 'ROLE_BASED' as const,
+        roleBasedAssignee: 'Finance_manager',
+        actionLabel: 'Finance Review',
+        type: 'approval',
+      },
+    ];
+    
+    for (const stepDef of testStepDefinitions) {
       try {
-        const assigneeId = await WorkflowAssignmentService.resolveStepAssignee(role as any, testUser.id);
+        const assigneeId = await WorkflowAssignmentService.resolveStepAssignee(stepDef, testUser.id);
         if (assigneeId) {
           const assignee = await prisma.user.findUnique({
             where: { id: assigneeId },
             select: { firstName: true, lastName: true, email: true, role: { select: { name: true } } },
           });
-          console.log(`   ✅ ${role}: ${assignee?.firstName} ${assignee?.lastName} (${assignee?.email}) - ${assignee?.role?.name}`);
+          const assigneeType = stepDef.assigneeType === 'DYNAMIC' ? stepDef.dynamicAssignee : stepDef.roleBasedAssignee;
+          console.log(`   ✅ ${assigneeType}: ${assignee?.firstName} ${assignee?.lastName} (${assignee?.email}) - ${assignee?.role?.name}`);
         } else {
-          console.log(`   ❌ ${role}: No assignee found`);
+          const assigneeType = stepDef.assigneeType === 'DYNAMIC' ? stepDef.dynamicAssignee : stepDef.roleBasedAssignee;
+          console.log(`   ❌ ${assigneeType}: No assignee found`);
         }
       } catch (error) {
-        console.log(`   ❌ ${role}: Error - ${error}`);
+        const assigneeType = stepDef.assigneeType === 'DYNAMIC' ? stepDef.dynamicAssignee : stepDef.roleBasedAssignee;
+        console.log(`   ❌ ${assigneeType}: Error - ${error}`);
       }
     }
     console.log();
@@ -74,9 +97,24 @@ async function testManagerHierarchy() {
     // Test 4: Validate a sample workflow
     console.log("4️⃣ Testing workflow validation...");
     const sampleWorkflowSteps = [
-      { role: "MANAGER", label: "Manager Approval", type: "approval" },
-      { role: "FINANCE", label: "Finance Review", type: "approval" },
-      { role: "CEO", label: "CEO Approval", type: "approval" },
+      {
+        assigneeType: 'DYNAMIC' as const,
+        dynamicAssignee: 'INITIATOR_SUPERVISOR',
+        actionLabel: 'Manager Approval',
+        type: 'approval',
+      },
+      {
+        assigneeType: 'ROLE_BASED' as const,
+        roleBasedAssignee: 'Finance_manager',
+        actionLabel: 'Finance Review',
+        type: 'approval',
+      },
+      {
+        assigneeType: 'ROLE_BASED' as const,
+        roleBasedAssignee: 'Ceo',
+        actionLabel: 'CEO Approval',
+        type: 'approval',
+      },
     ];
 
     const validation = await WorkflowAssignmentService.validateWorkflowRequest(

@@ -6,13 +6,13 @@ async function createSampleRequests() {
   console.log("Creating sample workflow requests...");
 
   try {
-    // Get users and templates - use manager as sample initiator
+    // Get users and templates - use operations director as sample initiator
     const initiatorUser = await prisma.user.findFirst({
-      where: { role: { name: "Manager" } }
+      where: { role: { name: "Operations_director" } }
     });
 
     const managerUser = await prisma.user.findFirst({
-      where: { role: { name: "Manager" } }
+      where: { role: { name: "Operations_director" } }
     });
 
     const templates = await prisma.workflowTemplate.findMany({
@@ -90,7 +90,7 @@ async function createSampleRequests() {
             data: {
               requestId: request.id,
               step: 0,
-              role: firstStep.role === "manager" ? "MANAGER" : "HR_SPECIALIST",
+              role: firstStep.role === "manager" ? "INITIATOR_SUPERVISOR" : "HR_SPECIALIST",
               actionLabel: firstStep.label,
               status: "PENDING"
             }

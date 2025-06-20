@@ -7,7 +7,7 @@ const sampleWorkflows = [
     name: "Leave Request",
     description: "Employee leave request approval workflow",
     steps: [
-      { role: "MANAGER", label: "Manager Approval", type: "approval" },
+      { role: "INITIATOR_SUPERVISOR", label: "Manager Approval", type: "approval" },
       { role: "HR_SPECIALIST", label: "HR Review", type: "approval" },
     ],
   },
@@ -15,7 +15,7 @@ const sampleWorkflows = [
     name: "Contract Approval",
     description: "Contract review and approval process",
     steps: [
-      { role: "MANAGER", label: "Manager Review", type: "approval" },
+      { role: "INITIATOR_SUPERVISOR", label: "Manager Review", type: "approval" },
       { role: "LEGAL", label: "Legal Review", type: "approval" },
       { role: "CEO", label: "CEO Approval", type: "approval" },
     ],
@@ -24,7 +24,7 @@ const sampleWorkflows = [
     name: "Payment Request",
     description: "Payment authorization workflow",
     steps: [
-      { role: "MANAGER", label: "Manager Approval", type: "approval" },
+      { role: "INITIATOR_SUPERVISOR", label: "Manager Approval", type: "approval" },
       { role: "FINANCE_MANAGER", label: "Finance Review", type: "approval" },
       { role: "ACCOUNTING", label: "Accountant Processing", type: "task" },
     ],
@@ -33,7 +33,7 @@ const sampleWorkflows = [
     name: "Procurement Request",
     description: "Purchase order approval process",
     steps: [
-      { role: "MANAGER", label: "Manager Approval", type: "approval" },
+      { role: "INITIATOR_SUPERVISOR", label: "Manager Approval", type: "approval" },
       { role: "PROCUREMENT", label: "Procurement Review", type: "approval" },
       { role: "FINANCE_MANAGER", label: "Budget Approval", type: "approval" },
       { role: "CEO", label: "Executive Approval", type: "approval" },
@@ -43,8 +43,8 @@ const sampleWorkflows = [
     name: "Fuel Request (GSM)",
     description: "Vehicle fuel request workflow",
     steps: [
-      { role: "MANAGER", label: "Manager Approval", type: "approval" },
-      { role: "FINANCE", label: "Finance Authorization", type: "approval" },
+      { role: "INITIATOR_SUPERVISOR", label: "Manager Approval", type: "approval" },
+      { role: "FINANCE_MANAGER", label: "Finance Authorization", type: "approval" },
     ],
   },
 ];

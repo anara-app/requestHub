@@ -48,6 +48,12 @@ export const usersRouter = router({
             email: true,
             phoneNumber: true,
             createdAt: true,
+            role: {
+              select: {
+                id: true,
+                name: true,
+              },
+            },
           },
         }),
         db.user.count(),
@@ -68,15 +74,70 @@ export const usersRouter = router({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ input: { id } }) => {
       try {
+        // Check if user has created workflow requests
+        const workflowRequestsCount = await db.workflowRequest.count({
+          where: { initiatorId: id },
+        });
+
+        if (workflowRequestsCount > 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Cannot delete user: they have created ${workflowRequestsCount} workflow request(s). Please transfer or delete these requests first.`,
+          });
+        }
+
+        // Check if user has subordinates (is a manager)
+        const subordinatesCount = await db.user.count({
+          where: { managerId: id },
+        });
+
+        if (subordinatesCount > 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Cannot delete user: they manage ${subordinatesCount} subordinate(s). Please reassign these users to another manager first.`,
+          });
+        }
+
+        // Check if user has pending workflow approvals
+        const pendingApprovalsCount = await db.workflowApproval.count({
+          where: { 
+            approverId: id,
+            status: "PENDING"
+          },
+        });
+
+        if (pendingApprovalsCount > 0) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Cannot delete user: they have ${pendingApprovalsCount} pending workflow approval(s). Please reassign or complete these approvals first.`,
+          });
+        }
+
+        // If all checks pass, delete the user
         await db.user.delete({
           where: { id },
         });
-        return { success: true, message: "Пользователь успешно удален" };
-      } catch (error) {
+        
+        return { success: true, message: "User successfully deleted" };
+      } catch (error: any) {
         console.log({ error });
+        
+        // If it's already a TRPCError, re-throw it
+        if (error.code) {
+          throw error;
+        }
+        
+        // Handle other database constraint errors
+        if (error.code === 'P2003') {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: "Cannot delete user due to existing references. Please remove all related data first.",
+          });
+        }
+        
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Не удалось удалить пользователя",
+          message: "Failed to delete user",
         });
       }
     }),
@@ -94,6 +155,12 @@ export const usersRouter = router({
           phoneNumber: true,
           roleId: true,
           createdAt: true,
+          role: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
         },
       });
       return user;
