@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useCallback } from 'react';
 import {
   Container,
   Paper,
@@ -11,10 +11,10 @@ import {
   TextInput,
   Badge,
   Stack,
-  Divider,
   Card,
   ActionIcon,
-} from "@mantine/core";
+  Alert,
+} from '@mantine/core';
 import { 
   Users, 
   Search, 
@@ -23,222 +23,438 @@ import {
   Mail,
   Phone,
   Briefcase,
-  ChevronDown,
-  ChevronRight,
   Crown,
   UserCheck,
-} from "lucide-react";
-import { trpc } from "../../../common/trpc";
-import PageTitle from "../../../components/PageTitle";
-import { useDebouncedValue } from "@mantine/hooks";
+  ChartBar,
+  RotateCcw,
+} from 'lucide-react';
+import { 
+  ReactFlow, 
+  Node, 
+  Edge, 
+  Background, 
+  BackgroundVariant,
+  Controls, 
+  MiniMap,
+  useNodesState,
+  useEdgesState,
+  ReactFlowProvider,
+  Panel,
+  useReactFlow,
+  NodeProps,
+  MarkerType,
+  Handle,
+  Position,
+} from '@xyflow/react';
+import dagre from 'dagre';
+import { trpc } from '../../../common/trpc';
+import PageTitle from '../../../components/PageTitle';
+import { useDebouncedValue } from '@mantine/hooks';
+
+// React Flow styles
+import '@xyflow/react/dist/style.css';
 
 interface HierarchyNode {
   id: string;
   firstName: string | null;
   lastName: string | null;
   email: string;
-  phoneNumber: string | null;
-  createdAt: string;
-  role: {
-    id: string;
+  phoneNumber?: string | null;
+  role?: {
     name: string;
   } | null;
-  managerId: string | null;
   isSelfManaged: boolean;
   subordinates: HierarchyNode[];
 }
 
-interface TreeNodeProps {
-  node: HierarchyNode;
-  level: number;
-  searchTerm: string;
-  isLast?: boolean;
-  parentPrefix?: string;
+interface HierarchyStats {
+  totalUsers: number;
+  managersCount: number;
+  topLevelCount: number;
+  rolesCount: number;
 }
 
-function TreeNode({ node, level, searchTerm, isLast = false, parentPrefix = "" }: TreeNodeProps) {
-  const [isExpanded, setIsExpanded] = useState(level < 2); // Auto-expand first 2 levels
-  
-  const userDisplayName = `${node.firstName || ''} ${node.lastName || ''}`.trim() || 'Unnamed User';
-  const hasSubordinates = node.subordinates && node.subordinates.length > 0;
-  
-  // Check if this node or any subordinate matches the search
-  const matchesSearch = !searchTerm || 
-    userDisplayName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    node.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    node.role?.name.toLowerCase().includes(searchTerm.toLowerCase());
-  
-  const hasMatchingSubordinate = (nodes: HierarchyNode[]): boolean => {
-    return nodes.some(sub => {
-      const subName = `${sub.firstName || ''} ${sub.lastName || ''}`.trim();
-      return subName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-             sub.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-             sub.role?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-             hasMatchingSubordinate(sub.subordinates || []);
-    });
+// Custom Node Component
+function UserNode({ data }: NodeProps) {
+  const roleColors: Record<string, string> = {
+    'Admin': '#fa5252',
+    'Ceo': '#fab005',
+    'Manager': '#339af0',
+    'Hr': '#51cf66',
+    'Finance': '#22b8cf',
+    'Lawyer': '#9775fa',
+    'Accountant': '#ff8787',
+    'Initiator': '#868e96'
   };
-  
-  // Hide this node if it doesn't match and has no matching subordinates
-  if (searchTerm && !matchesSearch && !hasMatchingSubordinate(node.subordinates || [])) {
-    return null;
-  }
-  
-  const currentPrefix = level === 0 ? "" : parentPrefix + (isLast ? "    " : "│   ");
-  const connector = level === 0 ? "🏢 " : (isLast ? "└── " : "├── ");
-  
+
+  const nodeData = data as HierarchyNode & { subordinateCount: number; level: number };
+  const roleName = nodeData.role?.name || 'Unknown';
+  const firstName = nodeData.firstName || '';
+  const lastName = nodeData.lastName || '';
+  const fullName = `${firstName} ${lastName}`.trim() || 'Unnamed User';
+  const roleColor = roleColors[roleName] || '#339af0';
+
   return (
-    <Box>
-      <Group
-        gap="xs"
+    <Paper
+      withBorder
+      p="md"
+      style={{
+        minWidth: 280,
+        maxWidth: 320,
+        backgroundColor: 'white',
+        borderColor: roleColor,
+        borderWidth: 2,
+        borderRadius: 12,
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+        position: 'relative',
+      }}
+    >
+      {/* Input handle (top) */}
+      <Handle
+        type="target"
+        position={Position.Top}
         style={{
-          paddingLeft: 8,
-          paddingRight: 8,
-          paddingTop: 6,
-          paddingBottom: 6,
-          borderRadius: 6,
-          backgroundColor: matchesSearch && searchTerm ? 'var(--mantine-color-blue-0)' : 'transparent',
-          fontFamily: 'monospace',
-          fontSize: '14px',
+          background: roleColor,
+          width: 12,
+          height: 12,
+          border: '2px solid white',
         }}
-      >
-        <Text
-          size="sm"
-          style={{ 
-            fontFamily: 'monospace',
-            color: 'var(--mantine-color-gray-6)',
-            minWidth: level * 20 + 60,
-          }}
-        >
-          {currentPrefix + connector}
-        </Text>
-        
-        {hasSubordinates && (
-          <ActionIcon
-            variant="subtle"
-            size="sm"
-            onClick={() => setIsExpanded(!isExpanded)}
+      />
+      
+      {/* Output handle (bottom) */}
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        style={{
+          background: roleColor,
+          width: 12,
+          height: 12,
+          border: '2px solid white',
+        }}
+      />
+      <Stack gap="sm">
+        {/* Header with Avatar and Basic Info */}
+        <Group gap="md">
+          <Avatar 
+            size="lg" 
+            radius="xl" 
+            style={{ backgroundColor: roleColor }}
           >
-            {isExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-          </ActionIcon>
-        )}
-        
-        <Avatar size="sm" radius="xl" color={level === 0 ? "gold" : "blue"}>
-          {level === 0 ? <Crown size={14} /> : <User size={14} />}
-        </Avatar>
-        
-        <Box style={{ flex: 1 }}>
-          <Group gap="xs">
-            <Text fw={500} size="sm">
-              {userDisplayName}
+            {data.isSelfManaged ? (
+              <Crown size={24} color="white" />
+            ) : (
+              <User size={24} color="white" />
+            )}
+          </Avatar>
+          
+          <Box style={{ flex: 1 }}>
+            <Text size="lg" fw={600} lineClamp={1}>
+              {fullName}
             </Text>
-            {node.role && (
-              <Badge variant="light" size="xs" color="blue">
-                {node.role.name}
-              </Badge>
-            )}
-            {node.isSelfManaged && (
-              <Badge variant="filled" size="xs" color="gold">
-                Self-managed
-              </Badge>
-            )}
-            {hasSubordinates && (
-              <Badge variant="outline" size="xs" color="gray">
-                {node.subordinates.length} subordinate{node.subordinates.length !== 1 ? 's' : ''}
-              </Badge>
-            )}
+            <Badge 
+              size="sm" 
+              variant="light" 
+              style={{ backgroundColor: `${roleColor}20`, color: roleColor }}
+            >
+              {roleName}
+            </Badge>
+          </Box>
+        </Group>
+
+        {/* Contact Information */}
+        <Stack gap="xs">
+          <Group gap="xs" align="center">
+            <Mail size={14} style={{ color: '#868e96' }} />
+            <Text size="sm" c="dimmed" lineClamp={1}>
+              {data.email}
+            </Text>
           </Group>
           
-          <Group gap="xs" mt={2}>
-            <Group gap={4}>
-              <Mail size={12} />
-              <Text size="xs" c="dimmed">
-                {node.email}
+          {data.phoneNumber && (
+            <Group gap="xs" align="center">
+              <Phone size={14} style={{ color: '#868e96' }} />
+              <Text size="sm" c="dimmed">
+                {data.phoneNumber}
               </Text>
             </Group>
-            
-            {node.phoneNumber && (
-              <Group gap={4}>
-                <Phone size={12} />
-                <Text size="xs" c="dimmed">
-                  {node.phoneNumber}
-                </Text>
-              </Group>
-            )}
-          </Group>
-        </Box>
-      </Group>
-      
-      {isExpanded && hasSubordinates && (
-        <Box>
-          {node.subordinates.map((subordinate, index) => (
-            <TreeNode
-              key={subordinate.id}
-              node={subordinate}
-              level={level + 1}
-              searchTerm={searchTerm}
-              isLast={index === node.subordinates.length - 1}
-              parentPrefix={currentPrefix}
-            />
-          ))}
-        </Box>
-      )}
-    </Box>
+          )}
+        </Stack>
+
+        {/* Status Badges */}
+        <Group gap="xs">
+          {data.isSelfManaged && (
+            <Badge size="xs" variant="filled" color="yellow">
+              Self-managed
+            </Badge>
+          )}
+          
+          {data.subordinateCount > 0 && (
+            <Badge size="xs" variant="outline" color="gray">
+              {data.subordinateCount} subordinate{data.subordinateCount !== 1 ? 's' : ''}
+            </Badge>
+          )}
+        </Group>
+      </Stack>
+    </Paper>
   );
 }
 
-export default function OrganizationHierarchyPage() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [debouncedSearch] = useDebouncedValue(searchTerm, 300);
+// Node types for React Flow
+const nodeTypes = {
+  userNode: UserNode,
+};
+
+// Function to convert hierarchy data to React Flow nodes and edges
+function convertHierarchyToFlow(hierarchy: HierarchyNode[]): { nodes: Node[], edges: Edge[] } {
+  const nodes: Node[] = [];
+  const edges: Edge[] = [];
+
+  function processNode(node: HierarchyNode, level: number = 0) {
+    // Create the node
+    nodes.push({
+      id: node.id,
+      type: 'userNode',
+      position: { x: 0, y: 0 }, // Will be set by layout
+      data: {
+        ...node,
+        subordinateCount: node.subordinates.length,
+        level,
+      },
+    });
+
+    // Create edges to subordinates
+    node.subordinates.forEach((subordinate) => {
+              edges.push({
+          id: `${node.id}-${subordinate.id}`,
+          source: node.id,
+          target: subordinate.id,
+          type: 'smoothstep',
+          style: { 
+            strokeWidth: 2, 
+            stroke: '#64748b',
+          },
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            color: '#64748b',
+            width: 16,
+            height: 16,
+          },
+        });
+
+      // Recursively process subordinates
+      processNode(subordinate, level + 1);
+    });
+  }
+
+  hierarchy.forEach(rootNode => processNode(rootNode));
   
-  const { data, isLoading, error } = trpc.admin.users.getOrganizationHierarchy.useQuery();
+  return { nodes, edges };
+}
+
+// Layout function using Dagre
+function getLayoutedElements(nodes: Node[], edges: Edge[], direction = 'TB') {
+  const dagreGraph = new dagre.graphlib.Graph();
+  dagreGraph.setDefaultEdgeLabel(() => ({}));
+  dagreGraph.setGraph({ 
+    rankdir: direction,
+    nodesep: 100,
+    ranksep: 150,
+    marginx: 50,
+    marginy: 50,
+  });
+
+  nodes.forEach((node) => {
+    dagreGraph.setNode(node.id, { width: 320, height: 180 });
+  });
+
+  edges.forEach((edge) => {
+    dagreGraph.setEdge(edge.source, edge.target);
+  });
+
+  dagre.layout(dagreGraph);
+
+  const layoutedNodes = nodes.map((node) => {
+    const nodeWithPosition = dagreGraph.node(node.id);
+    return {
+      ...node,
+      position: {
+        x: nodeWithPosition.x - 160, // Center the node
+        y: nodeWithPosition.y - 90,  // Center the node
+      },
+    };
+  });
+
+  return { nodes: layoutedNodes, edges };
+}
+
+// Main Flow Component
+function OrganizationFlow() {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearch] = useDebouncedValue(searchQuery, 300);
+  const { fitView } = useReactFlow();
   
+  const { data, isLoading, error, refetch } = trpc.admin.users.getOrganizationHierarchy.useQuery();
+  
+  // Convert hierarchy to React Flow format
+  const { nodes: initialNodes, edges: initialEdges } = useMemo(() => {
+    if (!data?.hierarchy) return { nodes: [], edges: [] };
+    return convertHierarchyToFlow(data.hierarchy);
+  }, [data]);
+
+  // Apply layout
+  const { nodes: layoutedNodes, edges: layoutedEdges } = useMemo(() => {
+    if (initialNodes.length === 0) return { nodes: [], edges: [] };
+    return getLayoutedElements(initialNodes, initialEdges, 'TB');
+  }, [initialNodes, initialEdges]);
+
+  // Filter nodes based on search
+  const filteredNodes = useMemo(() => {
+    if (!debouncedSearch.trim()) return layoutedNodes;
+    
+    return layoutedNodes.filter(node => {
+      const firstName = node.data.firstName || '';
+      const lastName = node.data.lastName || '';
+      const email = node.data.email || '';
+      const roleName = node.data.role?.name || '';
+      
+      return (
+        firstName.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+        lastName.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+        email.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
+        roleName.toLowerCase().includes(debouncedSearch.toLowerCase())
+      );
+    });
+  }, [layoutedNodes, debouncedSearch]);
+
+  // Filter edges to only show connections between visible nodes
+  const filteredEdges = useMemo(() => {
+    const visibleNodeIds = new Set(filteredNodes.map(node => node.id));
+    return layoutedEdges.filter(edge => 
+      visibleNodeIds.has(edge.source) && visibleNodeIds.has(edge.target)
+    );
+  }, [layoutedEdges, filteredNodes]);
+
+  const [nodes, setNodes, onNodesChange] = useNodesState(filteredNodes);
+  const [edges, setEdges, onEdgesChange] = useEdgesState(filteredEdges);
+
+  // Update nodes and edges when filtered data changes
+  useMemo(() => {
+    setNodes(filteredNodes);
+    setEdges(filteredEdges);
+  }, [filteredNodes, filteredEdges, setNodes, setEdges]);
+
+  const onLayout = useCallback((direction: string) => {
+    const { nodes: layouted, edges: layoutedEdges } = getLayoutedElements(
+      filteredNodes,
+      filteredEdges,
+      direction
+    );
+    
+    setNodes([...layouted]);
+    setEdges([...layoutedEdges]);
+    
+    setTimeout(() => fitView(), 50);
+  }, [filteredNodes, filteredEdges, setNodes, setEdges, fitView]);
+
   if (isLoading) {
     return (
-      <Container>
-        <PageTitle title="Organization Hierarchy" />
-        <Center>
-          <Loader size="lg" />
-        </Center>
-      </Container>
+      <Center h="400px">
+        <Loader size="lg" />
+      </Center>
     );
   }
-  
+
   if (error) {
     return (
-      <Container>
-        <PageTitle title="Organization Hierarchy" />
-        <Paper p="md" withBorder>
-          <Text c="red">Error loading organization hierarchy: {error.message}</Text>
-        </Paper>
-      </Container>
+      <Alert color="red" title="Error loading hierarchy">
+        {error.message}
+      </Alert>
     );
   }
+
+  return (
+    <Paper withBorder style={{ height: '600px', position: 'relative' }}>
+              <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        nodeTypes={nodeTypes}
+        fitView
+        fitViewOptions={{ padding: 0.2 }}
+        minZoom={0.1}
+        maxZoom={2}
+        nodesDraggable={false}
+        nodesConnectable={false}
+        elementsSelectable={false}
+        defaultEdgeOptions={{
+          type: 'smoothstep',
+          style: { strokeWidth: 2, stroke: '#64748b' },
+          markerEnd: { type: MarkerType.ArrowClosed, color: '#64748b' },
+        }}
+      >
+        <Background variant={BackgroundVariant.Dots} />
+        <Controls />
+        <MiniMap 
+          nodeColor={(node) => {
+            const roleColors: Record<string, string> = {
+              'Admin': '#fa5252',
+              'Ceo': '#fab005',
+              'Manager': '#339af0',
+              'Hr': '#51cf66',
+              'Finance': '#22b8cf',
+              'Lawyer': '#9775fa',
+              'Accountant': '#ff8787',
+              'Initiator': '#868e96'
+            };
+            return roleColors[node.data?.role?.name] || '#339af0';
+          }}
+        />
+        
+        {/* Layout Controls */}
+        <Panel position="top-right">
+          <Stack gap="xs">
+            <ActionIcon 
+              variant="light" 
+              onClick={() => onLayout('TB')}
+              title="Vertical Layout"
+            >
+              ↓
+            </ActionIcon>
+            <ActionIcon 
+              variant="light" 
+              onClick={() => onLayout('LR')}
+              title="Horizontal Layout"
+            >
+              →
+            </ActionIcon>
+            <ActionIcon 
+              variant="light" 
+              onClick={() => fitView()}
+              title="Fit View"
+            >
+              ⌂
+            </ActionIcon>
+          </Stack>
+        </Panel>
+      </ReactFlow>
+    </Paper>
+  );
+}
+
+// Main Page Component
+export default function OrganizationHierarchyPage() {
+  const [searchQuery, setSearchQuery] = useState('');
   
-  const hierarchy = data?.hierarchy || [];
+  const { data, isLoading, error, refetch } = trpc.admin.users.getOrganizationHierarchy.useQuery();
+  
   const statistics = data?.statistics || {
     totalUsers: 0,
     managersCount: 0,
     topLevelCount: 0,
     rolesCount: 0,
   };
-  
-  // Filter hierarchy based on search
-  const filteredHierarchy = hierarchy.filter(node => {
-    if (!debouncedSearch) return true;
-    
-    const matchesNode = (n: HierarchyNode): boolean => {
-      const name = `${n.firstName || ''} ${n.lastName || ''}`.trim();
-      const matches = name.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-                     n.email.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
-                     n.role?.name.toLowerCase().includes(debouncedSearch.toLowerCase());
-      
-      if (matches) return true;
-      return n.subordinates?.some(sub => matchesNode(sub)) || false;
-    };
-    
-    return matchesNode(node);
-  });
-  
+
   return (
     <Container size="xl">
       <PageTitle 
@@ -247,11 +463,18 @@ export default function OrganizationHierarchyPage() {
           <Group>
             <TextInput
               placeholder="Search users..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
               leftSection={<Search size={16} />}
               style={{ minWidth: 250 }}
             />
+            <ActionIcon 
+              variant="light" 
+              onClick={() => refetch()}
+              loading={isLoading}
+            >
+              <RotateCcw size={16} />
+            </ActionIcon>
           </Group>
         }
       />
@@ -307,47 +530,10 @@ export default function OrganizationHierarchyPage() {
         </Card>
       </Group>
       
-      <Paper withBorder p="md">
-        <Group mb="md">
-          <Building size={20} />
-          <Text fw={600} size="lg">Organization Structure</Text>
-        </Group>
-        
-        <Divider mb="md" />
-        
-        {filteredHierarchy.length === 0 ? (
-          <Center py="xl">
-            <Stack align="center">
-              <Users size={48} color="gray" />
-              <Text size="lg" c="dimmed">No users found</Text>
-              <Text size="sm" c="dimmed">
-                {searchTerm ? "Try adjusting your search terms" : "No users in the system"}
-              </Text>
-            </Stack>
-          </Center>
-        ) : (
-          <Box style={{ backgroundColor: 'var(--mantine-color-gray-0)', padding: '16px', borderRadius: '8px' }}>
-            <Stack gap="xs">
-              {filteredHierarchy.map((rootNode) => (
-                <TreeNode
-                  key={rootNode.id}
-                  node={rootNode}
-                  level={0}
-                  searchTerm={debouncedSearch}
-                />
-              ))}
-            </Stack>
-          </Box>
-        )}
-        
-        {searchTerm && (
-          <Box mt="md" p="sm" style={{ backgroundColor: 'var(--mantine-color-blue-0)', borderRadius: 4 }}>
-            <Text size="sm" c="blue">
-              🔍 Searching for "{searchTerm}" - Found {filteredHierarchy.length} matching hierarchy tree{filteredHierarchy.length !== 1 ? 's' : ''}
-            </Text>
-          </Box>
-        )}
-      </Paper>
+      {/* React Flow Organization Chart */}
+      <ReactFlowProvider>
+        <OrganizationFlow />
+      </ReactFlowProvider>
     </Container>
   );
 } 
