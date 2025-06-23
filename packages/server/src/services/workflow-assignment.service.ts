@@ -73,6 +73,18 @@ export class WorkflowAssignmentService {
   }
 
   /**
+   * Diagnostic method to check what roles exist in the system
+   * @returns Array of role names available in the system
+   */
+  static async getAvailableRoles(): Promise<string[]> {
+    const roles = await db.role.findMany({
+      select: { name: true },
+      orderBy: { name: 'asc' },
+    });
+    return roles.map((role: { name: string }) => role.name);
+  }
+
+  /**
    * Finds the manager for a given user (for dynamic assignments)
    * @param userId - The user ID to find the manager for
    * @returns The manager's user ID, or null if no manager found
@@ -135,13 +147,22 @@ export class WorkflowAssignmentService {
     for (const [index, step] of stepDefinitions.entries()) {
       const assigneeId = await this.resolveStepAssignee(step, initiatorId);
       
+      // BUGFIX: Don't create approval records with null approverId
+      if (!assigneeId) {
+        const assigneeInfo = step.assigneeType === 'DYNAMIC' 
+          ? `${step.assigneeType}(${step.dynamicAssignee})`
+          : `${step.assigneeType}(${step.roleBasedAssignee})`;
+        
+        throw new Error(`Cannot resolve assignee for workflow step ${index + 1}. No user found for ${assigneeInfo}. Please ensure the required role exists and has users assigned.`);
+      }
+      
       // Create approval with proper schema fields
       const approval = await db.workflowApproval.create({
         data: {
           requestId,
           step: index,
           actionLabel: step.actionLabel,
-          approverId: assigneeId, // Resolved user ID
+          approverId: assigneeId, // Resolved user ID - guaranteed to be non-null now
           status: "PENDING",
           assigneeType: step.assigneeType,
           roleBasedAssignee: step.roleBasedAssignee,
@@ -181,12 +202,18 @@ export class WorkflowAssignmentService {
       'LEGAL': 'Lawyer',
       'PROCUREMENT': 'Procurement',
       'FINANCE_MANAGER': 'Finance_manager',
+      'FINANCE': 'Finance_manager', // Legacy fallback
       'ACCOUNTING': 'Accountant',
       'HR_SPECIALIST': 'Hr_specialist',
+      'HR': 'Hr_specialist', // Legacy fallback
       'SYSTEM_AUTOMATION': 'System',
       'SECURITY_REVIEW': 'Security',
       'SECURITY_GUARD': 'Security Guard',
       'INDUSTRIAL_SAFETY': 'Safety',
+      // Add common role name variations
+      'MANAGER': 'Manager',
+      'ADMIN': 'Admin',
+      'LAWYER': 'Lawyer',
     };
 
     const mappedRole = roleMapping[legacyRole];
