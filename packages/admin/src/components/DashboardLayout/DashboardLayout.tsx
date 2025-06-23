@@ -7,20 +7,32 @@ import {
   UnstyledButton,
   Group,
   Text,
+  Burger,
 } from "@mantine/core";
 import { useDisclosure, useMediaQuery } from "@mantine/hooks";
+import {
+  ImagesIcon,
+  LogOutIcon,
+  UserCog,
+  Users,
+  Workflow,
+  FileText,
+  Plus,
+  Clock,
+  FileCheck,
+  Network,
+} from "lucide-react";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
-import { ROUTES } from "../../router/routes";
-import ProtectedRoute from "../ProtectedRoute";
-import { ImagesIcon, LogOutIcon, UserCog, Users, Workflow, FileText, Plus, Clock, FileCheck, Network } from "lucide-react";
 import logo from "../../assets/logo.png";
-import ThemeSwitch from "../ThemeSwith";
+import { authClient } from "../../common/auth";
 import { $Enums } from "../../common/database.types";
 import { trpc } from "../../common/trpc";
+import { ROUTES } from "../../router/routes";
 import { useDashboardLayout } from "../../store/useDashboardLayout";
-import classes from "./NavbarMinimal.module.css";
-import { authClient } from "../../common/auth";
+import ProtectedRoute from "../ProtectedRoute";
+import ThemeSwitch from "../ThemeSwith";
 import UserProfile from "../UserProfile";
+import classes from "./NavbarMinimal.module.css";
 
 type WebAppRoutesTypes = keyof typeof ROUTES;
 
@@ -37,9 +49,35 @@ interface NavbarLinkProps {
   label: string;
   active?: boolean;
   onClick?: () => void;
+  isMobile?: boolean;
 }
 
-function NavbarLink({ icon: Icon, label, active, onClick }: NavbarLinkProps) {
+function NavbarLink({
+  icon: Icon,
+  label,
+  active,
+  onClick,
+  isMobile,
+}: NavbarLinkProps) {
+  if (isMobile) {
+    // Mobile layout with icon + text horizontal
+    return (
+      <UnstyledButton
+        onClick={onClick}
+        className={`flex w-full items-center gap-3 rounded-lg p-3 transition-colors duration-200 ${
+          active
+            ? "bg-blue-700 text-white"
+            : "text-blue-100 hover:bg-blue-700 hover:text-white"
+        }`}
+        style={{ minHeight: 48 }} // Touch-friendly height
+      >
+        <Icon size={20} strokeWidth={1.5} />
+        <span className="text-sm font-medium">{label}</span>
+      </UnstyledButton>
+    );
+  }
+
+  // Desktop layout (icon only with tooltip)
   return (
     <Tooltip label={label} position="right" transitionProps={{ duration: 0 }}>
       <UnstyledButton
@@ -108,7 +146,7 @@ const NavItems: NavItemType[] = [
 export default function DashboardLayout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [opened] = useDisclosure();
+  const [opened, { toggle }] = useDisclosure();
   const [_, setActive] = useState(0);
 
   const { isEnabled } = useDashboardLayout();
@@ -139,24 +177,40 @@ export default function DashboardLayout() {
         header={{ height: 60 }}
         disabled={isEnabled}
         navbar={{
-          width: 80,
+          width: isMobile ? 250 : 80,
           breakpoint: "sm",
           collapsed: { mobile: !opened },
         }}
       >
-        <AppShell.Header className="flex items-center justify-between px-6 border-b border-gray-200">
+        <AppShell.Header className="flex items-center justify-between border-b border-gray-200 px-6">
           <Group gap="md">
+            {isMobile && (
+              <Burger
+                opened={opened}
+                onClick={toggle}
+                size="sm"
+                color="#2563eb"
+              />
+            )}
             <img className="h-8 w-auto" src={logo} alt="24.kg" />
-            <Text size="lg" fw={600}>
-              Partner Neft
-            </Text>
+            {!isMobile && (
+              <Text size="lg" fw={600}>
+                Partner Neft
+              </Text>
+            )}
           </Group>
-          <UserProfile />
+          <UserProfile isMobile={isMobile} />
         </AppShell.Header>
 
-        <AppShell.Navbar className="flex flex-col bg-blue-600 p-4">
+        <AppShell.Navbar
+          className={
+            isMobile
+              ? "flex flex-col bg-blue-600 p-4"
+              : "flex flex-col bg-blue-600 p-4"
+          }
+        >
           <div className="mt-2 flex-1">
-            <Stack justify="center" gap={8}>
+            <Stack justify="center" gap={isMobile ? 12 : 8}>
               {NavItems.map((item, index) => {
                 if (
                   !item?.permissionRequired ||
@@ -169,7 +223,13 @@ export default function DashboardLayout() {
                       icon={item.icon}
                       label={item.label}
                       active={item?.activePaths?.includes(currentPath)}
-                      onClick={() => setActive(index)}
+                      onClick={() => {
+                        setActive(index);
+                        if (isMobile) {
+                          toggle(); // Close mobile nav when item is clicked
+                        }
+                      }}
+                      isMobile={isMobile}
                     />
                   </Link>
                 );
@@ -177,12 +237,17 @@ export default function DashboardLayout() {
             </Stack>
           </div>
 
-          <Stack justify="center" gap={0}>
-            <NavbarLink icon={ThemeSwitch} label="Change theme" />
+          <Stack justify="center" gap={isMobile ? 12 : 0}>
+            <NavbarLink
+              icon={ThemeSwitch}
+              label="Change theme"
+              isMobile={isMobile}
+            />
             <NavbarLink
               icon={LogOutIcon}
               label="Logout"
               onClick={handleLogout}
+              isMobile={isMobile}
             />
           </Stack>
         </AppShell.Navbar>

@@ -1,11 +1,15 @@
 import { Group, Text, Avatar, Menu, UnstyledButton, rem } from "@mantine/core";
 import { User, LogOut, Settings } from "lucide-react";
-import { trpc } from "../common/trpc";
-import { authClient } from "../common/auth";
 import { useNavigate } from "react-router-dom";
+import { authClient } from "../common/auth";
+import { trpc } from "../common/trpc";
 import { ROUTES } from "../router/routes";
 
-export default function UserProfile() {
+interface UserProfileProps {
+  isMobile?: boolean;
+}
+
+export default function UserProfile({ isMobile = false }: UserProfileProps) {
   const navigate = useNavigate();
   const { data: currentUser, isLoading } = trpc.admin.users.getMe.useQuery();
 
@@ -23,18 +27,24 @@ export default function UserProfile() {
     return (
       <Group gap="sm">
         <Avatar size="sm" />
-        <Text size="sm" c="dimmed">Loading...</Text>
+        {!isMobile && (
+          <Text size="sm" c="dimmed">
+            Loading...
+          </Text>
+        )}
       </Group>
     );
   }
 
-  const displayName = currentUser.firstName && currentUser.lastName 
-    ? `${currentUser.firstName} ${currentUser.lastName}`
-    : currentUser.email;
+  const displayName =
+    currentUser.firstName && currentUser.lastName
+      ? `${currentUser.firstName} ${currentUser.lastName}`
+      : currentUser.email;
 
-  const initials = currentUser.firstName && currentUser.lastName
-    ? `${currentUser.firstName[0]}${currentUser.lastName[0]}`
-    : currentUser.email?.[0]?.toUpperCase() || "U";
+  const initials =
+    currentUser.firstName && currentUser.lastName
+      ? `${currentUser.firstName[0]}${currentUser.lastName[0]}`
+      : currentUser.email?.[0]?.toUpperCase() || "U";
 
   return (
     <Menu shadow="md" width={200}>
@@ -43,7 +53,7 @@ export default function UserProfile() {
           style={{
             padding: rem(8),
             borderRadius: rem(8),
-            transition: 'background-color 0.2s',
+            transition: "background-color 0.2s",
           }}
           className="hover:bg-gray-100"
         >
@@ -51,14 +61,16 @@ export default function UserProfile() {
             <Avatar size="sm" radius="xl" color="blue">
               {initials}
             </Avatar>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <Text size="sm" fw={500} truncate>
-                {displayName}
-              </Text>
-              <Text size="xs" c="dimmed" truncate>
-                {currentUser.role?.name || "No role assigned"}
-              </Text>
-            </div>
+            {!isMobile && (
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <Text size="sm" fw={500} truncate>
+                  {displayName}
+                </Text>
+                <Text size="xs" c="dimmed" truncate>
+                  {currentUser.role?.name || "No role assigned"}
+                </Text>
+              </div>
+            )}
           </Group>
         </UnstyledButton>
       </Menu.Target>
@@ -67,18 +79,24 @@ export default function UserProfile() {
         <Menu.Label>Account</Menu.Label>
         <Menu.Item leftSection={<User size={14} />} disabled>
           <div>
-            <Text size="sm" fw={500}>{displayName}</Text>
-            <Text size="xs" c="dimmed">{currentUser.email}</Text>
+            <Text size="sm" fw={500}>
+              {displayName}
+            </Text>
+            <Text size="xs" c="dimmed">
+              {currentUser.email}
+            </Text>
             {currentUser.role && (
-              <Text size="xs" c="dimmed">Role: {currentUser.role.name}</Text>
+              <Text size="xs" c="dimmed">
+                Role: {currentUser.role.name}
+              </Text>
             )}
           </div>
         </Menu.Item>
-        
+
         <Menu.Divider />
-        
-        <Menu.Item 
-          leftSection={<LogOut size={14} />} 
+
+        <Menu.Item
+          leftSection={<LogOut size={14} />}
           color="red"
           onClick={handleLogout}
         >
@@ -87,4 +105,4 @@ export default function UserProfile() {
       </Menu.Dropdown>
     </Menu>
   );
-} 
+}
