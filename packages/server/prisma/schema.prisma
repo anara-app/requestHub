@@ -199,6 +199,7 @@ model WorkflowTemplate {
   isActive    Boolean @default(true)
   archivedAt  DateTime?
   archiveReason String?
+  formFields    Json    @default("[]")
 
   // Audit fields
   createdById String

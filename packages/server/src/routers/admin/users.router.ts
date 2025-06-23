@@ -1,15 +1,14 @@
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
+import { db } from "../../common/prisma";
+import { $Enums } from "../../common/prisma";
+import { auth } from "../../lib/auth";
+import { WorkflowAssignmentService } from "../../services/workflow-assignment.service";
 import {
   protectedPermissionProcedure,
   protectedProcedure,
   router,
 } from "../../trpc/trpc";
-import { TRPCError } from "@trpc/server";
-import { db } from "../../common/prisma";
-import bcrypt from "bcrypt";
-import { $Enums } from "../../common/prisma";
-import { WorkflowAssignmentService } from "../../services/workflow-assignment.service";
-import { auth } from "../../lib/auth";
 
 export const usersRouter = router({
   getUsers: protectedPermissionProcedure(["READ_USERS"])
@@ -101,9 +100,9 @@ export const usersRouter = router({
 
         // Check if user has pending workflow approvals
         const pendingApprovalsCount = await db.workflowApproval.count({
-          where: { 
+          where: {
             approverId: id,
-            status: "PENDING"
+            status: "PENDING",
           },
         });
 
@@ -118,24 +117,25 @@ export const usersRouter = router({
         await db.user.delete({
           where: { id },
         });
-        
+
         return { success: true, message: "User successfully deleted" };
       } catch (error: any) {
         console.log({ error });
-        
+
         // If it's already a TRPCError, re-throw it
         if (error.code) {
           throw error;
         }
-        
+
         // Handle other database constraint errors
-        if (error.code === 'P2003') {
+        if (error.code === "P2003") {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: "Cannot delete user due to existing references. Please remove all related data first.",
+            message:
+              "Cannot delete user due to existing references. Please remove all related data first.",
           });
         }
-        
+
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Failed to delete user",
@@ -446,8 +446,10 @@ export const usersRouter = router({
 
         // Check for circular hierarchy
         if (input.managerId) {
-          const hierarchy = await WorkflowAssignmentService.getUserHierarchy(input.managerId);
-          if (hierarchy.some(user => user.id === input.userId)) {
+          const hierarchy = await WorkflowAssignmentService.getUserHierarchy(
+            input.managerId
+          );
+          if (hierarchy.some((user) => user.id === input.userId)) {
             throw new TRPCError({
               code: "BAD_REQUEST",
               message: "This would create a circular hierarchy",
@@ -514,13 +516,10 @@ export const usersRouter = router({
             },
           },
         },
-        orderBy: [
-          { firstName: "asc" },
-          { lastName: "asc" },
-        ],
+        orderBy: [{ firstName: "asc" }, { lastName: "asc" }],
       });
 
-      return users.map(user => ({
+      return users.map((user) => ({
         id: user.id,
         name: `${user.firstName} ${user.lastName}`,
         email: user.email,
@@ -529,8 +528,8 @@ export const usersRouter = router({
     }),
 
   // Get complete organization hierarchy
-  getOrganizationHierarchy: protectedPermissionProcedure(["READ_USERS"])
-    .query(async () => {
+  getOrganizationHierarchy: protectedPermissionProcedure(["READ_USERS"]).query(
+    async () => {
       // Get all users with their manager and role information
       const users = await (db.user.findMany as any)({
         select: {
@@ -548,14 +547,14 @@ export const usersRouter = router({
             },
           },
         },
-        orderBy: [
-          { firstName: "asc" },
-          { lastName: "asc" },
-        ],
+        orderBy: [{ firstName: "asc" }, { lastName: "asc" }],
       });
 
       // Build hierarchy structure
-      const buildHierarchy = (parentId: string | null, visited: Set<string> = new Set()): any[] => {
+      const buildHierarchy = (
+        parentId: string | null,
+        visited: Set<string> = new Set()
+      ): any[] => {
         return users
           .filter((user: any) => {
             // For top level, include self-managed users or users with no manager
@@ -569,7 +568,7 @@ export const usersRouter = router({
           .map((user: any) => {
             const newVisited = new Set(visited);
             newVisited.add(user.id);
-            
+
             return {
               id: user.id,
               firstName: user.firstName,
@@ -589,11 +588,13 @@ export const usersRouter = router({
 
       // Calculate statistics
       const totalUsers = users.length;
-      const managersCount = users.filter((user: any) => 
+      const managersCount = users.filter((user: any) =>
         users.some((u: any) => u.managerId === user.id && u.id !== user.id)
       ).length;
       const topLevelCount = hierarchy.length;
-      const rolesCount = new Set(users.filter((u: any) => u.role).map((u: any) => u.role!.name)).size;
+      const rolesCount = new Set(
+        users.filter((u: any) => u.role).map((u: any) => u.role!.name)
+      ).size;
 
       return {
         hierarchy,
@@ -604,5 +605,6 @@ export const usersRouter = router({
           rolesCount,
         },
       };
-    }),
+    }
+  ),
 });
