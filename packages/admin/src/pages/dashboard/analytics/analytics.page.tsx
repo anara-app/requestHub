@@ -8,6 +8,7 @@ import { trpc } from "../../../common/trpc";
 export default function AnalyticsPage() {
   // Fetch real analytics data
   const { data: metricsData, isLoading: metricsLoading, error: metricsError } = trpc.admin.analytics.getDashboardMetrics.useQuery();
+  const { data: statusDistribution, isLoading: statusLoading } = trpc.admin.analytics.getStatusDistribution.useQuery();
   const { data: topPerformers, isLoading: performersLoading } = trpc.admin.analytics.getTopPerformers.useQuery();
   const { data: templateUsage, isLoading: templateLoading } = trpc.admin.analytics.getTemplateUsage.useQuery();
 
@@ -147,11 +148,71 @@ export default function AnalyticsPage() {
                   </Title>
                   <TrendingUp size={20} />
                 </Group>
-                <div style={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Text c="dimmed">
-                    <Trans>Pie chart will be implemented here</Trans>
-                  </Text>
-                </div>
+                {statusLoading ? (
+                  <Center py="md">
+                    <Loader size="sm" />
+                  </Center>
+                ) : (
+                  <Stack gap="md" style={{ height: 300, justifyContent: 'center' }}>
+                    {statusDistribution && statusDistribution.length > 0 ? (
+                      statusDistribution.map((item) => {
+                        const total = statusDistribution.reduce((sum, status) => sum + status.count, 0);
+                        const percentage = total > 0 ? Math.round((item.count / total) * 100) : 0;
+                        
+                        // Map status to display info
+                        const getStatusInfo = (status: string) => {
+                          switch (status) {
+                            case 'PENDING':
+                              return { label: 'Pending', color: 'orange', icon: Clock };
+                            case 'APPROVED':
+                              return { label: 'Approved', color: 'teal', icon: CheckCircle };
+                            case 'REJECTED':
+                              return { label: 'Rejected', color: 'red', icon: XCircle };
+                            case 'IN_PROGRESS':
+                              return { label: 'In Progress', color: 'blue', icon: Activity };
+                            case 'DRAFT':
+                              return { label: 'Draft', color: 'gray', icon: FileText };
+                            case 'CANCELLED':
+                              return { label: 'Cancelled', color: 'dark', icon: XCircle };
+                            default:
+                              return { label: status, color: 'gray', icon: FileText };
+                          }
+                        };
+
+                        const statusInfo = getStatusInfo(item.status);
+                        const IconComponent = statusInfo.icon;
+
+                        return (
+                          <Group key={item.status} justify="space-between">
+                            <Group gap="xs">
+                              <IconComponent 
+                                size={16} 
+                                color={`var(--mantine-color-${statusInfo.color}-6)`} 
+                              />
+                              <Text size="sm" fw={500}>
+                                <Trans>{statusInfo.label}</Trans>
+                              </Text>
+                            </Group>
+                            <Group gap="xs">
+                              <Text size="sm" fw={600}>
+                                {item.count}
+                              </Text>
+                              <Text size="xs" c="dimmed">
+                                ({percentage}%)
+                              </Text>
+                            </Group>
+                          </Group>
+                        );
+                      })
+                    ) : (
+                      <Center>
+                        <Text size="sm" c="dimmed">
+                          <Trans>No request data available yet</Trans>
+                        </Text>
+                      </Center>
+                    )}
+                  </Stack>
+                )}
               </Card>
             </Grid.Col>
           </Grid>

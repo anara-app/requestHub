@@ -137,17 +137,27 @@ export const analyticsRouter = router({
 
   getStatusDistribution: protectedPermissionProcedure(["READ_ANALYTICS"])
     .query(async () => {
-      const statusCounts = await db.workflowRequest.groupBy({
-        by: ['status'],
-        _count: {
-          status: true,
-        },
-      });
+      try {
+        const statusCounts = await db.workflowRequest.groupBy({
+          by: ['status'],
+          _count: {
+            status: true,
+          },
+          orderBy: {
+            _count: {
+              status: 'desc',
+            },
+          },
+        });
 
-      return statusCounts.map(item => ({
-        status: item.status,
-        count: item._count.status,
-      }));
+        return statusCounts.map(item => ({
+          status: item.status,
+          count: item._count.status,
+        }));
+      } catch (error) {
+        console.error('Error fetching status distribution:', error);
+        throw new Error('Failed to fetch status distribution data');
+      }
     }),
 
   getTopPerformers: protectedPermissionProcedure(["READ_ANALYTICS"])
