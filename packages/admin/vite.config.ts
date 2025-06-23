@@ -1,16 +1,17 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react-swc";
 import { lingui } from "@lingui/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineConfig({
   plugins: [
     react({
-      babel: {
-        plugins: ["@lingui/babel-plugin-lingui-macro"],
-      },
+      plugins: [["@lingui/swc-plugin", {}]],
     }),
     lingui(),
     tailwindcss(),
   ],
+  server: {
+    port: 5174,
+  },
 });

@@ -63,7 +63,7 @@ export default function AuthPage() {
     } catch (error) {
       if (error instanceof Error) {
         notifications.show({
-          title: "Ошибка",
+          title: t`Error`,
           message: error.message,
           color: "red",
         });
@@ -105,7 +105,7 @@ export default function AuthPage() {
             fullWidth
             mt="xl"
           >
-            <Typography>Войти</Typography>
+            <Typography>{t`Sign In`}</Typography>
           </Button>
         </Paper>
       </Container>

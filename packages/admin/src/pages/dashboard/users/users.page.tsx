@@ -24,21 +24,23 @@ import PermissionVisibility from "../../../components/PermissionVisibility";
 
 export default function UsersPage() {
   return (
-    <Container>
-      <PageTitle
-        title="Пользователи"
-        right={
-          <PermissionVisibility permissions={["CREATE_USER"]}>
-            <Link to={ROUTES.DASHBOARD_USERS_USER}>
-              <Button leftSection={<Plus size={14} />}>
-                Добавить пользователя
-              </Button>
-            </Link>
-          </PermissionVisibility>
-        }
-      />
-      <UsersTable />
-    </Container>
+    <PermissionVisibility permissions={["READ_USERS" as any]}>
+      <Container>
+        <PageTitle
+          title="Пользователи"
+          right={
+            <PermissionVisibility permissions={["CREATE_USER"]}>
+              <Link to={ROUTES.DASHBOARD_USERS_USER}>
+                <Button leftSection={<Plus size={14} />}>
+                  Добавить пользователя
+                </Button>
+              </Link>
+            </PermissionVisibility>
+          }
+        />
+        <UsersTable />
+      </Container>
+    </PermissionVisibility>
   );
 }
 

@@ -188,6 +188,9 @@ enum PermissionOperation {
   APPROVE_WORKFLOW_REQUEST
   REJECT_WORKFLOW_REQUEST
   MANAGE_WORKFLOW_TEMPLATES
+
+  //Analytics
+  READ_ANALYTICS
 }
 
 model WorkflowTemplate {

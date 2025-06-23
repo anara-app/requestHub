@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLingui } from "@lingui/react/macro";
 import {
   Button,
   Group,
@@ -10,68 +11,26 @@ import {
   Badge,
   TextInput,
   Textarea,
-  Select,
-  ActionIcon,
   Loader,
   Center,
   Modal,
-  Grid,
   Box,
+  Container,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { User, Edit, Save, X, Plus, Archive, RotateCcw } from "lucide-react";
+import { User, Edit, Save, Archive, RotateCcw } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 import { trpc } from "../../../common/trpc";
-import Container from "../../../components/Container";
-import {
-  FormBuilder,
-  FormField,
-  FormFieldType,
-} from "../../../components/Forms";
+import { FormBuilder, FormField } from "../../../components/Forms";
 import PageTitle from "../../../components/PageTitle";
+import {
+  WorkflowStepEditor,
+  WorkflowStep,
+} from "../../../components/WorkflowStepEditor";
 import { ROUTES } from "../../../router/routes";
 
-type WorkflowRoleEnum =
-  | "INITIATOR_SUPERVISOR"
-  | "CEO"
-  | "LEGAL"
-  | "PROCUREMENT"
-  | "FINANCE_MANAGER"
-  | "ACCOUNTING"
-  | "HR_SPECIALIST"
-  | "SYSTEM_AUTOMATION"
-  | "SECURITY_REVIEW"
-  | "SECURITY_GUARD"
-  | "INDUSTRIAL_SAFETY";
-
-interface WorkflowStep {
-  role: WorkflowRoleEnum;
-  type: string;
-  label: string;
-}
-
-// Workflow roles based on the department mapping
-const WORKFLOW_ROLES = [
-  {
-    value: "INITIATOR_SUPERVISOR",
-    label: "Руководитель инициатора (Initiator's Supervisor)",
-  },
-  { value: "CEO", label: "Генеральный директор (CEO)" },
-  { value: "LEGAL", label: "Юрист (Legal)" },
-  { value: "PROCUREMENT", label: "Сотрудник отдела закупок (Procurement)" },
-  { value: "FINANCE_MANAGER", label: "Финансовый менеджер (Finance Manager)" },
-  { value: "ACCOUNTING", label: "Бухгалтерия (Accounting)" },
-  { value: "HR_SPECIALIST", label: "HR Specialist" },
-  { value: "SYSTEM_AUTOMATION", label: "Система (System Automation)" },
-  { value: "SECURITY_REVIEW", label: "Служба безопасности (Security Review)" },
-  { value: "SECURITY_GUARD", label: "Охрана (Security Guard)" },
-  {
-    value: "INDUSTRIAL_SAFETY",
-    label: "Служба промышленной безопасности (Industrial Safety)",
-  },
-];
-
 export default function WorkflowTemplatePage() {
+  const { t } = useLingui();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [isEditMode, setIsEditMode] = useState(false);
@@ -83,7 +42,12 @@ export default function WorkflowTemplatePage() {
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
   const [editSteps, setEditSteps] = useState<WorkflowStep[]>([
-    { role: "INITIATOR_SUPERVISOR", type: "approval", label: "" },
+    {
+      assigneeType: "DYNAMIC",
+      dynamicAssignee: "INITIATOR_SUPERVISOR",
+      type: "approval",
+      actionLabel: "",
+    },
   ]);
   const [editFormFields, setEditFormFields] = useState<FormField[]>([]);
 
@@ -92,6 +56,8 @@ export default function WorkflowTemplatePage() {
     isLoading,
     refetch,
   } = trpc.admin.workflows.getTemplate.useQuery({ id: id! }, { enabled: !!id });
+
+  const { data: roles } = trpc.admin.roles.getRoles.useQuery();
 
   const updateTemplateMutation =
     trpc.admin.workflows.updateTemplate.useMutation({
@@ -162,10 +128,28 @@ export default function WorkflowTemplatePage() {
 
       try {
         const parsedSteps = JSON.parse(template.steps);
-        setEditSteps(parsedSteps);
+        // Convert old format to new format if needed
+        const convertedSteps = parsedSteps.map((step: any) => {
+          if (step.role && !step.assigneeType) {
+            // Legacy format - convert to new format
+            return {
+              assigneeType: "DYNAMIC" as const,
+              dynamicAssignee: step.role,
+              type: step.type || "approval",
+              actionLabel: step.label || "",
+            };
+          }
+          return step;
+        });
+        setEditSteps(convertedSteps);
       } catch (error) {
         setEditSteps([
-          { role: "INITIATOR_SUPERVISOR", type: "approval", label: "" },
+          {
+            assigneeType: "DYNAMIC",
+            dynamicAssignee: "INITIATOR_SUPERVISOR",
+            type: "approval",
+            actionLabel: "",
+          },
         ]);
       }
 
@@ -179,29 +163,6 @@ export default function WorkflowTemplatePage() {
       }
     }
   }, [template, isEditMode]);
-
-  const addEditStep = () => {
-    setEditSteps([
-      ...editSteps,
-      { role: "INITIATOR_SUPERVISOR", type: "approval", label: "" },
-    ]);
-  };
-
-  const removeEditStep = (index: number) => {
-    if (editSteps.length > 1) {
-      setEditSteps(editSteps.filter((_, i) => i !== index));
-    }
-  };
-
-  const updateEditStep = (
-    index: number,
-    field: keyof WorkflowStep,
-    value: string
-  ) => {
-    const updatedSteps = [...editSteps];
-    updatedSteps[index] = { ...updatedSteps[index], [field]: value };
-    setEditSteps(updatedSteps);
-  };
 
   const handleEdit = () => {
     setIsEditMode(true);
@@ -256,7 +217,7 @@ export default function WorkflowTemplatePage() {
 
   if (isLoading) {
     return (
-      <Container>
+      <Container size="xl" my="lg">
         <Center style={{ height: 400 }}>
           <Loader size="lg" />
         </Center>
@@ -266,11 +227,13 @@ export default function WorkflowTemplatePage() {
 
   if (!template) {
     return (
-      <Container>
+      <Container size="xl" my="lg">
         <Center style={{ height: 400 }}>
           <Stack align="center">
-            <Text>Template not found</Text>
-            <Button onClick={handleBackToTemplates}>Back to Templates</Button>
+            <Text>{t`Template not found`}</Text>
+            <Button onClick={handleBackToTemplates}>
+              {t`Back to Templates`}
+            </Button>
           </Stack>
         </Center>
       </Container>
@@ -278,21 +241,21 @@ export default function WorkflowTemplatePage() {
   }
 
   return (
-    <Container>
+    <Container size="xl" my="lg">
       <Group justify="space-between" align="center" mb="lg">
         <PageTitle>
-          {isEditMode ? "Edit Template" : "Template Details"}
+          {isEditMode ? t`Edit Template` : t`Template Details`}
         </PageTitle>
         <Group>
           <Button variant="outline" onClick={handleBackToTemplates}>
-            Back to Templates
+            {t`Back to Templates`}
           </Button>
           {!isEditMode ? (
             <Group>
               {template.isActive && (
                 <>
                   <Button leftSection={<Edit size={16} />} onClick={handleEdit}>
-                    Edit Template
+                    {t`Edit Template`}
                   </Button>
                   <Button
                     color="red"
@@ -300,7 +263,7 @@ export default function WorkflowTemplatePage() {
                     leftSection={<Archive size={16} />}
                     onClick={handleArchive}
                   >
-                    Archive
+                    {t`Archive`}
                   </Button>
                 </>
               )}
@@ -310,21 +273,21 @@ export default function WorkflowTemplatePage() {
                   leftSection={<RotateCcw size={16} />}
                   onClick={handleRestore}
                 >
-                  Restore
+                  {t`Restore`}
                 </Button>
               )}
             </Group>
           ) : (
             <Group>
               <Button variant="outline" onClick={handleCancelEdit}>
-                Cancel
+                {t`Cancel`}
               </Button>
               <Button
                 leftSection={<Save size={16} />}
                 onClick={handleSave}
                 loading={updateTemplateMutation.isPending}
               >
-                Save Changes
+                {t`Save Changes`}
               </Button>
             </Group>
           )}
@@ -338,34 +301,34 @@ export default function WorkflowTemplatePage() {
             <>
               <div>
                 <Text fw={500} mb="xs">
-                  Template Name
+                  {t`Template Name`}
                 </Text>
                 <Text>{template.name}</Text>
               </div>
 
               <div>
                 <Text fw={500} mb="xs">
-                  Description
+                  {t`Description`}
                 </Text>
                 <Text>{template.description || "No description"}</Text>
               </div>
 
               <div>
                 <Text fw={500} mb="xs">
-                  Status
+                  {t`Status`}
                 </Text>
                 <Badge
                   color={template.isActive ? "green" : "gray"}
                   variant="light"
                 >
-                  {template.isActive ? "Active" : "Archived"}
+                  {template.isActive ? t`Active` : t`Archived`}
                 </Badge>
               </div>
 
               {!template.isActive && template.archiveReason && (
                 <div>
                   <Text fw={500} mb="xs">
-                    Archive Reason
+                    {t`Archive Reason`}
                   </Text>
                   <Text size="sm" c="dimmed">
                     {template.archiveReason}
@@ -376,15 +339,15 @@ export default function WorkflowTemplatePage() {
           ) : (
             <>
               <TextInput
-                label="Template Name"
-                placeholder="Enter template name"
+                label={t`Template Name`}
+                placeholder={t`Enter template name`}
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
                 required
               />
               <Textarea
-                label="Description"
-                placeholder="Enter template description"
+                label={t`Description`}
+                placeholder={t`Enter template description`}
                 value={editDescription}
                 onChange={(e) => setEditDescription(e.target.value)}
               />
@@ -396,79 +359,73 @@ export default function WorkflowTemplatePage() {
           {/* Workflow Steps */}
           <div>
             <Text fw={500} mb="sm">
-              Workflow Steps
+              {t`Workflow Steps`}
             </Text>
             {!isEditMode ? (
               <Timeline>
                 {(() => {
                   try {
                     const steps = JSON.parse(template.steps);
-                    return steps.map((step: any, index: number) => (
-                      <Timeline.Item
-                        key={index}
-                        bullet={<User size={14} />}
-                        title={`Step ${index + 1}: ${step.label || step.role}`}
-                      >
-                        <Text size="sm" c="dimmed">
-                          Role:{" "}
-                          {WORKFLOW_ROLES.find((r) => r.value === step.role)
-                            ?.label || step.role}
-                        </Text>
-                        <Text size="sm" c="dimmed">
-                          Type: {step.type}
-                        </Text>
-                      </Timeline.Item>
-                    ));
+                    return steps.map((step: any, index: number) => {
+                      let displayText = "";
+                      let roleText = "";
+
+                      if (step.assigneeType === "ROLE_BASED") {
+                        displayText = step.actionLabel || `Step ${index + 1}`;
+                        if (step.roleBasedAssignee) {
+                          roleText = t`Role: ${step.roleBasedAssignee}`;
+                        } else {
+                          roleText = t`Role-based assignment (no role selected)`;
+                        }
+                      } else if (step.assigneeType === "DYNAMIC") {
+                        displayText = step.actionLabel || `Step ${index + 1}`;
+                        if (step.dynamicAssignee) {
+                          const dynamicLabel =
+                            step.dynamicAssignee === "INITIATOR_SUPERVISOR"
+                              ? t`Initiator's Supervisor`
+                              : step.dynamicAssignee;
+                          roleText = t`Dynamic Assignment: ${dynamicLabel}`;
+                        } else {
+                          roleText = t`Dynamic assignment (no assignment selected)`;
+                        }
+                      } else if (step.role) {
+                        // Legacy format
+                        displayText = step.label || `Step ${index + 1}`;
+                        roleText = t`Legacy Role: ${step.role}`;
+                      } else {
+                        displayText =
+                          step.actionLabel || step.label || `Step ${index + 1}`;
+                        roleText = t`Unknown assignment`;
+                      }
+
+                      return (
+                        <Timeline.Item
+                          key={index}
+                          bullet={<User size={14} />}
+                          title={displayText}
+                        >
+                          <Text size="sm" c="dimmed">
+                            {roleText}
+                          </Text>
+                          <Text size="sm" c="dimmed">
+                            {t`Type`}: {step.type}
+                          </Text>
+                        </Timeline.Item>
+                      );
+                    });
                   } catch (error) {
-                    return <Text c="red">Error parsing workflow steps</Text>;
+                    return (
+                      <Text c="red">{t`Error parsing workflow steps`}</Text>
+                    );
                   }
                 })()}
               </Timeline>
             ) : (
-              <Stack gap="md">
-                {editSteps.map((step, index) => (
-                  <Group key={index} align="end">
-                    <Select
-                      label={`Step ${index + 1} Role`}
-                      data={WORKFLOW_ROLES}
-                      value={step.role}
-                      onChange={(value) =>
-                        updateEditStep(
-                          index,
-                          "role",
-                          value || "INITIATOR_SUPERVISOR"
-                        )
-                      }
-                      style={{ flex: 1 }}
-                    />
-                    <TextInput
-                      label="Step Label"
-                      placeholder="Enter step label"
-                      value={step.label}
-                      onChange={(e) =>
-                        updateEditStep(index, "label", e.target.value)
-                      }
-                      style={{ flex: 1 }}
-                    />
-                    {editSteps.length > 1 && (
-                      <ActionIcon
-                        color="red"
-                        onClick={() => removeEditStep(index)}
-                      >
-                        <X size={16} />
-                      </ActionIcon>
-                    )}
-                  </Group>
-                ))}
-
-                <Button
-                  variant="outline"
-                  onClick={addEditStep}
-                  leftSection={<Plus size={16} />}
-                >
-                  Add Step
-                </Button>
-              </Stack>
+              <WorkflowStepEditor
+                steps={editSteps}
+                onStepsChange={setEditSteps}
+                roles={roles}
+              />
             )}
           </div>
 
@@ -477,7 +434,7 @@ export default function WorkflowTemplatePage() {
           {/* Form Fields Section */}
           <div>
             <Text fw={500} mb="sm">
-              Form Fields
+              {t`Form Fields`}
             </Text>
             {!isEditMode ? (
               <>
@@ -490,7 +447,7 @@ export default function WorkflowTemplatePage() {
                     if (formFields.length === 0) {
                       return (
                         <Text size="sm" c="dimmed">
-                          No form fields configured for this template.
+                          {t`No form fields configured for this template.`}
                         </Text>
                       );
                     }
@@ -508,12 +465,12 @@ export default function WorkflowTemplatePage() {
                                   </Badge>
                                   {field.validation?.required && (
                                     <Badge size="sm" color="red">
-                                      Required
+                                      {t`Required`}
                                     </Badge>
                                   )}
                                 </Group>
                                 <Text size="sm" c="dimmed">
-                                  Field name: {field.name}
+                                  {t`Field name`}: {field.name}
                                 </Text>
                                 {field.description && (
                                   <Text size="sm" c="dimmed" mt="xs">
@@ -522,13 +479,13 @@ export default function WorkflowTemplatePage() {
                                 )}
                                 {field.placeholder && (
                                   <Text size="sm" c="dimmed">
-                                    Placeholder: {field.placeholder}
+                                    {t`Placeholder`}: {field.placeholder}
                                   </Text>
                                 )}
                                 {field.options && field.options.length > 0 && (
                                   <Box mt="xs">
                                     <Text size="xs" c="dimmed" mb="xs">
-                                      Options:
+                                      {t`Options`}:
                                     </Text>
                                     <Group gap="xs">
                                       {field.options.map((option, idx) => (
@@ -553,7 +510,7 @@ export default function WorkflowTemplatePage() {
                       </Stack>
                     );
                   } catch (error) {
-                    return <Text c="red">Error parsing form fields</Text>;
+                    return <Text c="red">{t`Error parsing form fields`}</Text>;
                   }
                 })()}
               </>
@@ -572,7 +529,7 @@ export default function WorkflowTemplatePage() {
               {/* Audit Trail Section */}
               <div>
                 <Text fw={500} mb="sm">
-                  Audit Trail
+                  {t`Audit Trail`}
                 </Text>
                 <Paper p="md" withBorder>
                   <Stack gap="sm">
@@ -580,14 +537,14 @@ export default function WorkflowTemplatePage() {
                     <Group justify="space-between">
                       <Group gap="xs">
                         <Badge color="blue" variant="light" size="sm">
-                          Created
+                          {t`Created`}
                         </Badge>
                         <Text size="sm">
-                          by{" "}
+                          {t`by`}{" "}
                           {template.createdBy
                             ? `${template.createdBy.firstName || ""} ${template.createdBy.lastName || ""}`.trim() ||
                               template.createdBy.email
-                            : "Unknown"}
+                            : t`Unknown`}
                         </Text>
                       </Group>
                       <Text size="sm" c="dimmed">
@@ -601,14 +558,14 @@ export default function WorkflowTemplatePage() {
                         <Group justify="space-between">
                           <Group gap="xs">
                             <Badge color="yellow" variant="light" size="sm">
-                              Updated
+                              {t`Updated`}
                             </Badge>
                             <Text size="sm">
-                              by{" "}
+                              {t`by`}{" "}
                               {template.updatedBy
                                 ? `${template.updatedBy.firstName || ""} ${template.updatedBy.lastName || ""}`.trim() ||
                                   template.updatedBy.email
-                                : "Unknown"}
+                                : t`Unknown`}
                             </Text>
                           </Group>
                           <Text size="sm" c="dimmed">
@@ -622,14 +579,14 @@ export default function WorkflowTemplatePage() {
                       <Group justify="space-between">
                         <Group gap="xs">
                           <Badge color="red" variant="light" size="sm">
-                            Archived
+                            {t`Archived`}
                           </Badge>
                           <Text size="sm">
-                            by{" "}
+                            {t`by`}{" "}
                             {template.archivedBy
                               ? `${template.archivedBy.firstName || ""} ${template.archivedBy.lastName || ""}`.trim() ||
                                 template.archivedBy.email
-                              : "Unknown"}
+                              : t`Unknown`}
                           </Text>
                         </Group>
                         <Text size="sm" c="dimmed">
@@ -649,12 +606,12 @@ export default function WorkflowTemplatePage() {
       <Modal
         opened={archiveOpened}
         onClose={() => setArchiveOpened(false)}
-        title="Archive Template"
+        title={t`Archive Template`}
         size="md"
       >
         <Stack gap="md">
           <Text>
-            Are you sure you want to archive the template{" "}
+            {t`Are you sure you want to archive the template`}{" "}
             <Text component="span" fw={700} c="red">
               "{template.name}"
             </Text>
@@ -662,14 +619,12 @@ export default function WorkflowTemplatePage() {
           </Text>
 
           <Text size="sm" c="dimmed">
-            Archived templates will no longer be available for creating new
-            requests, but existing requests using this template will continue to
-            work.
+            {t`Archived templates will no longer be available for creating new requests, but existing requests using this template will continue to work.`}
           </Text>
 
           <Textarea
-            label="Reason for archiving (optional)"
-            placeholder="Enter a reason for archiving this template..."
+            label={t`Reason for archiving (optional)`}
+            placeholder={t`Enter a reason for archiving this template...`}
             value={archiveReason}
             onChange={(e) => setArchiveReason(e.target.value)}
           />
@@ -680,14 +635,14 @@ export default function WorkflowTemplatePage() {
               onClick={() => setArchiveOpened(false)}
               disabled={archiveTemplateMutation.isPending}
             >
-              Cancel
+              {t`Cancel`}
             </Button>
             <Button
               color="red"
               onClick={confirmArchive}
               loading={archiveTemplateMutation.isPending}
             >
-              Archive Template
+              {t`Archive Template`}
             </Button>
           </Group>
         </Stack>
@@ -697,12 +652,12 @@ export default function WorkflowTemplatePage() {
       <Modal
         opened={restoreOpened}
         onClose={() => setRestoreOpened(false)}
-        title="Restore Template"
+        title={t`Restore Template`}
         size="md"
       >
         <Stack gap="md">
           <Text>
-            Are you sure you want to restore the template{" "}
+            {t`Are you sure you want to restore the template`}{" "}
             <Text component="span" fw={700} c="green">
               "{template.name}"
             </Text>
@@ -710,8 +665,7 @@ export default function WorkflowTemplatePage() {
           </Text>
 
           <Text size="sm" c="dimmed">
-            This will make the template available for creating new workflow
-            requests again.
+            {t`This will make the template available for creating new workflow requests again.`}
           </Text>
 
           <Group justify="flex-end" gap="sm">
@@ -720,14 +674,14 @@ export default function WorkflowTemplatePage() {
               onClick={() => setRestoreOpened(false)}
               disabled={restoreTemplateMutation.isPending}
             >
-              Cancel
+              {t`Cancel`}
             </Button>
             <Button
               color="green"
               onClick={confirmRestore}
               loading={restoreTemplateMutation.isPending}
             >
-              Restore Template
+              {t`Restore Template`}
             </Button>
           </Group>
         </Stack>

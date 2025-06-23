@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLingui } from "@lingui/react/macro";
 import {
   Table,
   Button,
@@ -9,34 +10,24 @@ import {
   Badge,
   Group,
   Switch,
+  Container,
 } from "@mantine/core";
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { trpc } from "../../../common/trpc";
-import Container from "../../../components/Container";
 import PageTitle from "../../../components/PageTitle";
 import { ROUTES } from "../../../router/routes";
 
-type WorkflowRoleEnum =
-  | "INITIATOR_SUPERVISOR"
-  | "CEO"
-  | "LEGAL"
-  | "PROCUREMENT"
-  | "FINANCE_MANAGER"
-  | "ACCOUNTING"
-  | "HR_SPECIALIST"
-  | "SYSTEM_AUTOMATION"
-  | "SECURITY_REVIEW"
-  | "SECURITY_GUARD"
-  | "INDUSTRIAL_SAFETY";
-
 interface WorkflowStep {
-  role: WorkflowRoleEnum;
+  assigneeType: "ROLE_BASED" | "DYNAMIC";
+  roleBasedAssignee?: string;
+  dynamicAssignee?: string;
+  actionLabel: string;
   type: string;
-  label: string;
 }
 
 export default function WorkflowTemplatesPage() {
+  const { t } = useLingui();
   const navigate = useNavigate();
   const [showArchived, setShowArchived] = useState(false);
 
@@ -60,7 +51,7 @@ export default function WorkflowTemplatesPage() {
 
   if (isLoading) {
     return (
-      <Container>
+      <Container size="xl" my="lg">
         <Center style={{ height: 400 }}>
           <Loader size="lg" />
         </Center>
@@ -69,12 +60,12 @@ export default function WorkflowTemplatesPage() {
   }
 
   return (
-    <Container>
+    <Container size="xl" my="lg">
       <Group justify="space-between" align="center" mb="lg">
-        <PageTitle>Workflow Templates</PageTitle>
+        <PageTitle>{t`Workflow Templates`}</PageTitle>
         <Group>
           <Switch
-            label={showArchived ? "Show Active" : "Show Archived"}
+            label={showArchived ? t`Show Active` : t`Show Archived`}
             checked={showArchived}
             onChange={(event) => setShowArchived(event.currentTarget.checked)}
           />
@@ -83,7 +74,7 @@ export default function WorkflowTemplatesPage() {
             leftSection={<Plus size={16} />}
             onClick={handleCreateTemplate}
           >
-            Create Template
+            {t`Create Template`}
           </Button>
         </Group>
       </Group>
@@ -92,8 +83,8 @@ export default function WorkflowTemplatesPage() {
         <Center style={{ height: 200 }}>
           <Text c="dimmed">
             {showArchived
-              ? "No archived templates found"
-              : "No workflow templates found. Create one to get started."}
+              ? t`No archived templates found`
+              : t`No workflow templates found. Create one to get started.`}
           </Text>
         </Center>
       ) : (
@@ -101,13 +92,13 @@ export default function WorkflowTemplatesPage() {
           <Table striped highlightOnHover>
             <Table.Thead>
               <Table.Tr>
-                <Table.Th>Name</Table.Th>
-                <Table.Th>Description</Table.Th>
-                <Table.Th>Steps</Table.Th>
-                <Table.Th>Status</Table.Th>
-                <Table.Th>Created By</Table.Th>
-                {showArchived && <Table.Th>Archived Date</Table.Th>}
-                {showArchived && <Table.Th>Archived By</Table.Th>}
+                <Table.Th>{t`Name`}</Table.Th>
+                <Table.Th>{t`Description`}</Table.Th>
+                <Table.Th>{t`Steps`}</Table.Th>
+                <Table.Th>{t`Status`}</Table.Th>
+                <Table.Th>{t`Created By`}</Table.Th>
+                {showArchived && <Table.Th>{t`Archived Date`}</Table.Th>}
+                {showArchived && <Table.Th>{t`Archived By`}</Table.Th>}
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -130,18 +121,20 @@ export default function WorkflowTemplatesPage() {
                     </Table.Td>
                     <Table.Td>
                       <Text size="sm" c="dimmed" lineClamp={2}>
-                        {template.description || "No description"}
+                        {template.description || t`No description`}
                       </Text>
                     </Table.Td>
                     <Table.Td>
-                      <Badge variant="light">{steps.length} steps</Badge>
+                      <Badge variant="light">
+                        {steps.length} {t`steps`}
+                      </Badge>
                     </Table.Td>
                     <Table.Td>
                       <Badge
                         color={template.isActive ? "green" : "gray"}
                         variant="light"
                       >
-                        {template.isActive ? "Active" : "Archived"}
+                        {template.isActive ? t`Active` : t`Archived`}
                       </Badge>
                     </Table.Td>
                     <Table.Td>
@@ -149,7 +142,7 @@ export default function WorkflowTemplatesPage() {
                         {template.createdBy
                           ? `${template.createdBy.firstName || ""} ${template.createdBy.lastName || ""}`.trim() ||
                             template.createdBy.email
-                          : "Unknown"}
+                          : t`Unknown`}
                       </Text>
                     </Table.Td>
                     {showArchived && (
@@ -157,7 +150,7 @@ export default function WorkflowTemplatesPage() {
                         <Text size="sm" c="dimmed">
                           {template.archivedAt
                             ? new Date(template.archivedAt).toLocaleDateString()
-                            : "N/A"}
+                            : t`N/A`}
                         </Text>
                       </Table.Td>
                     )}
@@ -167,7 +160,7 @@ export default function WorkflowTemplatesPage() {
                           {template.archivedBy
                             ? `${template.archivedBy.firstName || ""} ${template.archivedBy.lastName || ""}`.trim() ||
                               template.archivedBy.email
-                            : "N/A"}
+                            : t`N/A`}
                         </Text>
                       </Table.Td>
                     )}

@@ -1,7 +1,11 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import { Prisma } from "server/src/common/database-types";
+import { trpc } from "../common/trpc";
 import DashboardLayout from "../components/DashboardLayout/DashboardLayout";
+import ProtectedRoute from "../components/ProtectedRoute";
 /* Pages */
 import AuthPage from "../pages/auth/auth.page";
+import AnalyticsPage from "../pages/dashboard/analytics/analytics.page";
 import GalleryPage from "../pages/dashboard/gallery/gallery.page";
 import RolePage from "../pages/dashboard/roles/role";
 import RolesPage from "../pages/dashboard/roles/roles";
@@ -19,6 +23,24 @@ import WorkflowTemplatePage from "../pages/dashboard/workflows/workflow-template
 import WorkflowTemplatesPage from "../pages/dashboard/workflows/workflow-templates.page";
 import { ROUTES } from "./routes";
 
+// Component to handle conditional default redirect based on user permissions
+function DefaultRedirect() {
+  const { data: permissions, isLoading } =
+    trpc.admin.users.getMyPermissions.useQuery();
+
+  if (isLoading) {
+    return null; // Show nothing while loading
+  }
+
+  // If user has READ_ANALYTICS permission, redirect to analytics (admin user)
+  if (permissions?.includes("READ_ANALYTICS" as Prisma.PermissionOperation)) {
+    return <Navigate to={ROUTES.DASHBOARD_ANALYTICS} replace />;
+  }
+
+  // Otherwise redirect to my-requests (regular user)
+  return <Navigate to={ROUTES.DASHBOARD_MY_REQUESTS} replace />;
+}
+
 export const router = createBrowserRouter([
   {
     path: ROUTES.AUTH,
@@ -29,8 +51,12 @@ export const router = createBrowserRouter([
     element: <DashboardLayout />,
     children: [
       {
+        path: ROUTES.DASHBOARD_ANALYTICS,
+        element: <AnalyticsPage />,
+      },
+      {
         path: "",
-        element: <Navigate to={ROUTES.DASHBOARD_MY_REQUESTS} />,
+        element: <DefaultRedirect />,
       },
       /* Users */
       {

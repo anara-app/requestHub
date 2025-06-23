@@ -7,6 +7,7 @@ export default defineConfig({
     {
       path: "<rootDir>/locales/{locale}/messages",
       include: ["src"],
+      format: "po",
     },
   ],
 });

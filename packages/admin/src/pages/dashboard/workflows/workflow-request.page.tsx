@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Trans, useLingui } from "@lingui/react/macro";
 import {
   Container,
   Paper,
@@ -24,6 +25,7 @@ import PageTitle from "../../../components/PageTitle";
 import { RequestDataRenderer } from "../../../components/RequestDataRenderer";
 
 export default function WorkflowRequestPage() {
+  const { t } = useLingui();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [actionType, setActionType] = useState<"approve" | "reject" | null>(
@@ -57,11 +59,11 @@ export default function WorkflowRequestPage() {
   };
 
   const approveRequestMutation =
-    trpc.nextClient.workflows.approveRequest.useMutation({
+    trpc.admin.workflows.approveRequest.useMutation({
       onSuccess: () => {
         notifications.show({
-          title: "Success",
-          message: "Request approved successfully",
+          title: t`Success`,
+          message: t`Request approved successfully`,
           color: "green",
         });
         refetchAll();
@@ -69,32 +71,31 @@ export default function WorkflowRequestPage() {
       },
       onError: (error: any) => {
         notifications.show({
-          title: "Error",
-          message: error.message || "Failed to approve request",
+          title: t`Error`,
+          message: error.message || t`Failed to approve request`,
           color: "red",
         });
       },
     });
 
-  const rejectRequestMutation =
-    trpc.nextClient.workflows.rejectRequest.useMutation({
-      onSuccess: () => {
-        notifications.show({
-          title: "Success",
-          message: "Request rejected successfully",
-          color: "green",
-        });
-        refetchAll();
-        setActionType(null);
-      },
-      onError: (error: any) => {
-        notifications.show({
-          title: "Error",
-          message: error.message || "Failed to reject request",
-          color: "red",
-        });
-      },
-    });
+  const rejectRequestMutation = trpc.admin.workflows.rejectRequest.useMutation({
+    onSuccess: () => {
+      notifications.show({
+        title: t`Success`,
+        message: t`Request rejected successfully`,
+        color: "green",
+      });
+      refetchAll();
+      setActionType(null);
+    },
+    onError: (error: any) => {
+      notifications.show({
+        title: t`Error`,
+        message: error.message || t`Failed to reject request`,
+        color: "red",
+      });
+    },
+  });
 
   if (isLoading || !currentUser) {
     return <LoadingPlaceholder />;
@@ -103,10 +104,14 @@ export default function WorkflowRequestPage() {
   if (!request) {
     return (
       <Container size="xl" my="lg">
-        <PageTitle>Request Not Found</PageTitle>
-        <Text>The requested workflow request could not be found.</Text>
+        <PageTitle>
+          <Trans>Request Not Found</Trans>
+        </PageTitle>
+        <Text>
+          <Trans>The requested workflow request could not be found.</Trans>
+        </Text>
         <Button mt="md" onClick={() => navigate(-1)}>
-          Go Back
+          <Trans>Go Back</Trans>
         </Button>
       </Container>
     );
@@ -178,12 +183,60 @@ export default function WorkflowRequestPage() {
   let currentStep: any = null;
 
   try {
-    templateSteps = JSON.parse(request.template.steps as string);
+    templateSteps = JSON.parse(request.template.steps as any);
     currentStep = templateSteps[request.currentStep];
   } catch (error) {
     console.error("Error parsing template steps:", error);
     templateSteps = [];
   }
+
+  // Helper function to get step display info (handles both old and new formats)
+  const getStepDisplayInfo = (step: any, stepIndex?: number) => {
+    // New format
+    if (step.assigneeType) {
+      let assignee: string;
+
+      if (step.assigneeType === "ROLE_BASED") {
+        // For role-based, just show the role name
+        assignee = step.roleBasedAssignee || "Unknown role";
+      } else {
+        // For dynamic assignments, try to show the resolved person's name
+        if (typeof stepIndex === "number") {
+          // Find the approval for this step to get the resolved assignee
+          const approval = request.approvals.find(
+            (a: any) => a.step === stepIndex
+          );
+          if (approval?.approver) {
+            const fullName =
+              `${approval.approver.firstName || ""} ${approval.approver.lastName || ""}`.trim();
+            assignee = fullName || (approval.approver as any).email;
+          } else {
+            // Show the dynamic assignment type if no resolved person yet
+            assignee =
+              step.dynamicAssignee === "INITIATOR_SUPERVISOR"
+                ? t`Initiator's Supervisor`
+                : step.dynamicAssignee || t`Unknown assignment`;
+          }
+        } else {
+          assignee =
+            step.dynamicAssignee === "INITIATOR_SUPERVISOR"
+              ? t`Initiator's Supervisor`
+              : step.dynamicAssignee || t`Unknown assignment`;
+        }
+      }
+
+      const label = step.actionLabel || t`Approval`;
+      return { assignee, label };
+    }
+
+    // Old format (backward compatibility)
+    if (step.role && step.label) {
+      return { assignee: step.role, label: step.label };
+    }
+
+    // Fallback
+    return { assignee: t`Unknown`, label: t`Approval` };
+  };
 
   return (
     <Container size="xl" my="lg">
@@ -193,7 +246,7 @@ export default function WorkflowRequestPage() {
           leftSection={<ArrowLeft size={16} />}
           onClick={() => navigate(-1)}
         >
-          Back to Requests
+          <Trans>Back to Requests</Trans>
         </Button>
       </Group>
 
@@ -204,7 +257,7 @@ export default function WorkflowRequestPage() {
         <Paper shadow="sm" p="lg" withBorder>
           <Group justify="space-between" mb="md">
             <Text size="lg" fw={500}>
-              Request Details
+              <Trans>Request Details</Trans>
             </Text>
             <Badge
               color={getStatusColor(request.status)}
@@ -217,28 +270,45 @@ export default function WorkflowRequestPage() {
 
           <Stack gap="sm">
             <Group>
-              <Text fw={500}>Template:</Text>
+              <Text fw={500}>
+                <Trans>Template:</Trans>
+              </Text>
               <Text>{request.template.name}</Text>
             </Group>
             <Group>
-              <Text fw={500}>Initiated by:</Text>
+              <Text fw={500}>
+                <Trans>Initiated by:</Trans>
+              </Text>
               <Text>
                 {request.initiator.firstName} {request.initiator.lastName}
               </Text>
             </Group>
             <Group>
-              <Text fw={500}>Current Step:</Text>
-              <Text>
-                {request.currentStep + 1} of {templateSteps.length}
+              <Text fw={500}>
+                <Trans>Current Step:</Trans>
               </Text>
-              {currentStep && (
-                <Text c="dimmed">
-                  ({currentStep.role} - {currentStep.label})
-                </Text>
-              )}
+              <Text>
+                <Trans>
+                  {request.currentStep + 1} of {templateSteps.length}
+                </Trans>
+              </Text>
+              {currentStep &&
+                (() => {
+                  const { assignee, label } = getStepDisplayInfo(
+                    currentStep,
+                    request.currentStep
+                  );
+                  return (
+                    <Text c="dimmed">
+                      ({assignee} - {label})
+                    </Text>
+                  );
+                })()}
             </Group>
             <Group>
-              <Text fw={500}>Created:</Text>
+              <Text fw={500}>
+                <Trans>Created:</Trans>
+              </Text>
               <Text>{new Date(request.createdAt).toLocaleString()}</Text>
             </Group>
           </Stack>
@@ -247,17 +317,17 @@ export default function WorkflowRequestPage() {
             <>
               <Divider my="md" />
               <Text fw={500} mb="xs">
-                Description:
+                <Trans>Description:</Trans>
               </Text>
               <Text>{request.description}</Text>
             </>
           )}
 
-          {request.data && Object.keys(request.data).length > 0 && (
+          {request.data && Object.keys(request.data as any).length > 0 && (
             <>
               <Divider my="md" />
               <Text fw={500} mb="xs">
-                Request Data:
+                <Trans>Request Data:</Trans>
               </Text>
               <RequestDataRenderer
                 requestData={request.data as Record<string, any>}
@@ -287,7 +357,7 @@ export default function WorkflowRequestPage() {
         {/* Workflow Progress */}
         <Paper shadow="sm" p="lg" withBorder>
           <Text size="lg" fw={500} mb="md">
-            Workflow Progress
+            <Trans>Workflow Progress</Trans>
           </Text>
 
           <Timeline active={request.currentStep} bulletSize={24} lineWidth={2}>
@@ -330,33 +400,37 @@ export default function WorkflowRequestPage() {
                 color = "blue";
               }
 
+              const { assignee, label } = getStepDisplayInfo(step, index);
+
               return (
                 <Timeline.Item
                   key={index}
                   bullet={bullet}
-                  title={`${step.role} - ${step.label}`}
+                  title={`${assignee} - ${label}`}
                   color={color}
                 >
                   <Text size="sm" c="dimmed">
                     {stepStatus === "completed" && approval?.comment && (
-                      <>Approved: {approval.comment}</>
+                      <Trans>Approved: {approval.comment}</Trans>
                     )}
-                    {stepStatus === "completed" &&
-                      !approval?.comment &&
-                      "Completed"}
+                    {stepStatus === "completed" && !approval?.comment && (
+                      <Trans>Completed</Trans>
+                    )}
                     {stepStatus === "rejected" && approval?.comment && (
-                      <>Rejected: {approval.comment}</>
+                      <Trans>Rejected: {approval.comment}</Trans>
                     )}
-                    {stepStatus === "rejected" &&
-                      !approval?.comment &&
-                      "Rejected"}
-                    {stepStatus === "active" && "Pending approval"}
-                    {stepStatus === "not-started" && "Not started"}
+                    {stepStatus === "rejected" && !approval?.comment && (
+                      <Trans>Rejected</Trans>
+                    )}
+                    {stepStatus === "active" && <Trans>Pending approval</Trans>}
+                    {stepStatus === "not-started" && <Trans>Not started</Trans>}
                   </Text>
                   {approval?.approver && (
                     <Text size="xs" c="dimmed">
-                      by {approval.approver.firstName}{" "}
-                      {approval.approver.lastName}
+                      <Trans>
+                        by {approval.approver.firstName}{" "}
+                        {approval.approver.lastName}
+                      </Trans>
                     </Text>
                   )}
                 </Timeline.Item>
@@ -369,7 +443,7 @@ export default function WorkflowRequestPage() {
         {canUserApprove() && (
           <Paper shadow="sm" p="lg" withBorder>
             <Text size="lg" fw={500} mb="md">
-              Take Action
+              <Trans>Take Action</Trans>
             </Text>
 
             {!actionType ? (
@@ -379,14 +453,14 @@ export default function WorkflowRequestPage() {
                   leftSection={<CheckCircle size={16} />}
                   onClick={() => setActionType("approve")}
                 >
-                  Approve
+                  <Trans>Approve</Trans>
                 </Button>
                 <Button
                   color="red"
                   leftSection={<XCircle size={16} />}
                   onClick={() => setActionType("reject")}
                 >
-                  Reject
+                  <Trans>Reject</Trans>
                 </Button>
               </Group>
             ) : (

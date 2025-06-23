@@ -13,21 +13,1167 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. js-lingui-explicit-id
+#: src/App.tsx:39
+msgid "Access Denied"
+msgstr "Доступ запрещен"
+
+#. js-lingui-explicit-id
+#: src/App.tsx:40
+msgid "You don't have permission to perform this action"
+msgstr "У вас нет разрешения на выполнение этого действия"
+
+#. js-lingui-explicit-id
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:428
+#~ msgid "Search users..."
+#~ msgstr "Поиск пользователей..."
+
+#. js-lingui-explicit-id
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:446
+#~ msgid "Total Users"
+#~ msgstr "Всего пользователей"
+
+#. js-lingui-explicit-id
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:455
+#~ msgid "Managers"
+#~ msgstr "Менеджеры"
+
+#. js-lingui-explicit-id
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:464
+#~ msgid "Top-level Nodes"
+#~ msgstr "Узлы верхнего уровня"
+
+#. js-lingui-explicit-id
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:473
+#~ msgid "Unique Roles"
+#~ msgstr "Уникальные роли"
+
+#. placeholder {0}: nodeData.subordinateCount
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:201
+msgid "{0, plural, one {subordinate} other {subordinates}}"
+msgstr "{0, plural, one {subordinate} other {subordinates}}"
+
 #. placeholder {0}: props.children
 #: src/components/Typography.tsx:8
 msgid "{0}"
-msgstr ""
+msgstr "{0}"
 
-#: src/pages/auth/auth.page.tsx:78
-#: src/pages/auth/auth.page.tsx:82
+#. placeholder {0}: request.currentStep + 1
+#. placeholder {1}: templateSteps.length
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:291
+msgid "{0} of {1}"
+msgstr "{0} из {1}"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:245
+msgid "{status}"
+msgstr "{status}"
+
+#: src/components/ProtectedRoute.tsx:44
+msgid "Access Denied"
+msgstr "Access Denied"
+
+#: src/components/WorkflowStepEditor.tsx:127
+msgid "Action Label"
+msgstr "Метка действия"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:92
+#: src/pages/dashboard/workflows/all-requests.page.tsx:115
+msgid "Actions"
+msgstr "Действия"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:137
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:324
+msgid "Active"
+msgstr "Активный"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:126
+msgid "Active Users"
+msgstr "Активные пользователи"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:406
+#~ msgid "Add a comment about your decision..."
+#~ msgstr "Добавьте комментарий о вашем решении..."
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:436
+#~ msgid "Add a comment..."
+#~ msgstr "Добавить комментарий..."
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:446
+#~ msgid "Add Comment"
+#~ msgstr "Добавить комментарий"
+
+#: src/components/WorkflowStepEditor.tsx:150
+msgid "Add Step"
+msgstr "Добавить этап"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:46
+#: src/components/DashboardLayout/DashboardLayout.tsx:141
+msgid "All Requests"
+msgstr "Все заявки"
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:86
+msgid "All statuses"
+msgstr "Все статусы"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:171
+msgid "All types"
+msgstr "Все типы"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:92
+#: src/pages/dashboard/analytics/analytics.page.tsx:107
+#: src/pages/dashboard/analytics/analytics.page.tsx:167
+#: src/components/DashboardLayout/DashboardLayout.tsx:113
+msgid "Analytics"
+msgstr "Аналитика"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:228
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:238
+msgid "Approval"
+msgstr "Одобрение"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:456
+msgid "Approve"
+msgstr "Одобрить"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:73
+#: src/pages/dashboard/workflows/all-requests.page.tsx:53
+#: src/pages/dashboard/workflows/all-requests.page.tsx:90
+#: src/pages/dashboard/analytics/analytics.page.tsx:235
+msgid "Approved"
+msgstr "Одобрено"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:140
+msgid "Approved Requests"
+msgstr "Одобренные заявки"
+
+#. placeholder {0}: approval.comment
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:414
+msgid "Approved: {0}"
+msgstr "Одобрено: {0}"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:266
+msgid "Archive"
+msgstr "Archive"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:331
+msgid "Archive Reason"
+msgstr "Archive Reason"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:609
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:645
+msgid "Archive Template"
+msgstr "Архивировать шаблон"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:137
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:324
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:582
+msgid "Archived"
+msgstr "Архивировано"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:101
+msgid "Archived By"
+msgstr "Архивировано пользователем"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:100
+msgid "Archived Date"
+msgstr "Дата архивирования"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:622
+msgid "Archived templates will no longer be available for creating new requests, but existing requests using this template will continue to work."
+msgstr "Archived templates will no longer be available for creating new requests, but existing requests using this template will continue to work."
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:614
+msgid "Are you sure you want to archive the template"
+msgstr "Are you sure you want to archive the template"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:660
+msgid "Are you sure you want to restore the template"
+msgstr "Are you sure you want to restore the template"
+
+#: src/components/WorkflowStepEditor.tsx:85
+msgid "Assignment Type"
+msgstr "Тип назначения"
+
+#. placeholder {0}: approvalInfo.dynamicAssignee
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:140
+msgid "Assignment: {0}"
+msgstr "Назначение: {0}"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:532
+msgid "Audit Trail"
+msgstr "Audit Trail"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:154
+msgid "Avg. Processing Time"
+msgstr "Среднее время обработки"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:249
+msgid "Back to Requests"
+msgstr "Вернуться к заявкам"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:235
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:251
+msgid "Back to Templates"
+msgstr "Back to Templates"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:543
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:564
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:585
+msgid "by"
+msgstr "by"
+
+#. placeholder {0}: approval.approver.firstName
+#. placeholder {1}: approval.approver.lastName
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:430
+msgid "by {0} {1}"
+msgstr "от {0} {1}"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:283
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:638
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:677
+#: src/pages/dashboard/workflows/new-workflow-template.page.tsx:122
+msgid "Cancel"
+msgstr "Отмена"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:77
+#: src/pages/dashboard/workflows/all-requests.page.tsx:55
+#: src/pages/dashboard/workflows/all-requests.page.tsx:92
+#: src/pages/dashboard/analytics/analytics.page.tsx:243
+msgid "Cancelled"
+msgstr "Отменено"
+
+#: src/components/LanguageSwitcher.tsx:21
+#~ msgid "Change Language"
+#~ msgstr "Изменить язык"
+
+#: src/components/DashboardLayout/DashboardLayout.tsx:257
+msgid "Change theme"
+msgstr "Сменить тему"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:137
+#~ msgid "Chart visualization will be implemented here"
+#~ msgstr "Здесь будет реализована визуализация графиков"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:405
+#~ msgid "Comment (Optional)"
+#~ msgstr "Комментарий (необязательно)"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:80
+#~ msgid "Comment added successfully"
+#~ msgstr "Комментарий успешно добавлен"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:100
+#~ msgid "Comment is required"
+#~ msgstr "Комментарий обязателен"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:430
+#~ msgid "Comments"
+#~ msgstr "Комментарии"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:417
+msgid "Completed"
+msgstr "Завершено"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:416
+#~ msgid "Confirm Approval"
+#~ msgstr "Подтвердить одобрение"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:416
+#~ msgid "Confirm Rejection"
+#~ msgstr "Подтвердить отклонение"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:79
+msgid "Create a new workflow request"
+msgstr "Создайте новую заявку на рабочий процесс"
+
+#: src/pages/dashboard/workflows/new-workflow-template.page.tsx:88
+msgid "Create New Workflow Template"
+msgstr "Новый шаблон"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:77
+#: src/pages/dashboard/workflows/new-workflow-template.page.tsx:128
+msgid "Create Template"
+msgstr "Создать шаблон"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:431
+#~ msgid "Create Workflow Template"
+#~ msgstr "Создать шаблон процесса"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:128
+msgid "Create Your First Request"
+msgstr "Создать первую заявку"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:540
+#: src/pages/dashboard/workflows/my-requests.page.tsx:141
+#: src/pages/dashboard/workflows/all-requests.page.tsx:114
+msgid "Created"
+msgstr "Создано"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:99
+msgid "Created By"
+msgstr "Создано пользователем"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:310
+msgid "Created:"
+msgstr "Создано:"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:89
+#: src/pages/dashboard/workflows/all-requests.page.tsx:113
+msgid "Current Step"
+msgstr "Текущий этап"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:288
+msgid "Current Step:"
+msgstr "Текущий этап:"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:47
+msgid "Daily"
+msgstr "Ежедневно"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:211
+msgid "Data Points:"
+msgstr "Data Points:"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:149
+msgid "Date Range"
+msgstr "Диапазон дат"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:193
+msgid "day"
+msgstr "день"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:193
+msgid "days"
+msgstr "дней"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:96
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:311
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:349
+#: src/pages/dashboard/workflows/new-workflow-template.page.tsx:100
+msgid "Description"
+msgstr "Описание"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:320
+msgid "Description:"
+msgstr "Описание:"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:67
+#: src/pages/dashboard/workflows/all-requests.page.tsx:50
+#: src/pages/dashboard/workflows/all-requests.page.tsx:87
+#: src/pages/dashboard/analytics/analytics.page.tsx:241
+msgid "Draft"
+msgstr "Черновик"
+
+#: src/components/WorkflowStepEditor.tsx:93
+msgid "Dynamic (assign based on relationships)"
+msgstr "Динамический (назначение на основе отношений)"
+
+#: src/components/WorkflowStepEditor.tsx:117
+msgid "Dynamic Assignment"
+msgstr "Динамическое назначение"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:389
+msgid "Dynamic assignment (no assignment selected)"
+msgstr "Dynamic assignment (no assignment selected)"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:387
+msgid "Dynamic Assignment: {dynamicLabel}"
+msgstr "Dynamic Assignment: {dynamicLabel}"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:247
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:258
+msgid "Edit Template"
+msgstr "Редактировать шаблон"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:627
+msgid "Enter a reason for archiving this template..."
+msgstr "Enter a reason for archiving this template..."
+
+#: src/components/WorkflowStepEditor.tsx:128
+msgid "Enter action label (e.g., 'Review and Approve')"
+msgstr "Введите метку действия (например, 'Просмотр и Одобрение')"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:350
+#: src/pages/dashboard/workflows/new-workflow-template.page.tsx:101
+msgid "Enter template description"
+msgstr "Введите описание шаблона"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:343
+#: src/pages/dashboard/workflows/new-workflow-template.page.tsx:94
+msgid "Enter template name"
+msgstr "Введите название шаблона"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:74
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:93
+#: src/pages/dashboard/workflows/new-workflow-template.page.tsx:53
+#: src/pages/dashboard/workflows/new-workflow-template.page.tsx:63
+#: src/pages/auth/auth.page.tsx:66
+msgid "Error"
+msgstr "Ошибка"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:386
+msgid "Error loading hierarchy"
+msgstr "Ошибка загрузки иерархии"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:109
+msgid "Error loading requests"
+msgstr "Ошибка загрузки заявок"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:513
+msgid "Error parsing form fields"
+msgstr "Error parsing form fields"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:418
+msgid "Error parsing workflow steps"
+msgstr "Error parsing workflow steps"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:89
+#~ msgid "Failed to add comment"
+#~ msgstr "Не удалось добавить комментарий"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:75
+msgid "Failed to approve request"
+msgstr "Не удалось одобрить заявку"
+
+#: src/pages/dashboard/workflows/new-workflow-template.page.tsx:54
+msgid "Failed to create workflow template"
+msgstr "Failed to create workflow template"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:110
+msgid "Failed to load analytics data. Please try again later."
+msgstr "Failed to load analytics data. Please try again later."
+
+#: src/components/Analytics/RequestTrendsChart.tsx:129
+msgid "Failed to load request trends data. Please try again later."
+msgstr "Failed to load request trends data. Please try again later."
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:387
+msgid "Failed to load the organization hierarchy. Please try again later."
+msgstr "Не удалось загрузить организационную иерархию. Попробуйте еще раз позже."
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:94
+msgid "Failed to reject request"
+msgstr "Не удалось отклонить заявку"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:473
+msgid "Field name"
+msgstr "Field name"
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:82
+msgid "Filter by status"
+msgstr "Фильтр по статусу"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:215
+msgid "Filtered by:"
+msgstr "Filtered by:"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:462
+msgid "Fit View"
+msgstr "Поместить в видимую область"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:437
+msgid "Form Fields"
+msgstr "Form Fields"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:114
+msgid "Go Back"
+msgstr "Назад"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:160
+msgid "Group By"
+msgstr "Группировать по"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:455
+msgid "Horizontal Layout"
+msgstr "Горизонтальное расположение"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:71
+#: src/pages/dashboard/workflows/all-requests.page.tsx:52
+#: src/pages/dashboard/workflows/all-requests.page.tsx:89
+#: src/pages/dashboard/analytics/analytics.page.tsx:239
+msgid "In Progress"
+msgstr "В процессе"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:280
+msgid "Initiated by:"
+msgstr "Инициатор:"
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:111
+msgid "Initiator"
+msgstr "Инициатор"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:385
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:217
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:223
+msgid "Initiator's Supervisor"
+msgstr "Руководитель инициатора"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:42
+msgid "Last 30 days"
+msgstr "Последние 30 дней"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:41
+msgid "Last 7 days"
+msgstr "Последние 7 дней"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:43
+msgid "Last 90 days"
+msgstr "Последние 90 дней"
+
+#. placeholder {0}: step.role
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:394
+msgid "Legacy Role: {0}"
+msgstr "Legacy Role: {0}"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:378
+msgid "Loading organization chart..."
+msgstr "Загрузка организационной схемы..."
+
+#: src/components/ProtectedRoute.tsx:28
+msgid "Loading..."
+msgstr "Загрузка..."
+
+#: src/components/DashboardLayout/DashboardLayout.tsx:262
+msgid "Logout"
+msgstr "Выход"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:55
+msgid "Manage system users"
+msgstr "Управляйте пользователями системы"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:71
+msgid "Manage user roles and permissions"
+msgstr "Управляйте ролями и разрешениями пользователей"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:39
+msgid "Manage workflow templates"
+msgstr "Управляйте шаблонами рабочих процессов"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:532
+msgid "Managers"
+msgstr "Менеджеры"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:49
+msgid "Monthly"
+msgstr "Ежемесячно"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:129
+#~ msgid "Most active users and approval statistics will be displayed here"
+#~ msgstr "Здесь будут отображены самые активные пользователи и статистика одобрений"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:86
+#: src/pages/dashboard/analytics/analytics.page.tsx:22
+#: src/components/DashboardLayout/DashboardLayout.tsx:120
+msgid "My Requests"
+msgstr "Мои заявки"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:153
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:163
+msgid "N/A"
+msgstr "Н/Д"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:95
+msgid "Name"
+msgstr "Название"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:391
+msgid "Navigate quickly to other sections of the dashboard"
+msgstr "Быстро переходите к другим разделам панели управления"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:99
+msgid "New Request"
+msgstr "Новая заявка"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:86
+msgid "No archived templates found"
+msgstr "Архивные шаблоны не найдены"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:473
+#~ msgid "No comments yet"
+#~ msgstr "Комментарии пока отсутствуют"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:319
+msgid "No data available for the selected period"
+msgstr "Нет данных за выбранный период"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:124
+msgid "No description"
+msgstr "Без описания"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:450
+msgid "No form fields configured for this template."
+msgstr "No form fields configured for this template."
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:63
+msgid "No matching requests found"
+msgstr "Соответствующих заявок не найдено"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:63
+msgid "No pending approvals"
+msgstr "Отсутствуют ожидающие одобрения"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:342
+msgid "No performance data available yet"
+msgstr "Данные о производительности пока недоступны"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:277
+msgid "No request data available yet"
+msgstr "Данные о заявках пока недоступны"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:118
+msgid "No requests found"
+msgstr "Заявки не найдены"
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:101
+msgid "No requests match your search"
+msgstr "Заявки не соответствуют запросу"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:480
+msgid "No Results Found"
+msgstr "Результаты не найдены"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:376
+msgid "No template usage data available yet"
+msgstr "Данные об использовании шаблонов пока недоступны"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:481
+msgid "No users match the current search criteria."
+msgstr "Ни один пользователь не соответствует текущим критериям поиска."
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:101
+msgid "No workflow requests found"
+msgstr "Заявки на процессы не найдены"
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:102
+msgid "No workflow requests have been submitted yet."
+msgstr "Заявки на процессы еще не были поданы."
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:87
+msgid "No workflow templates found. Create one to get started."
+msgstr "Шаблоны процессов не найдены. Создайте шаблон для начала."
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:426
+msgid "Not started"
+msgstr "Не начато"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:488
+msgid "Options"
+msgstr "Options"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:62
+msgid "Organization"
+msgstr "Организация"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:509
+#: src/components/DashboardLayout/DashboardLayout.tsx:155
+msgid "Organization Hierarchy"
+msgstr "Организационная иерархия"
+
+#: src/components/DashboardLayout/DashboardLayout.tsx:209
+msgid "Partner Neft"
+msgstr "Партнер Нефть"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:69
+#: src/pages/dashboard/workflows/all-requests.page.tsx:51
+#: src/pages/dashboard/workflows/all-requests.page.tsx:88
+#: src/pages/dashboard/analytics/analytics.page.tsx:233
+msgid "Pending"
+msgstr "В ожидании"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:425
+msgid "Pending approval"
+msgstr "Ожидает одобрения"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:37
+#: src/pages/dashboard/analytics/analytics.page.tsx:30
+#: src/pages/dashboard/analytics/analytics.page.tsx:133
+#: src/components/DashboardLayout/DashboardLayout.tsx:127
+msgid "Pending Approvals"
+msgstr "Ожидающие одобрения"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:142
+msgid "Pending your approval"
+msgstr "Ожидает вашего одобрения"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:208
+msgid "Period:"
+msgstr "Период:"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:113
+#~ msgid "Pie chart will be implemented here"
+#~ msgstr "Здесь будет реализована круговая диаграмма"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:482
+msgid "Placeholder"
+msgstr "Placeholder"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:140
+msgid "Progress"
+msgstr "Прогресс"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:388
+msgid "Quick Access"
+msgstr "Быстрый доступ"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:78
+msgid "Raise Request"
+msgstr "Подать заявку"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:626
+msgid "Reason for archiving (optional)"
+msgstr "Reason for archiving (optional)"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:521
+#~ msgid "Refresh"
+#~ msgstr "Обновить"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:463
+msgid "Reject"
+msgstr "Отклонить"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:423
+#: src/pages/dashboard/workflows/my-requests.page.tsx:75
+#: src/pages/dashboard/workflows/all-requests.page.tsx:54
+#: src/pages/dashboard/workflows/all-requests.page.tsx:91
+#: src/pages/dashboard/analytics/analytics.page.tsx:237
+msgid "Rejected"
+msgstr "Отклонено"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:147
+msgid "Rejected Requests"
+msgstr "Отклоненные заявки"
+
+#. placeholder {0}: approval.comment
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:420
+msgid "Rejected: {0}"
+msgstr "Отклонено: {0}"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:79
+msgid "request"
+msgstr "заявка"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:66
+msgid "Request approved successfully"
+msgstr "Заявка успешно одобрена"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:330
+msgid "Request Data:"
+msgstr "Данные заявки:"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:260
+msgid "Request Details"
+msgstr "Детали заявки"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:108
+msgid "Request Not Found"
+msgstr "Заявка не найдена"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:85
+msgid "Request rejected successfully"
+msgstr "Заявка успешно отклонена"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:139
+msgid "Request Trends"
+msgstr "Тренды заявок"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:170
+msgid "Request Type"
+msgstr "Тип заявки"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:79
+msgid "requests"
+msgstr "заявок"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:468
+msgid "Required"
+msgstr "Required"
+
+#. placeholder {0}: currentStep.role
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:141
+msgid "Requires {0} approval"
+msgstr "Требует одобрения {0}"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:194
+msgid "Reset Filters"
+msgstr "Сбросить фильтры"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:276
+msgid "Restore"
+msgstr "Restore"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:655
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:684
+msgid "Restore Template"
+msgstr "Восстановить шаблон"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:164
+msgid "Review"
+msgstr "Рассмотреть"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:31
+msgid "Review requests awaiting approval"
+msgstr "Рассматривайте заявки, ожидающие одобрения"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:136
+msgid "Review Required"
+msgstr "Требуется рассмотрение"
+
+#: src/components/WorkflowStepEditor.tsx:104
+msgid "Role"
+msgstr "Роль"
+
+#: src/components/WorkflowStepEditor.tsx:89
+msgid "Role-based (assign to users with specific role)"
+msgstr "На основе роли (назначение пользователям с определенной ролью)"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:378
+msgid "Role-based assignment (no role selected)"
+msgstr "Role-based assignment (no role selected)"
+
+#. placeholder {0}: step.roleBasedAssignee
+#. placeholder {0}: approvalInfo.roleBasedAssignee
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:376
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:139
+msgid "Role: {0}"
+msgstr "Роль: {0}"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:70
+#: src/components/DashboardLayout/DashboardLayout.tsx:162
+msgid "Roles"
+msgstr "Роли"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:290
+msgid "Save Changes"
+msgstr "Save Changes"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:93
+msgid "Search"
+msgstr "Поиск"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:434
+msgid "Search by name or role..."
+msgstr "Поиск по имени или роли..."
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:75
+msgid "Search by title, description, template, or initiator..."
+msgstr "Поиск по названию, описанию, шаблону или инициатору..."
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:42
+msgid "Search requests..."
+msgstr "Поиск заявок..."
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:511
+#~ msgid "Search users..."
+#~ msgstr "Поиск пользователей..."
+
+#: src/components/WorkflowStepEditor.tsx:105
+msgid "Select a role"
+msgstr "Выберите роль"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:161
+msgid "Select grouping"
+msgstr "Выберите группировку"
+
+#: src/components/LanguageSwitcher.tsx:24
+msgid "Select Language"
+msgstr "Выбрать язык"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:150
+msgid "Select range"
+msgstr "Выберите диапазон"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:195
+msgid "Self-managed"
+msgstr "Самоуправляемые"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:68
+msgid "Show Active"
+msgstr "Показать активные"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:68
+msgid "Show Archived"
+msgstr "Показать архивированные"
+
+#: src/pages/auth/auth.page.tsx:108
+msgid "Sign In"
+msgstr "Войти"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:98
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:318
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:90
+#: src/pages/dashboard/workflows/my-requests.page.tsx:139
+#: src/pages/dashboard/workflows/all-requests.page.tsx:112
+msgid "Status"
+msgstr "Статус"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:214
+msgid "Status Distribution"
+msgstr "Распределение по статусам"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:136
+#: src/pages/dashboard/workflows/my-requests.page.tsx:184
+#: src/components/WorkflowStepEditor.tsx:81
+msgid "Step"
+msgstr "Этап"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:129
+msgid "steps"
+msgstr "этапов"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:97
+msgid "Steps"
+msgstr "Этапы"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:91
+msgid "Submitted"
+msgstr "Подано"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:88
+msgid "Submitted By"
+msgstr "Подано пользователем"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:199
+#~ msgid "subordinate"
+#~ msgstr "подчиненный"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:200
+#~ msgid "subordinates"
+#~ msgstr "подчиненных"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:65
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:84
+#: src/pages/dashboard/workflows/new-workflow-template.page.tsx:45
+msgid "Success"
+msgstr "Успешно"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:446
+msgid "Take Action"
+msgstr "Выполнить действие"
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:110
+msgid "Template"
+msgstr "Шаблон"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:247
+msgid "Template Details"
+msgstr "Template Details"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:304
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:342
+#: src/pages/dashboard/workflows/new-workflow-template.page.tsx:93
+msgid "Template Name"
+msgstr "Название шаблона"
+
+#: src/pages/dashboard/workflows/new-workflow-template.page.tsx:64
+msgid "Template name is required"
+msgstr "Template name is required"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:233
+msgid "Template not found"
+msgstr "Template not found"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:353
+msgid "Template Usage"
+msgstr "Использование шаблонов"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:274
+msgid "Template:"
+msgstr "Шаблон:"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:111
+msgid "The requested workflow request could not be found."
+msgstr "Запрашиваемая заявка на процесс не найдена."
+
+#. placeholder {0}: currentUser.role.name
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:69
+msgid "There are no requests waiting for {0} approval at this time."
+msgstr "В данный момент нет заявок, ожидающих одобрения {0}."
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:668
+msgid "This will make the template available for creating new workflow requests again."
+msgstr "This will make the template available for creating new workflow requests again."
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:86
+#: src/pages/dashboard/workflows/my-requests.page.tsx:137
+#: src/pages/dashboard/workflows/all-requests.page.tsx:109
+msgid "Title"
+msgstr "Название"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:303
+msgid "Top Approvers"
+msgstr "Лучшие утверждающие"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:292
+msgid "Top Performers"
+msgstr "Лучшие исполнители"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:323
+msgid "Top Request Creators"
+msgstr "Лучшие создатели заявок"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:544
+msgid "Top-level Nodes"
+msgstr "Узлы верхнего уровня"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:119
+msgid "Total Requests"
+msgstr "Всего заявок"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:205
+msgid "Total Requests:"
+msgstr "Всего заявок:"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:520
+msgid "Total Users"
+msgstr "Всего пользователей"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:322
+msgid "Try adjusting your filters or date range"
+msgstr "Попробуйте изменить фильтры или диапазон дат"
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:102
+msgid "Try adjusting your search criteria or filters."
+msgstr "Попробуйте изменить критерии поиска или фильтры."
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:67
+msgid "Try adjusting your search terms or clear the search to see all pending approvals."
+msgstr "Попробуйте изменить условия поиска или очистите поиск, чтобы увидеть все ожидающие одобрения."
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:411
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:87
+#: src/pages/dashboard/workflows/my-requests.page.tsx:138
+msgid "Type"
+msgstr "Тип"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:556
+msgid "Unique Roles"
+msgstr "Уникальные роли"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:145
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:547
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:568
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:589
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:238
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:99
+msgid "Unknown"
+msgstr "Неизвестно"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:398
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:218
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:224
+msgid "Unknown assignment"
+msgstr "Неизвестное назначение"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:126
+msgid "Unknown Template"
+msgstr "Неизвестный шаблон"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:102
+msgid "Unnamed User"
+msgstr "Безымянный пользователь"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:561
+msgid "Updated"
+msgstr "Updated"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:54
+#: src/components/DashboardLayout/DashboardLayout.tsx:148
+msgid "Users"
+msgstr "Пользователи"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:448
+msgid "Vertical Layout"
+msgstr "Вертикальное расположение"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:148
+#~ msgid "View"
+#~ msgstr "Просмотр"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:47
+msgid "View all system requests"
+msgstr "Просматривайте все системные заявки"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:23
+msgid "View and manage your requests"
+msgstr "Просматривайте и управляйте своими заявками"
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:151
+msgid "View Details"
+msgstr "Детали"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:63
+msgid "View organization hierarchy"
+msgstr "Просматривайте организационную иерархию"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:387
+#~ msgid "View Template"
+#~ msgstr "Просмотр шаблона"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:79
+msgid "waiting for your approval"
+msgstr "ожидают вашего одобрения"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:48
+msgid "Weekly"
+msgstr "Еженедельно"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:360
+msgid "Workflow Progress"
+msgstr "Прогресс процесса"
+
+#: src/pages/dashboard/workflows/workflow-template.page.tsx:362
+#: src/components/WorkflowStepEditor.tsx:76
+msgid "Workflow Steps"
+msgstr "Этапы процесса"
+
+#: src/pages/dashboard/workflows/new-workflow-template.page.tsx:46
+msgid "Workflow template created successfully"
+msgstr "Workflow template created successfully"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:142
+#~ msgid "Workflow template popularity and success rates will be shown here"
+#~ msgstr "Здесь будут показаны популярность шаблонов процессов и показатели успешности"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:65
+#: src/pages/dashboard/analytics/analytics.page.tsx:38
+#: src/components/DashboardLayout/DashboardLayout.tsx:134
+msgid "Workflow Templates"
+msgstr "Шаблоны процессов"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:401
+#~ msgid "You are about to {actionType} this request. Please provide a comment explaining your decision."
+#~ msgstr "Вы собираетесь выполнить {actionType} данную заявку. Пожалуйста, предоставьте комментарий с объяснением вашего решения."
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:55
+msgid "You don't have a role assigned. Please contact an administrator."
+msgstr "У вас нет назначенной роли. Обратитесь к администратору."
+
+#: src/components/ProtectedRoute.tsx:48
+msgid "You don't have permission to access this page. Please contact your administrator if you believe this is an error."
+msgstr "You don't have permission to access this page. Please contact your administrator if you believe this is an error."
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:122
+msgid "You haven't submitted any workflow requests yet."
+msgstr "Вы еще не подали ни одной заявки на процессы."
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:70
+msgid "You need a role assigned to approve requests."
+msgstr "Для одобрения заявок вам нужно иметь назначенную роль."
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:70
+msgid "Все заявки"
+msgstr "Все заявки"
+
+#: src/pages/auth/auth.page.tsx:84
+#: src/pages/auth/auth.page.tsx:88
 msgid "Логин"
-msgstr ""
+msgstr "Логин"
 
-#: src/pages/auth/auth.page.tsx:91
-#: src/pages/auth/auth.page.tsx:92
+#: src/pages/auth/auth.page.tsx:97
+#: src/pages/auth/auth.page.tsx:98
 msgid "Пароль"
-msgstr ""
+msgstr "Пароль"
 
 #: src/pages/auth/auth.page.tsx:73
-msgid "Привет"
-msgstr "Привет"
+#~ msgid "Привет"
+#~ msgstr "Привет"
