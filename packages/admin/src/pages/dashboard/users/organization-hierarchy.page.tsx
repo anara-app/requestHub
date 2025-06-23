@@ -50,6 +50,7 @@ import dagre from 'dagre';
 import { trpc } from '../../../common/trpc';
 import PageTitle from '../../../components/PageTitle';
 import { useDebouncedValue } from '@mantine/hooks';
+import { Trans, useLingui, Plural } from '@lingui/react/macro';
 
 // React Flow styles
 import '@xyflow/react/dist/style.css';
@@ -82,6 +83,7 @@ type UserNodeData = HierarchyNode & {
 
 // Custom Node Component
 function UserNode({ data }: NodeProps) {
+  const { t } = useLingui();
   const roleColors: Record<string, string> = {
     'Admin': '#fa5252',
     'Ceo': '#fab005',
@@ -93,10 +95,10 @@ function UserNode({ data }: NodeProps) {
   };
 
   const nodeData = data as unknown as UserNodeData;
-  const roleName = nodeData.role?.name || 'Unknown';
+  const roleName = nodeData.role?.name || t`Unknown`;
   const firstName = nodeData.firstName || '';
   const lastName = nodeData.lastName || '';
-  const fullName = `${firstName} ${lastName}`.trim() || 'Unnamed User';
+  const fullName = `${firstName} ${lastName}`.trim() || t`Unnamed User`;
   const roleColor = roleColors[roleName] || '#339af0';
 
   return (
@@ -189,13 +191,17 @@ function UserNode({ data }: NodeProps) {
         <Group gap="xs">
           {nodeData.isSelfManaged && (
             <Badge size="xs" variant="filled" color="yellow">
-              Self-managed
+              <Trans>Self-managed</Trans>
             </Badge>
           )}
           
           {nodeData.subordinateCount > 0 && (
             <Badge size="xs" variant="outline" color="gray">
-              {nodeData.subordinateCount} subordinate{nodeData.subordinateCount !== 1 ? 's' : ''}
+              {nodeData.subordinateCount} <Plural
+                value={nodeData.subordinateCount}
+                one="subordinate"
+                other="subordinates"
+              />
             </Badge>
           )}
         </Group>
@@ -297,6 +303,7 @@ function OrganizationFlow() {
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearch] = useDebouncedValue(searchQuery, 300);
   const { fitView } = useReactFlow();
+  const { t } = useLingui();
   
   const { data, isLoading, error, refetch } = trpc.admin.users.getOrganizationHierarchy.useQuery();
   
@@ -365,22 +372,25 @@ function OrganizationFlow() {
   if (isLoading) {
     return (
       <Center h="400px">
-        <Loader size="lg" />
+        <Stack align="center" gap="sm">
+          <Loader size="lg" />
+          <Text><Trans>Loading organization chart...</Trans></Text>
+        </Stack>
       </Center>
     );
   }
 
   if (error) {
     return (
-      <Alert color="red" title="Error loading hierarchy">
-        {error.message}
+      <Alert color="red" title={<Trans>Error loading hierarchy</Trans>}>
+        <Trans>Failed to load the organization hierarchy. Please try again later.</Trans>
       </Alert>
     );
   }
 
   return (
     <Paper withBorder style={{ height: '600px', position: 'relative' }}>
-              <ReactFlow
+      <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
@@ -417,32 +427,61 @@ function OrganizationFlow() {
           }}
         />
         
+        {/* Search Panel */}
+        <Panel position="top-left">
+          <TextInput
+            placeholder={t`Search by name or role...`}
+            leftSection={<Search size={16} />}
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.currentTarget.value)}
+            style={{ minWidth: 250 }}
+          />
+        </Panel>
+        
         {/* Layout Controls */}
         <Panel position="top-right">
           <Stack gap="xs">
             <ActionIcon 
               variant="light" 
               onClick={() => onLayout('TB')}
-              title="Vertical Layout"
+              title={t`Vertical Layout`}
             >
               ↓
             </ActionIcon>
             <ActionIcon 
               variant="light" 
               onClick={() => onLayout('LR')}
-              title="Horizontal Layout"
+              title={t`Horizontal Layout`}
             >
               →
             </ActionIcon>
             <ActionIcon 
               variant="light" 
               onClick={() => fitView()}
-              title="Fit View"
+              title={t`Fit View`}
             >
               ⌂
             </ActionIcon>
           </Stack>
         </Panel>
+
+        {/* No Results Message */}
+        {filteredNodes.length === 0 && debouncedSearch.trim() && (
+          <div style={{ 
+            position: 'absolute', 
+            top: '50%', 
+            left: '50%', 
+            transform: 'translate(-50%, -50%)',
+            zIndex: 1000
+          }}>
+            <Paper p="xl" withBorder shadow="md">
+              <Stack align="center" gap="sm">
+                <Text size="lg" fw={500}><Trans>No Results Found</Trans></Text>
+                <Text c="dimmed"><Trans>No users match the current search criteria.</Trans></Text>
+              </Stack>
+            </Paper>
+          </div>
+        )}
       </ReactFlow>
     </Paper>
   );
@@ -451,6 +490,7 @@ function OrganizationFlow() {
 // Main Page Component
 export default function OrganizationHierarchyPage() {
   const [searchQuery, setSearchQuery] = useState('');
+  const { t } = useLingui();
   
   const { data, isLoading, error, refetch } = trpc.admin.users.getOrganizationHierarchy.useQuery();
   
@@ -464,11 +504,11 @@ export default function OrganizationHierarchyPage() {
   return (
     <Container size="xl">
       <PageTitle 
-        title="Organization Hierarchy" 
+        title={t`Organization Hierarchy`}
         right={
           <Group>
             <TextInput
-              placeholder="Search users..."
+              placeholder={t`Search users...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               leftSection={<Search size={16} />}
@@ -478,12 +518,64 @@ export default function OrganizationHierarchyPage() {
               variant="light" 
               onClick={() => refetch()}
               loading={isLoading}
+              title={t`Refresh`}
             >
               <RotateCcw size={16} />
             </ActionIcon>
           </Group>
         }
       />
+
+      {/* Statistics Cards */}
+      <Group mt="lg" mb="lg">
+        <Paper withBorder p="md" radius="md" style={{ flex: 1 }}>
+          <Group>
+            <ActionIcon variant="light" color="blue" size="xl" radius="md">
+              <Users size={24} />
+            </ActionIcon>
+            <Box>
+              <Text size="xs" c="dimmed"><Trans>Total Users</Trans></Text>
+              <Text size="xl" fw={700}>{isLoading ? <Loader size="xs" /> : statistics.totalUsers}</Text>
+            </Box>
+          </Group>
+        </Paper>
+        
+        <Paper withBorder p="md" radius="md" style={{ flex: 1 }}>
+          <Group>
+            <ActionIcon variant="light" color="green" size="xl" radius="md">
+              <Briefcase size={24} />
+            </ActionIcon>
+            <Box>
+              <Text size="xs" c="dimmed"><Trans>Managers</Trans></Text>
+              <Text size="xl" fw={700}>{isLoading ? <Loader size="xs" /> : statistics.managersCount}</Text>
+            </Box>
+          </Group>
+        </Paper>
+        
+        <Paper withBorder p="md" radius="md" style={{ flex: 1 }}>
+          <Group>
+            <ActionIcon variant="light" color="yellow" size="xl" radius="md">
+              <Crown size={24} />
+            </ActionIcon>
+            <Box>
+              <Text size="xs" c="dimmed"><Trans>Top-level Nodes</Trans></Text>
+              <Text size="xl" fw={700}>{isLoading ? <Loader size="xs" /> : statistics.topLevelCount}</Text>
+            </Box>
+          </Group>
+        </Paper>
+        
+        <Paper withBorder p="md" radius="md" style={{ flex: 1 }}>
+          <Group>
+            <ActionIcon variant="light" color="violet" size="xl" radius="md">
+              <UserCheck size={24} />
+            </ActionIcon>
+            <Box>
+              <Text size="xs" c="dimmed"><Trans>Unique Roles</Trans></Text>
+              <Text size="xl" fw={700}>{isLoading ? <Loader size="xs" /> : statistics.rolesCount}</Text>
+            </Box>
+          </Group>
+        </Paper>
+      </Group>
       
       {/* React Flow Organization Chart */}
       <ReactFlowProvider>

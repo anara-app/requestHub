@@ -15,8 +15,9 @@ export default function MyRequestsPage() {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 500);
   
-  const { data: requests, isLoading, error } = trpc.nextClient.workflows.getMyRequests.useQuery({
+  const { data: requests, isLoading, error } = (trpc as any).nextClient.workflows.getMyRequests.useQuery({
     search: debouncedSearch,
+    limit: 100,
   }, {
     refetchOnWindowFocus: true,
     refetchOnMount: true,

@@ -23,6 +23,11 @@ msgstr ""
 msgid "You don't have permission to perform this action"
 msgstr ""
 
+#. placeholder {0}: nodeData.subordinateCount
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:200
+msgid "{0, plural, one {subordinate} other {subordinates}}"
+msgstr ""
+
 #. placeholder {0}: props.children
 #: src/components/Typography.tsx:8
 msgid "{0}"
@@ -40,7 +45,7 @@ msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:322
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:90
-#: src/pages/dashboard/workflows/my-requests.page.tsx:100
+#: src/pages/dashboard/workflows/my-requests.page.tsx:101
 #: src/pages/dashboard/workflows/all-requests.page.tsx:113
 msgid "Actions"
 msgstr ""
@@ -82,7 +87,7 @@ msgstr ""
 msgid "Approve"
 msgstr ""
 
-#: src/pages/dashboard/workflows/my-requests.page.tsx:44
+#: src/pages/dashboard/workflows/my-requests.page.tsx:45
 #: src/pages/dashboard/workflows/all-requests.page.tsx:52
 #: src/pages/dashboard/workflows/all-requests.page.tsx:88
 msgid "Approved"
@@ -133,7 +138,7 @@ msgstr "by {0} {1}"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/pages/dashboard/workflows/my-requests.page.tsx:46
+#: src/pages/dashboard/workflows/my-requests.page.tsx:47
 #: src/pages/dashboard/workflows/all-requests.page.tsx:54
 #: src/pages/dashboard/workflows/all-requests.page.tsx:90
 msgid "Cancelled"
@@ -184,11 +189,11 @@ msgstr "Create Template"
 msgid "Create Workflow Template"
 msgstr "Create Workflow Template"
 
-#: src/pages/dashboard/workflows/my-requests.page.tsx:87
+#: src/pages/dashboard/workflows/my-requests.page.tsx:88
 msgid "Create Your First Request"
 msgstr "Create Your First Request"
 
-#: src/pages/dashboard/workflows/my-requests.page.tsx:99
+#: src/pages/dashboard/workflows/my-requests.page.tsx:100
 #: src/pages/dashboard/workflows/all-requests.page.tsx:112
 msgid "Created"
 msgstr "Created"
@@ -219,7 +224,7 @@ msgstr "Description"
 msgid "Description:"
 msgstr "Description:"
 
-#: src/pages/dashboard/workflows/my-requests.page.tsx:41
+#: src/pages/dashboard/workflows/my-requests.page.tsx:42
 #: src/pages/dashboard/workflows/all-requests.page.tsx:49
 #: src/pages/dashboard/workflows/all-requests.page.tsx:85
 msgid "Draft"
@@ -249,27 +254,34 @@ msgstr "Enter template description"
 msgid "Enter template name"
 msgstr "Enter template name"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:50
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:60
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:70
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:86
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:49
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:69
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:88
+#: src/pages/auth/auth.page.tsx:66
 msgid "Error"
 msgstr "Error"
 
-#: src/pages/dashboard/workflows/pending-approvals.page.tsx:35
-#: src/pages/dashboard/workflows/my-requests.page.tsx:30
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:385
+msgid "Error loading hierarchy"
+msgstr ""
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:74
 msgid "Error loading requests"
 msgstr "Error loading requests"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:87
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:89
 msgid "Failed to add comment"
 msgstr "Failed to add comment"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:51
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:50
 msgid "Failed to approve request"
 msgstr "Failed to approve request"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:61
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:386
+msgid "Failed to load the organization hierarchy. Please try again later."
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:70
 msgid "Failed to reject request"
 msgstr "Failed to reject request"
 
@@ -277,11 +289,19 @@ msgstr "Failed to reject request"
 msgid "Filter by status"
 msgstr "Filter by status"
 
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:461
+msgid "Fit View"
+msgstr ""
+
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:114
 msgid "Go Back"
 msgstr ""
 
-#: src/pages/dashboard/workflows/my-requests.page.tsx:43
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:454
+msgid "Horizontal Layout"
+msgstr ""
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:44
 #: src/pages/dashboard/workflows/all-requests.page.tsx:51
 #: src/pages/dashboard/workflows/all-requests.page.tsx:87
 msgid "In Progress"
@@ -300,11 +320,19 @@ msgstr "Initiator"
 msgid "Initiator's Supervisor"
 msgstr "Initiator's Supervisor"
 
-#: src/components/DashboardLayout/DashboardLayout.tsx:181
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:377
+msgid "Loading organization chart..."
+msgstr ""
+
+#: src/components/DashboardLayout/DashboardLayout.tsx:190
 msgid "Logout"
 msgstr "Logout"
 
-#: src/pages/dashboard/workflows/my-requests.page.tsx:53
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:549
+msgid "Managers"
+msgstr ""
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:54
 #: src/components/DashboardLayout/DashboardLayout.tsx:74
 msgid "My Requests"
 msgstr "My Requests"
@@ -318,7 +346,7 @@ msgstr "N/A"
 msgid "Name"
 msgstr "Name"
 
-#: src/pages/dashboard/workflows/my-requests.page.tsx:62
+#: src/pages/dashboard/workflows/my-requests.page.tsx:63
 msgid "New Request"
 msgstr "New Request"
 
@@ -326,7 +354,7 @@ msgstr "New Request"
 msgid "No archived templates found"
 msgstr "No archived templates found"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:459
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:473
 msgid "No comments yet"
 msgstr "No comments yet"
 
@@ -342,13 +370,21 @@ msgstr ""
 msgid "No pending approvals"
 msgstr "No pending approvals"
 
-#: src/pages/dashboard/workflows/my-requests.page.tsx:80
+#: src/pages/dashboard/workflows/my-requests.page.tsx:81
 msgid "No requests found"
 msgstr "No requests found"
 
 #: src/pages/dashboard/workflows/all-requests.page.tsx:99
 msgid "No requests match your search"
 msgstr "No requests match your search"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:479
+msgid "No Results Found"
+msgstr ""
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:480
+msgid "No users match the current search criteria."
+msgstr ""
 
 #: src/pages/dashboard/workflows/all-requests.page.tsx:99
 msgid "No workflow requests found"
@@ -366,6 +402,7 @@ msgstr ""
 msgid "Not started"
 msgstr "Not started"
 
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:507
 #: src/components/DashboardLayout/DashboardLayout.tsx:109
 msgid "Organization Hierarchy"
 msgstr "Organization Hierarchy"
@@ -374,7 +411,7 @@ msgstr "Organization Hierarchy"
 msgid "Partner Neft"
 msgstr "Partner Neft"
 
-#: src/pages/dashboard/workflows/my-requests.page.tsx:42
+#: src/pages/dashboard/workflows/my-requests.page.tsx:43
 #: src/pages/dashboard/workflows/all-requests.page.tsx:50
 #: src/pages/dashboard/workflows/all-requests.page.tsx:86
 msgid "Pending"
@@ -393,16 +430,20 @@ msgstr "Pending Approvals"
 msgid "Pending your approval"
 msgstr "Pending your approval"
 
-#: src/pages/dashboard/workflows/my-requests.page.tsx:98
+#: src/pages/dashboard/workflows/my-requests.page.tsx:99
 msgid "Progress"
 msgstr "Progress"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:521
+msgid "Refresh"
+msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:394
 msgid "Reject"
 msgstr "Reject"
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:360
-#: src/pages/dashboard/workflows/my-requests.page.tsx:45
+#: src/pages/dashboard/workflows/my-requests.page.tsx:46
 #: src/pages/dashboard/workflows/all-requests.page.tsx:53
 #: src/pages/dashboard/workflows/all-requests.page.tsx:89
 msgid "Rejected"
@@ -425,11 +466,11 @@ msgstr "Request approved successfully"
 msgid "Request Data:"
 msgstr "Request Data:"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:251
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:253
 msgid "Request Details"
 msgstr "Request Details"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:109
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:111
 msgid "Request Not Found"
 msgstr "Request Not Found"
 
@@ -475,9 +516,13 @@ msgstr ""
 msgid "Roles"
 msgstr "Roles"
 
-#: src/pages/dashboard/workflows/my-requests.page.tsx:57
+#: src/pages/dashboard/workflows/my-requests.page.tsx:58
 msgid "Search"
 msgstr "Search"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:433
+msgid "Search by name or role..."
+msgstr ""
 
 #: src/pages/dashboard/workflows/all-requests.page.tsx:73
 msgid "Search by title, description, template, or initiator..."
@@ -487,6 +532,10 @@ msgstr "Search by title, description, template, or initiator..."
 msgid "Search requests..."
 msgstr "Search requests..."
 
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:511
+msgid "Search users..."
+msgstr ""
+
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:464
 msgid "Select a role"
 msgstr "Select a role"
@@ -494,6 +543,10 @@ msgstr "Select a role"
 #: src/components/LanguageSwitcher.tsx:24
 msgid "Select Language"
 msgstr "Select Language"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:194
+msgid "Self-managed"
+msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:294
 msgid "Show Active"
@@ -509,14 +562,14 @@ msgstr "Sign In"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:318
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:88
-#: src/pages/dashboard/workflows/my-requests.page.tsx:97
+#: src/pages/dashboard/workflows/my-requests.page.tsx:98
 #: src/pages/dashboard/workflows/all-requests.page.tsx:110
 msgid "Status"
 msgstr "Status"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:449
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:134
-#: src/pages/dashboard/workflows/my-requests.page.tsx:130
+#: src/pages/dashboard/workflows/my-requests.page.tsx:131
 msgid "Step"
 msgstr "Step"
 
@@ -535,6 +588,10 @@ msgstr ""
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:86
 msgid "Submitted By"
 msgstr ""
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:200
+#~ msgid "subordinate{0}"
+#~ msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:39
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:59
@@ -568,10 +625,18 @@ msgid "There are no requests waiting for {0} approval at this time."
 msgstr ""
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:84
-#: src/pages/dashboard/workflows/my-requests.page.tsx:95
+#: src/pages/dashboard/workflows/my-requests.page.tsx:96
 #: src/pages/dashboard/workflows/all-requests.page.tsx:107
 msgid "Title"
 msgstr "Title"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:561
+msgid "Top-level Nodes"
+msgstr ""
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:537
+msgid "Total Users"
+msgstr ""
 
 #: src/pages/dashboard/workflows/all-requests.page.tsx:100
 msgid "Try adjusting your search criteria or filters."
@@ -582,12 +647,17 @@ msgid "Try adjusting your search terms or clear the search to see all pending ap
 msgstr ""
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:85
-#: src/pages/dashboard/workflows/my-requests.page.tsx:96
+#: src/pages/dashboard/workflows/my-requests.page.tsx:97
 msgid "Type"
+msgstr ""
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:573
+msgid "Unique Roles"
 msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:356
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:234
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:98
 msgid "Unknown"
 msgstr ""
 
@@ -600,11 +670,19 @@ msgstr ""
 msgid "Unknown Template"
 msgstr ""
 
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:101
+msgid "Unnamed User"
+msgstr ""
+
 #: src/components/DashboardLayout/DashboardLayout.tsx:102
 msgid "Users"
 msgstr ""
 
-#: src/pages/dashboard/workflows/my-requests.page.tsx:145
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:447
+msgid "Vertical Layout"
+msgstr ""
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:146
 msgid "View"
 msgstr ""
 
@@ -641,7 +719,7 @@ msgstr ""
 msgid "You don't have a role assigned. Please contact an administrator."
 msgstr ""
 
-#: src/pages/dashboard/workflows/my-requests.page.tsx:81
+#: src/pages/dashboard/workflows/my-requests.page.tsx:82
 msgid "You haven't submitted any workflow requests yet."
 msgstr ""
 
