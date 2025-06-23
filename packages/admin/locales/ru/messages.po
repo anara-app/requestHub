@@ -70,7 +70,7 @@ msgstr "{status}"
 
 #: src/components/ProtectedRoute.tsx:44
 msgid "Access Denied"
-msgstr "Access Denied"
+msgstr "Доступ запрещен"
 
 #: src/components/WorkflowStepEditor.tsx:127
 msgid "Action Label"
@@ -153,11 +153,11 @@ msgstr "Одобрено: {0}"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:266
 msgid "Archive"
-msgstr "Archive"
+msgstr "Архивировать"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:331
 msgid "Archive Reason"
-msgstr "Archive Reason"
+msgstr "Причина архивирования"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:609
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:645
@@ -180,15 +180,15 @@ msgstr "Дата архивирования"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:622
 msgid "Archived templates will no longer be available for creating new requests, but existing requests using this template will continue to work."
-msgstr "Archived templates will no longer be available for creating new requests, but existing requests using this template will continue to work."
+msgstr "Архивированные шаблоны больше не будут доступны для создания новых заявок, но существующие заявки, использующие этот шаблон, продолжат работать."
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:614
 msgid "Are you sure you want to archive the template"
-msgstr "Are you sure you want to archive the template"
+msgstr "Вы действительно хотите архивировать этот шаблон"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:660
 msgid "Are you sure you want to restore the template"
-msgstr "Are you sure you want to restore the template"
+msgstr "Вы действительно хотите восстановить этот шаблон"
 
 #: src/components/WorkflowStepEditor.tsx:85
 msgid "Assignment Type"
@@ -201,7 +201,7 @@ msgstr "Назначение: {0}"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:532
 msgid "Audit Trail"
-msgstr "Audit Trail"
+msgstr "Журнал аудита"
 
 #: src/pages/dashboard/analytics/analytics.page.tsx:154
 msgid "Avg. Processing Time"
@@ -214,13 +214,13 @@ msgstr "Вернуться к заявкам"
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:235
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:251
 msgid "Back to Templates"
-msgstr "Back to Templates"
+msgstr "Назад к шаблонам"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:543
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:564
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:585
 msgid "by"
-msgstr "by"
+msgstr "от"
 
 #. placeholder {0}: approval.approver.firstName
 #. placeholder {1}: approval.approver.lastName
@@ -295,6 +295,10 @@ msgstr "Новый шаблон"
 msgid "Create Template"
 msgstr "Создать шаблон"
 
+#: src/pages/dashboard/users/user.page.tsx:93
+msgid "Create User"
+msgstr "Создать пользователя"
+
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:431
 #~ msgid "Create Workflow Template"
 #~ msgstr "Создать шаблон процесса"
@@ -332,7 +336,7 @@ msgstr "Ежедневно"
 
 #: src/components/Analytics/RequestTrendsChart.tsx:211
 msgid "Data Points:"
-msgstr "Data Points:"
+msgstr "Точки данных:"
 
 #: src/components/Analytics/RequestTrendsChart.tsx:149
 msgid "Date Range"
@@ -374,20 +378,24 @@ msgstr "Динамическое назначение"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:389
 msgid "Dynamic assignment (no assignment selected)"
-msgstr "Dynamic assignment (no assignment selected)"
+msgstr "Динамическое назначение (no assignment selected)"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:387
 msgid "Dynamic Assignment: {dynamicLabel}"
-msgstr "Dynamic Assignment: {dynamicLabel}"
+msgstr "Динамическое назначение: {dynamicLabel}"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:247
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:258
 msgid "Edit Template"
 msgstr "Редактировать шаблон"
 
+#: src/pages/dashboard/users/user.page.tsx:93
+msgid "Edit User"
+msgstr "Редактировать пользователя"
+
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:627
 msgid "Enter a reason for archiving this template..."
-msgstr "Enter a reason for archiving this template..."
+msgstr "Введите причину архивации этого шаблона..."
 
 #: src/components/WorkflowStepEditor.tsx:128
 msgid "Enter action label (e.g., 'Review and Approve')"
@@ -407,6 +415,7 @@ msgstr "Введите название шаблона"
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:93
 #: src/pages/dashboard/workflows/new-workflow-template.page.tsx:53
 #: src/pages/dashboard/workflows/new-workflow-template.page.tsx:63
+#: src/pages/dashboard/users/user.page.tsx:66
 #: src/pages/auth/auth.page.tsx:66
 msgid "Error"
 msgstr "Ошибка"
@@ -421,11 +430,11 @@ msgstr "Ошибка загрузки заявок"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:513
 msgid "Error parsing form fields"
-msgstr "Error parsing form fields"
+msgstr "Ошибка разбора полей формы"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:418
 msgid "Error parsing workflow steps"
-msgstr "Error parsing workflow steps"
+msgstr "Ошибка разбора этапов рабочего процесса"
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:89
 #~ msgid "Failed to add comment"
@@ -437,15 +446,15 @@ msgstr "Не удалось одобрить заявку"
 
 #: src/pages/dashboard/workflows/new-workflow-template.page.tsx:54
 msgid "Failed to create workflow template"
-msgstr "Failed to create workflow template"
+msgstr "Не удалось создать шаблон рабочего процесса"
 
 #: src/pages/dashboard/analytics/analytics.page.tsx:110
 msgid "Failed to load analytics data. Please try again later."
-msgstr "Failed to load analytics data. Please try again later."
+msgstr "Не удалось загрузить аналитические данные. Пожалуйста, попробуйте позже."
 
 #: src/components/Analytics/RequestTrendsChart.tsx:129
 msgid "Failed to load request trends data. Please try again later."
-msgstr "Failed to load request trends data. Please try again later."
+msgstr "Не удалось загрузить данные о трендах заявок. Пожалуйста, попробуйте позже."
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:387
 msgid "Failed to load the organization hierarchy. Please try again later."
@@ -457,7 +466,7 @@ msgstr "Не удалось отклонить заявку"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:473
 msgid "Field name"
-msgstr "Field name"
+msgstr "Название поля"
 
 #: src/pages/dashboard/workflows/all-requests.page.tsx:82
 msgid "Filter by status"
@@ -465,7 +474,7 @@ msgstr "Фильтр по статусу"
 
 #: src/components/Analytics/RequestTrendsChart.tsx:215
 msgid "Filtered by:"
-msgstr "Filtered by:"
+msgstr "Отфильтровано по:"
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:462
 msgid "Fit View"
@@ -473,7 +482,7 @@ msgstr "Поместить в видимую область"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:437
 msgid "Form Fields"
-msgstr "Form Fields"
+msgstr "Поля формы"
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:114
 msgid "Go Back"
@@ -602,7 +611,7 @@ msgstr "Без описания"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:450
 msgid "No form fields configured for this template."
-msgstr "No form fields configured for this template."
+msgstr "Для этого шаблона не настроены поля формы."
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:63
 msgid "No matching requests found"
@@ -658,7 +667,7 @@ msgstr "Не начато"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:488
 msgid "Options"
-msgstr "Options"
+msgstr "Опции"
 
 #: src/pages/dashboard/analytics/analytics.page.tsx:62
 msgid "Organization"
@@ -705,7 +714,7 @@ msgstr "Период:"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:482
 msgid "Placeholder"
-msgstr "Placeholder"
+msgstr "Заполнитель"
 
 #: src/pages/dashboard/workflows/my-requests.page.tsx:140
 msgid "Progress"
@@ -721,7 +730,7 @@ msgstr "Подать заявку"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:626
 msgid "Reason for archiving (optional)"
-msgstr "Reason for archiving (optional)"
+msgstr "Причина архивации (необязательно)"
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:521
 #~ msgid "Refresh"
@@ -786,7 +795,7 @@ msgstr "заявок"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:468
 msgid "Required"
-msgstr "Required"
+msgstr "Обязательно"
 
 #. placeholder {0}: currentStep.role
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:141
@@ -799,7 +808,7 @@ msgstr "Сбросить фильтры"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:276
 msgid "Restore"
-msgstr "Restore"
+msgstr "Восстановить"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:655
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:684
@@ -828,7 +837,7 @@ msgstr "На основе роли (назначение пользовател�
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:378
 msgid "Role-based assignment (no role selected)"
-msgstr "Role-based assignment (no role selected)"
+msgstr "Назначение на основе роли (роль не выбрана)"
 
 #. placeholder {0}: step.roleBasedAssignee
 #. placeholder {0}: approvalInfo.roleBasedAssignee
@@ -844,7 +853,7 @@ msgstr "Роли"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:290
 msgid "Save Changes"
-msgstr "Save Changes"
+msgstr "Сохранить изменения"
 
 #: src/pages/dashboard/workflows/my-requests.page.tsx:93
 msgid "Search"
@@ -956,7 +965,7 @@ msgstr "Шаблон"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:247
 msgid "Template Details"
-msgstr "Template Details"
+msgstr "Детали шаблона"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:304
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:342
@@ -966,11 +975,11 @@ msgstr "Название шаблона"
 
 #: src/pages/dashboard/workflows/new-workflow-template.page.tsx:64
 msgid "Template name is required"
-msgstr "Template name is required"
+msgstr "Название шаблона обязательно"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:233
 msgid "Template not found"
-msgstr "Template not found"
+msgstr "Шаблон не найден"
 
 #: src/pages/dashboard/analytics/analytics.page.tsx:353
 msgid "Template Usage"
@@ -991,7 +1000,7 @@ msgstr "В данный момент нет заявок, ожидающих о�
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:668
 msgid "This will make the template available for creating new workflow requests again."
-msgstr "This will make the template available for creating new workflow requests again."
+msgstr "Это сделает шаблон снова доступным для создания новых заявок на рабочие процессы."
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:86
 #: src/pages/dashboard/workflows/my-requests.page.tsx:137
@@ -1074,7 +1083,15 @@ msgstr "Безымянный пользователь"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:561
 msgid "Updated"
-msgstr "Updated"
+msgstr "Обновлено"
+
+#: src/pages/dashboard/users/user.page.tsx:59
+msgid "User successfully created"
+msgstr "Пользователь успешно создан"
+
+#: src/pages/dashboard/users/user.page.tsx:80
+msgid "User successfully deleted"
+msgstr "Пользователь успешно удален"
 
 #: src/pages/dashboard/analytics/analytics.page.tsx:54
 #: src/components/DashboardLayout/DashboardLayout.tsx:148
@@ -1128,7 +1145,7 @@ msgstr "Этапы процесса"
 
 #: src/pages/dashboard/workflows/new-workflow-template.page.tsx:46
 msgid "Workflow template created successfully"
-msgstr "Workflow template created successfully"
+msgstr "Шаблон рабочего процесса успешно создан"
 
 #: src/pages/dashboard/analytics/analytics.page.tsx:142
 #~ msgid "Workflow template popularity and success rates will be shown here"
@@ -1150,7 +1167,7 @@ msgstr "У вас нет назначенной роли. Обратитесь �
 
 #: src/components/ProtectedRoute.tsx:48
 msgid "You don't have permission to access this page. Please contact your administrator if you believe this is an error."
-msgstr "You don't have permission to access this page. Please contact your administrator if you believe this is an error."
+msgstr "У вас нет разрешения на доступ к этой странице. Пожалуйста, обратитесь к администратору, если считаете, что это ошибка."
 
 #: src/pages/dashboard/workflows/my-requests.page.tsx:122
 msgid "You haven't submitted any workflow requests yet."

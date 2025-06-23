@@ -1,10 +1,10 @@
 import { Center, Container, Loader } from "@mantine/core";
-import PageTitle from "../../../components/PageTitle";
-import { trpc } from "../../../common/trpc";
-import { useParams, useNavigate } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
-import RoleForm, { RoleFormData } from "../../../components/Forms/RoleForm";
+import { useParams, useNavigate } from "react-router-dom";
 import { Prisma } from "server/src/common/database-types";
+import { trpc } from "../../../common/trpc";
+import RoleForm, { RoleFormData } from "../../../components/Forms/RoleForm";
+import PageTitle from "../../../components/PageTitle";
 
 export default function RolePage() {
   const navigate = useNavigate();
@@ -109,7 +109,7 @@ export default function RolePage() {
   };
 
   return (
-    <Container p="md">
+    <Container size="xl" my="lg">
       <PageTitle
         title={isEdit ? "Редактировать роль" : "Создать роль"}
         showBack

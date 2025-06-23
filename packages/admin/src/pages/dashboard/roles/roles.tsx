@@ -1,17 +1,17 @@
 import { Table, Button, Box, Center, Loader, ScrollArea } from "@mantine/core";
+import { Container } from "@mantine/core";
 import { Eye, Plus } from "lucide-react";
-import Container from "../../../components/Container";
-import PageTitle from "../../../components/PageTitle";
-import { trpc } from "../../../common/trpc";
 import { Link, useNavigate } from "react-router-dom";
-import { ROUTES } from "../../../router/routes";
+import { trpc } from "../../../common/trpc";
 import EmptyPlaceholder from "../../../components/EmptyPlaceholder";
+import PageTitle from "../../../components/PageTitle";
 import PermissionVisibility from "../../../components/PermissionVisibility";
+import { ROUTES } from "../../../router/routes";
 
 export default function RolesPage() {
   return (
     <PermissionVisibility permissions={["READ_ROLES" as any]}>
-      <Container>
+      <Container size="xl" my="lg">
         <PageTitle
           title="Роли"
           right={

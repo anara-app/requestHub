@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { format } from "date-fns";
 import {
   Table,
   Button,
@@ -10,22 +11,21 @@ import {
   Text,
   Flex,
   ScrollArea,
+  Container,
 } from "@mantine/core";
-import { Eye, Plus } from "lucide-react";
-import Container from "../../../components/Container";
-import PageTitle from "../../../components/PageTitle";
-import { trpc } from "../../../common/trpc";
 import { useDebouncedValue } from "@mantine/hooks";
+import { Plus } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { ROUTES } from "../../../router/routes";
 import { DEFAULT_DATE_FORMAT } from "../../../common/constants";
-import { format } from "date-fns";
+import { trpc } from "../../../common/trpc";
+import PageTitle from "../../../components/PageTitle";
 import PermissionVisibility from "../../../components/PermissionVisibility";
+import { ROUTES } from "../../../router/routes";
 
 export default function UsersPage() {
   return (
     <PermissionVisibility permissions={["READ_USERS" as any]}>
-      <Container>
+      <Container size="xl" my="lg">
         <PageTitle
           title="Пользователи"
           right={
@@ -50,6 +50,9 @@ export function UsersTable() {
   const [page, setPage] = useState(1);
 
   const [searchValue] = useDebouncedValue(search, 500);
+  const { data: myPermissions } = trpc.admin.users.getMyPermissions.useQuery();
+
+  const hasPermission = myPermissions?.includes("READ_USERS");
 
   const { data, isLoading } = trpc.admin.users.getUsers.useQuery({
     search: searchValue,
@@ -61,8 +64,15 @@ export function UsersTable() {
   };
 
   const rows = data?.users.map((user) => (
-    <Table.Tr key={user.id}>
-      <Table.Td>{user.id}</Table.Td>
+    <Table.Tr
+      key={user.id}
+      onClick={() => {
+        if (hasPermission) {
+          navigate(`${ROUTES.DASHBOARD_USERS_USER}/${user.id}`);
+        }
+      }}
+      style={{ cursor: hasPermission ? "pointer" : "default" }}
+    >
       <Table.Td>
         <Flex align="center" gap="xs">
           {/* <Avatar size="md" /> */}
@@ -74,19 +84,6 @@ export function UsersTable() {
       <Table.Td>{user.phoneNumber || "-"}</Table.Td>
       <Table.Td>{user.email || "-"}</Table.Td>
       <Table.Td>{format(user.createdAt, DEFAULT_DATE_FORMAT) || "-"}</Table.Td>
-      <Table.Td>
-        <PermissionVisibility permissions={["READ_USERS"]}>
-          <Button
-            leftSection={<Eye size={14} />}
-            variant="light"
-            onClick={() =>
-              navigate(`${ROUTES.DASHBOARD_USERS_USER}/${user.id}`)
-            }
-          >
-            Просмотр
-          </Button>
-        </PermissionVisibility>
-      </Table.Td>
     </Table.Tr>
   ));
 
@@ -106,12 +103,10 @@ export function UsersTable() {
             <Table mb="md" withTableBorder>
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th>ID</Table.Th>
                   <Table.Th>Имя</Table.Th>
                   <Table.Th>Номер телефона</Table.Th>
                   <Table.Th>Электронная почта</Table.Th>
                   <Table.Th>Дата присоединения</Table.Th>
-                  <Table.Th>Действие</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>{rows}</Table.Tbody>

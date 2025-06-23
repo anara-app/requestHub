@@ -1,11 +1,13 @@
+import { useLingui } from "@lingui/react/macro";
 import { Center, Container, Loader } from "@mantine/core";
-import PageTitle from "../../../components/PageTitle";
-import UserForm, { UserFormData } from "../../../components/Forms/UserForm";
-import { trpc } from "../../../common/trpc";
-import { useParams, useNavigate } from "react-router-dom";
 import { notifications } from "@mantine/notifications";
+import { useParams, useNavigate } from "react-router-dom";
+import { trpc } from "../../../common/trpc";
+import UserForm, { UserFormData } from "../../../components/Forms/UserForm";
+import PageTitle from "../../../components/PageTitle";
 
 export default function UserPage() {
+  const { t } = useLingui();
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const isEdit = !!id;
@@ -54,14 +56,14 @@ export default function UserPage() {
     createUser(data, {
       onSuccess: () => {
         notifications.show({
-          message: "Пользователь успешно создан",
+          message: t`User successfully created`,
           color: "green",
         });
         navigate(-1);
       },
       onError: (error) => {
         notifications.show({
-          title: "Ошибка",
+          title: t`Error`,
           message: error.message,
           color: "red",
         });
@@ -75,7 +77,7 @@ export default function UserPage() {
       {
         onSuccess: () => {
           notifications.show({
-            message: "Пользователь успешно удален",
+            message: t`User successfully deleted`,
             color: "green",
           });
           navigate(-1);
@@ -87,11 +89,8 @@ export default function UserPage() {
   const formData = isEdit ? { ...data } : {};
 
   return (
-    <Container p="md">
-      <PageTitle
-        title={isEdit ? "Редактировать пользователя" : "Создать пользователя"}
-        showBack
-      />
+    <Container size="xl" my="lg">
+      <PageTitle title={isEdit ? t`Edit User` : t`Create User`} showBack />
       {isEdit && isLoading ? (
         <Center>
           <Loader />

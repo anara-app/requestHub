@@ -270,6 +270,10 @@ msgstr ""
 msgid "Create Template"
 msgstr "Create Template"
 
+#: src/pages/dashboard/users/user.page.tsx:93
+msgid "Create User"
+msgstr ""
+
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:431
 #~ msgid "Create Workflow Template"
 #~ msgstr "Create Workflow Template"
@@ -360,6 +364,10 @@ msgstr ""
 msgid "Edit Template"
 msgstr "Edit Template"
 
+#: src/pages/dashboard/users/user.page.tsx:93
+msgid "Edit User"
+msgstr ""
+
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:627
 msgid "Enter a reason for archiving this template..."
 msgstr ""
@@ -382,6 +390,7 @@ msgstr "Enter template name"
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:93
 #: src/pages/dashboard/workflows/new-workflow-template.page.tsx:53
 #: src/pages/dashboard/workflows/new-workflow-template.page.tsx:63
+#: src/pages/dashboard/users/user.page.tsx:66
 #: src/pages/auth/auth.page.tsx:66
 msgid "Error"
 msgstr "Error"
@@ -1045,6 +1054,14 @@ msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:561
 msgid "Updated"
+msgstr ""
+
+#: src/pages/dashboard/users/user.page.tsx:59
+msgid "User successfully created"
+msgstr ""
+
+#: src/pages/dashboard/users/user.page.tsx:80
+msgid "User successfully deleted"
 msgstr ""
 
 #: src/pages/dashboard/analytics/analytics.page.tsx:54
