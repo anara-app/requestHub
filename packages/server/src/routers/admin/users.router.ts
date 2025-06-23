@@ -9,6 +9,7 @@ import { db } from "../../common/prisma";
 import bcrypt from "bcrypt";
 import { $Enums } from "../../common/prisma";
 import { WorkflowAssignmentService } from "../../services/workflow-assignment.service";
+import { auth } from "../../lib/auth";
 
 export const usersRouter = router({
   getUsers: protectedPermissionProcedure(["READ_USERS"])
@@ -187,8 +188,13 @@ export const usersRouter = router({
     .mutation(async ({ input: { id, data } }) => {
       try {
         if (data.password) {
-          const passwordHash = await bcrypt.hash(data.password, 10);
-          data.password = passwordHash;
+          // TODO: Implement password update
+          // const updatedPassword = await auth.api.setPassword({
+          //   body: {
+          //     newPassword: data.password,
+          //   },
+          // });
+          // console.log({ updatedPassword });
         } else {
           delete data.password;
         }
@@ -237,23 +243,30 @@ export const usersRouter = router({
             message: "Пользователь с таким email уже существует",
           });
         }
+        const body = {
+          email: input.email,
+          password: input.password,
+          name: `${input.firstName} ${input.lastName}`,
+        };
 
-        const passwordHash = await bcrypt.hash(input.password, 10);
-        const newUser = await db.user.create({
+        // Use better-auth to create the user
+        const response = await auth.api.signUpEmail({
+          body,
+        });
+
+        const userId = response.user.id;
+
+        const user = await db.user.update({
+          where: { id: userId },
           data: {
-            ...input,
+            firstName: input.firstName,
+            lastName: input.lastName,
+            phoneNumber: input.phoneNumber,
             roleId: input.roleId,
-            password: passwordHash,
-          },
-          select: {
-            id: true,
-            firstName: true,
-            lastName: true,
-            email: true,
-            phoneNumber: true,
           },
         });
-        return newUser;
+
+        return user;
       } catch (error: any) {
         throw new TRPCError({
           code: "BAD_REQUEST",
