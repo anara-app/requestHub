@@ -1,17 +1,17 @@
-import dotenv from "dotenv";
+import cors from "@fastify/cors";
+import fastifyMultipart from "@fastify/multipart";
+import sendsible from "@fastify/sensible";
 import {
   fastifyTRPCPlugin,
   FastifyTRPCPluginOptions,
 } from "@trpc/server/adapters/fastify";
+import dotenv from "dotenv";
 import fastify from "fastify";
+import { authRouter } from "./api/auth.router";
+import { mediaRouter } from "./api/media.router";
+import { CONSTANTS } from "./common/constants";
 import { createContext } from "./trpc/context";
 import { appRouter, type AppRouter } from "./trpc/router";
-import cors from "@fastify/cors";
-import { mediaRouter } from "./api/media.router";
-import fastifyMultipart from "@fastify/multipart";
-import sendsible from "@fastify/sensible";
-import { CONSTANTS } from "./common/constants";
-import { authRouter } from "./api/auth.router";
 
 dotenv.config();
 
@@ -29,12 +29,13 @@ server.register(fastifyMultipart, {
 server.register(sendsible);
 server.register(cors, {
   origin: [
-    "http://localhost:3000", 
+    "http://localhost:3000",
     "http://localhost:5174",
     "http://localhost:8080",
     "http://127.0.0.1:3000",
-    "http://127.0.0.1:5174", 
-    "http://127.0.0.1:8080"
+    "http://127.0.0.1:5174",
+    "http://127.0.0.1:8080",
+    "https://0214-77-95-56-40.ngrok-free.app",
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
