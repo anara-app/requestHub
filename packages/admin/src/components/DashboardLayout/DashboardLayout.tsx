@@ -70,6 +70,13 @@ export default function DashboardLayout() {
 
   const NavItems: NavItemType[] = [
     {
+      icon: BarChart3,
+      label: t`Analytics`,
+      path: ROUTES.DASHBOARD_ANALYTICS,
+      activePaths: [ROUTES.DASHBOARD_ANALYTICS],
+      permissionRequired: "READ_ANALYTICS" as any, // Analytics should be available to users with READ_ANALYTICS permission
+    },
+    {
       icon: FileCheck,
       label: t`My Requests`,
       path: ROUTES.DASHBOARD_MY_REQUESTS,
@@ -117,13 +124,6 @@ export default function DashboardLayout() {
       path: ROUTES.DASHBOARD_ROLES,
       activePaths: [ROUTES.DASHBOARD_ROLES, ROUTES.DASHBOARD_ROLES_ROLE],
       permissionRequired: "READ_ROLES",
-    },
-    {
-      icon: BarChart3,
-      label: t`Analytics`,
-      path: ROUTES.DASHBOARD_ANALYTICS,
-      activePaths: [ROUTES.DASHBOARD_ANALYTICS],
-      permissionRequired: "READ_WORKFLOW_REQUESTS", // Analytics should be available to users who can read workflow requests
     },
   ];
 

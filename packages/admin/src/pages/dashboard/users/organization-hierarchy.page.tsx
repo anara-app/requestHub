@@ -51,6 +51,7 @@ import { trpc } from '../../../common/trpc';
 import PageTitle from '../../../components/PageTitle';
 import { useDebouncedValue } from '@mantine/hooks';
 import { Trans, useLingui, Plural } from '@lingui/react/macro';
+import PermissionVisibility from "../../../components/PermissionVisibility";
 
 // React Flow styles
 import '@xyflow/react/dist/style.css';
@@ -502,66 +503,68 @@ export default function OrganizationHierarchyPage() {
   };
 
   return (
-    <Container size="xl">
-      <PageTitle 
-        title={t`Organization Hierarchy`}
-      />
+    <PermissionVisibility permissions={["READ_USERS" as any]}>
+      <Container size="xl">
+        <PageTitle 
+          title={t`Organization Hierarchy`}
+        />
 
-      {/* Statistics Cards */}
-      <Group mt="lg" mb="lg">
-        <Paper withBorder p="md" radius="md" style={{ flex: 1 }}>
-          <Group>
-            <ActionIcon variant="light" color="blue" size="xl" radius="md">
-              <Users size={24} />
-            </ActionIcon>
-            <Box>
-              <Text size="xs" c="dimmed"><Trans>Total Users</Trans></Text>
-              <Text size="xl" fw={700}>{isLoading ? <Loader size="xs" /> : statistics.totalUsers}</Text>
-            </Box>
-          </Group>
-        </Paper>
+        {/* Statistics Cards */}
+        <Group mt="lg" mb="lg">
+          <Paper withBorder p="md" radius="md" style={{ flex: 1 }}>
+            <Group>
+              <ActionIcon variant="light" color="blue" size="xl" radius="md">
+                <Users size={24} />
+              </ActionIcon>
+              <Box>
+                <Text size="xs" c="dimmed"><Trans>Total Users</Trans></Text>
+                <Text size="xl" fw={700}>{isLoading ? <Loader size="xs" /> : statistics.totalUsers}</Text>
+              </Box>
+            </Group>
+          </Paper>
+          
+          <Paper withBorder p="md" radius="md" style={{ flex: 1 }}>
+            <Group>
+              <ActionIcon variant="light" color="green" size="xl" radius="md">
+                <Briefcase size={24} />
+              </ActionIcon>
+              <Box>
+                <Text size="xs" c="dimmed"><Trans>Managers</Trans></Text>
+                <Text size="xl" fw={700}>{isLoading ? <Loader size="xs" /> : statistics.managersCount}</Text>
+              </Box>
+            </Group>
+          </Paper>
+          
+          <Paper withBorder p="md" radius="md" style={{ flex: 1 }}>
+            <Group>
+              <ActionIcon variant="light" color="yellow" size="xl" radius="md">
+                <Crown size={24} />
+              </ActionIcon>
+              <Box>
+                <Text size="xs" c="dimmed"><Trans>Top-level Nodes</Trans></Text>
+                <Text size="xl" fw={700}>{isLoading ? <Loader size="xs" /> : statistics.topLevelCount}</Text>
+              </Box>
+            </Group>
+          </Paper>
+          
+          <Paper withBorder p="md" radius="md" style={{ flex: 1 }}>
+            <Group>
+              <ActionIcon variant="light" color="violet" size="xl" radius="md">
+                <UserCheck size={24} />
+              </ActionIcon>
+              <Box>
+                <Text size="xs" c="dimmed"><Trans>Unique Roles</Trans></Text>
+                <Text size="xl" fw={700}>{isLoading ? <Loader size="xs" /> : statistics.rolesCount}</Text>
+              </Box>
+            </Group>
+          </Paper>
+        </Group>
         
-        <Paper withBorder p="md" radius="md" style={{ flex: 1 }}>
-          <Group>
-            <ActionIcon variant="light" color="green" size="xl" radius="md">
-              <Briefcase size={24} />
-            </ActionIcon>
-            <Box>
-              <Text size="xs" c="dimmed"><Trans>Managers</Trans></Text>
-              <Text size="xl" fw={700}>{isLoading ? <Loader size="xs" /> : statistics.managersCount}</Text>
-            </Box>
-          </Group>
-        </Paper>
-        
-        <Paper withBorder p="md" radius="md" style={{ flex: 1 }}>
-          <Group>
-            <ActionIcon variant="light" color="yellow" size="xl" radius="md">
-              <Crown size={24} />
-            </ActionIcon>
-            <Box>
-              <Text size="xs" c="dimmed"><Trans>Top-level Nodes</Trans></Text>
-              <Text size="xl" fw={700}>{isLoading ? <Loader size="xs" /> : statistics.topLevelCount}</Text>
-            </Box>
-          </Group>
-        </Paper>
-        
-        <Paper withBorder p="md" radius="md" style={{ flex: 1 }}>
-          <Group>
-            <ActionIcon variant="light" color="violet" size="xl" radius="md">
-              <UserCheck size={24} />
-            </ActionIcon>
-            <Box>
-              <Text size="xs" c="dimmed"><Trans>Unique Roles</Trans></Text>
-              <Text size="xl" fw={700}>{isLoading ? <Loader size="xs" /> : statistics.rolesCount}</Text>
-            </Box>
-          </Group>
-        </Paper>
-      </Group>
-      
-      {/* React Flow Organization Chart */}
-      <ReactFlowProvider>
-        <OrganizationFlow />
-      </ReactFlowProvider>
-    </Container>
+        {/* React Flow Organization Chart */}
+        <ReactFlowProvider>
+          <OrganizationFlow />
+        </ReactFlowProvider>
+      </Container>
+    </PermissionVisibility>
   );
 } 

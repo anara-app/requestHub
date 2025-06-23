@@ -10,19 +10,21 @@ import PermissionVisibility from "../../../components/PermissionVisibility";
 
 export default function RolesPage() {
   return (
-    <Container>
-      <PageTitle
-        title="Роли"
-        right={
-          <PermissionVisibility permissions={["CREATE_ROLE"]}>
-            <Link to={ROUTES.DASHBOARD_ROLES_ROLE}>
-              <Button leftSection={<Plus size={14} />}>Добавить роль</Button>
-            </Link>
-          </PermissionVisibility>
-        }
-      />
-      <RolesTable />
-    </Container>
+    <PermissionVisibility permissions={["READ_ROLES" as any]}>
+      <Container>
+        <PageTitle
+          title="Роли"
+          right={
+            <PermissionVisibility permissions={["CREATE_ROLE"]}>
+              <Link to={ROUTES.DASHBOARD_ROLES_ROLE}>
+                <Button leftSection={<Plus size={14} />}>Добавить роль</Button>
+              </Link>
+            </PermissionVisibility>
+          }
+        />
+        <RolesTable />
+      </Container>
+    </PermissionVisibility>
   );
 }
 

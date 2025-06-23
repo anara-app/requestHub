@@ -54,6 +54,12 @@ const PERMISSION_GROUPS: {
       { operation: "MANAGE_WORKFLOW_TEMPLATES", description: "Управление шаблонами workflow" },
     ],
   },
+  {
+    label: "Аналитика",
+    operations: [
+      { operation: "READ_ANALYTICS", description: "Просмотр аналитики" },
+    ],
+  },
 ];
 
 interface PermissionSelectProps {
