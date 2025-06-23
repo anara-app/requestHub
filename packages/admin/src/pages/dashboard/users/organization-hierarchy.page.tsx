@@ -74,6 +74,12 @@ interface HierarchyStats {
   rolesCount: number;
 }
 
+type UserNodeData = HierarchyNode & {
+  subordinateCount: number;
+  level: number;
+  [key: string]: unknown; // Add index signature to make it compatible with Record<string, unknown>
+};
+
 // Custom Node Component
 function UserNode({ data }: NodeProps) {
   const roleColors: Record<string, string> = {
@@ -86,7 +92,7 @@ function UserNode({ data }: NodeProps) {
     'Accountant': '#ff8787'
   };
 
-  const nodeData = data as HierarchyNode & { subordinateCount: number; level: number };
+  const nodeData = data as unknown as UserNodeData;
   const roleName = nodeData.role?.name || 'Unknown';
   const firstName = nodeData.firstName || '';
   const lastName = nodeData.lastName || '';
@@ -139,7 +145,7 @@ function UserNode({ data }: NodeProps) {
             radius="xl" 
             style={{ backgroundColor: roleColor }}
           >
-            {data.isSelfManaged ? (
+            {nodeData.isSelfManaged ? (
               <Crown size={24} color="white" />
             ) : (
               <User size={24} color="white" />
@@ -165,15 +171,15 @@ function UserNode({ data }: NodeProps) {
           <Group gap="xs" align="center">
             <Mail size={14} style={{ color: '#868e96' }} />
             <Text size="sm" c="dimmed" lineClamp={1}>
-              {data.email}
+              {nodeData.email}
             </Text>
           </Group>
           
-          {data.phoneNumber && (
+          {nodeData.phoneNumber && (
             <Group gap="xs" align="center">
               <Phone size={14} style={{ color: '#868e96' }} />
               <Text size="sm" c="dimmed">
-                {data.phoneNumber}
+                {nodeData.phoneNumber}
               </Text>
             </Group>
           )}
@@ -181,15 +187,15 @@ function UserNode({ data }: NodeProps) {
 
         {/* Status Badges */}
         <Group gap="xs">
-          {data.isSelfManaged && (
+          {nodeData.isSelfManaged && (
             <Badge size="xs" variant="filled" color="yellow">
               Self-managed
             </Badge>
           )}
           
-          {data.subordinateCount > 0 && (
+          {nodeData.subordinateCount > 0 && (
             <Badge size="xs" variant="outline" color="gray">
-              {data.subordinateCount} subordinate{data.subordinateCount !== 1 ? 's' : ''}
+              {nodeData.subordinateCount} subordinate{nodeData.subordinateCount !== 1 ? 's' : ''}
             </Badge>
           )}
         </Group>
@@ -218,7 +224,7 @@ function convertHierarchyToFlow(hierarchy: HierarchyNode[]): { nodes: Node[], ed
         ...node,
         subordinateCount: node.subordinates.length,
         level,
-      },
+      } as UserNodeData,
     });
 
     // Create edges to subordinates
@@ -311,10 +317,11 @@ function OrganizationFlow() {
     if (!debouncedSearch.trim()) return layoutedNodes;
     
     return layoutedNodes.filter(node => {
-      const firstName = node.data.firstName || '';
-      const lastName = node.data.lastName || '';
-      const email = node.data.email || '';
-      const roleName = node.data.role?.name || '';
+      const data = node.data as unknown as HierarchyNode;
+      const firstName = data.firstName || '';
+      const lastName = data.lastName || '';
+      const email = data.email || '';
+      const roleName = data.role?.name || '';
       
       return (
         firstName.toLowerCase().includes(debouncedSearch.toLowerCase()) ||
@@ -405,7 +412,8 @@ function OrganizationFlow() {
               'Lawyer': '#9775fa',
               'Accountant': '#ff8787'
             };
-            return roleColors[node.data?.role?.name] || '#339af0';
+            const roleName = (node.data as unknown as HierarchyNode).role?.name;
+            return roleColors[roleName ?? ''] || '#339af0';
           }}
         />
         
