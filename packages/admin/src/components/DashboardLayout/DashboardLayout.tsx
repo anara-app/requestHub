@@ -211,8 +211,8 @@ export default function DashboardLayout() {
             )}
           </Group>
           <Group gap="sm">
-            <UserProfile isMobile={isMobile} />
             <LanguageSwitcher />
+            <UserProfile isMobile={isMobile} />
           </Group>
         </AppShell.Header>
 

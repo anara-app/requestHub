@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLingui } from "@lingui/react/macro";
 import {
   Button,
   TextInput,
@@ -20,69 +21,44 @@ import { FormBuilder, FormField } from "../../../components/Forms";
 import PageTitle from "../../../components/PageTitle";
 import { ROUTES } from "../../../router/routes";
 
-type WorkflowRoleEnum =
-  | "INITIATOR_SUPERVISOR"
-  | "CEO"
-  | "LEGAL"
-  | "PROCUREMENT"
-  | "FINANCE_MANAGER"
-  | "ACCOUNTING"
-  | "HR_SPECIALIST"
-  | "SYSTEM_AUTOMATION"
-  | "SECURITY_REVIEW"
-  | "SECURITY_GUARD"
-  | "INDUSTRIAL_SAFETY";
-
 interface WorkflowStep {
-  role: WorkflowRoleEnum;
+  assigneeType: "ROLE_BASED" | "DYNAMIC";
+  roleBasedAssignee?: string;
+  dynamicAssignee?: string;
+  actionLabel: string;
   type: string;
-  label: string;
 }
 
-// Workflow roles based on the department mapping
-const WORKFLOW_ROLES = [
-  {
-    value: "INITIATOR_SUPERVISOR",
-    label: "Руководитель инициатора (Initiator's Supervisor)",
-  },
-  { value: "CEO", label: "Генеральный директор (CEO)" },
-  { value: "LEGAL", label: "Юрист (Legal)" },
-  { value: "PROCUREMENT", label: "Сотрудник отдела закупок (Procurement)" },
-  { value: "FINANCE_MANAGER", label: "Финансовый менеджер (Finance Manager)" },
-  { value: "ACCOUNTING", label: "Бухгалтерия (Accounting)" },
-  { value: "HR_SPECIALIST", label: "HR Specialist" },
-  { value: "SYSTEM_AUTOMATION", label: "Система (System Automation)" },
-  { value: "SECURITY_REVIEW", label: "Служба безопасности (Security Review)" },
-  { value: "SECURITY_GUARD", label: "Охрана (Security Guard)" },
-  {
-    value: "INDUSTRIAL_SAFETY",
-    label: "Служба промышленной безопасности (Industrial Safety)",
-  },
-];
-
 export const NewWorkflowTemplatePage = () => {
+  const { t } = useLingui();
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [steps, setSteps] = useState<WorkflowStep[]>([
-    { role: "INITIATOR_SUPERVISOR", type: "approval", label: "" },
+    {
+      assigneeType: "DYNAMIC",
+      dynamicAssignee: "INITIATOR_SUPERVISOR",
+      type: "approval",
+      actionLabel: "",
+    },
   ]);
   const [formFields, setFormFields] = useState<FormField[]>([]);
+  const { data: roles } = trpc.admin.roles.getRoles.useQuery();
 
   const createTemplateMutation =
     trpc.admin.workflows.createTemplate.useMutation({
       onSuccess: () => {
         notifications.show({
-          title: "Success",
-          message: "Workflow template created successfully",
+          title: t`Success`,
+          message: t`Workflow template created successfully`,
           color: "green",
         });
         navigate(ROUTES.DASHBOARD_WORKFLOW_TEMPLATES);
       },
       onError: (error: any) => {
         notifications.show({
-          title: "Error",
-          message: error.message || "Failed to create workflow template",
+          title: t`Error`,
+          message: error.message || t`Failed to create workflow template`,
           color: "red",
         });
       },
@@ -91,7 +67,12 @@ export const NewWorkflowTemplatePage = () => {
   const addStep = () => {
     setSteps([
       ...steps,
-      { role: "INITIATOR_SUPERVISOR", type: "approval", label: "" },
+      {
+        assigneeType: "DYNAMIC",
+        dynamicAssignee: "INITIATOR_SUPERVISOR",
+        type: "approval",
+        actionLabel: "",
+      },
     ]);
   };
 
@@ -114,8 +95,8 @@ export const NewWorkflowTemplatePage = () => {
   const handleCreate = () => {
     if (!name.trim()) {
       notifications.show({
-        title: "Error",
-        message: "Template name is required",
+        title: t`Error`,
+        message: t`Template name is required`,
         color: "red",
       });
       return;
@@ -129,6 +110,16 @@ export const NewWorkflowTemplatePage = () => {
     });
   };
 
+  const dynamicOptions = [
+    { value: "INITIATOR_SUPERVISOR", label: "Initiator's Supervisor" },
+  ];
+
+  const roleOptions =
+    roles?.map((role) => ({
+      value: role.name,
+      label: role.name,
+    })) || [];
+
   const handleCancel = () => {
     navigate(ROUTES.DASHBOARD_WORKFLOW_TEMPLATES);
   };
@@ -139,49 +130,92 @@ export const NewWorkflowTemplatePage = () => {
 
   return (
     <Container>
-      <PageTitle>Create New Workflow Template</PageTitle>
+      <PageTitle>{t`Create New Workflow Template`}</PageTitle>
 
       <Paper p="xl" withBorder>
         <Stack gap="md">
           <TextInput
-            label="Template Name"
-            placeholder="Enter template name"
+            label={t`Template Name`}
+            placeholder={t`Enter template name`}
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
           <Textarea
-            label="Description"
-            placeholder="Enter template description"
+            label={t`Description`}
+            placeholder={t`Enter template description`}
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
 
-          <Text fw={500}>Workflow Steps</Text>
+          <Text fw={500}>{t`Workflow Steps`}</Text>
           {steps.map((step, index) => (
-            <Group key={index} align="end">
-              <Select
-                label={`Step ${index + 1} Role`}
-                data={WORKFLOW_ROLES}
-                value={step.role}
-                onChange={(value) =>
-                  updateStep(index, "role", value || "INITIATOR_SUPERVISOR")
-                }
-                style={{ flex: 1 }}
-              />
-              <TextInput
-                label="Step Label"
-                placeholder="Enter step label"
-                value={step.label}
-                onChange={(e) => updateStep(index, "label", e.target.value)}
-                style={{ flex: 1 }}
-              />
-              {steps.length > 1 && (
-                <ActionIcon color="red" onClick={() => removeStep(index)}>
-                  <X size={16} />
-                </ActionIcon>
-              )}
-            </Group>
+            <Paper key={index} p="md" withBorder>
+              <Stack gap="sm">
+                <Text fw={500} size="sm">
+                  {t`Step`} {index + 1}
+                </Text>
+
+                <Select
+                  label={t`Assignment Type`}
+                  data={[
+                    {
+                      value: "ROLE_BASED",
+                      label: t`Role-based (assign to users with specific role)`,
+                    },
+                    {
+                      value: "DYNAMIC",
+                      label: t`Dynamic (assign based on relationships)`,
+                    },
+                  ]}
+                  value={step.assigneeType}
+                  onChange={(value) =>
+                    updateStep(index, "assigneeType", value || "DYNAMIC")
+                  }
+                />
+
+                {step.assigneeType === "ROLE_BASED" && (
+                  <Select
+                    label={t`Role`}
+                    placeholder={t`Select a role`}
+                    data={roleOptions}
+                    value={step.roleBasedAssignee || ""}
+                    onChange={(value) =>
+                      updateStep(index, "roleBasedAssignee", value || "")
+                    }
+                    searchable
+                  />
+                )}
+
+                {step.assigneeType === "DYNAMIC" && (
+                  <Select
+                    label={t`Dynamic Assignment`}
+                    data={dynamicOptions}
+                    value={step.dynamicAssignee || ""}
+                    onChange={(value) =>
+                      updateStep(index, "dynamicAssignee", value || "")
+                    }
+                  />
+                )}
+
+                <TextInput
+                  label={t`Action Label`}
+                  placeholder={t`Enter action label (e.g., 'Review and Approve')`}
+                  value={step.actionLabel}
+                  onChange={(e) =>
+                    updateStep(index, "actionLabel", e.target.value)
+                  }
+                />
+
+                {steps.length > 1 && (
+                  <Group justify="flex-end">
+                    <ActionIcon color="red" onClick={() => removeStep(index)}>
+                      <X size={16} />
+                    </ActionIcon>
+                  </Group>
+                )}
+              </Stack>
+            </Paper>
           ))}
 
           <Button
@@ -189,7 +223,7 @@ export const NewWorkflowTemplatePage = () => {
             onClick={addStep}
             leftSection={<Plus size={16} />}
           >
-            Add Step
+            {t`Add Step`}
           </Button>
 
           <Divider my="xl" />
@@ -202,13 +236,13 @@ export const NewWorkflowTemplatePage = () => {
 
           <Group justify="flex-end" mt="xl">
             <Button variant="outline" onClick={handleCancel}>
-              Cancel
+              {t`Cancel`}
             </Button>
             <Button
               onClick={handleCreate}
               loading={createTemplateMutation.isPending}
             >
-              Create Template
+              {t`Create Template`}
             </Button>
           </Group>
         </Stack>
