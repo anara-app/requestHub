@@ -15,6 +15,7 @@ import WorkflowRequestPage from "../pages/dashboard/workflows/workflow-request.p
 import RaiseRequestPage from "../pages/dashboard/workflows/raise-request.page";
 import MyRequestsPage from "../pages/dashboard/workflows/my-requests.page";
 import PendingApprovalsPage from "../pages/dashboard/workflows/pending-approvals.page";
+import AnalyticsPage from "../pages/dashboard/analytics/analytics.page";
 
 export const router = createBrowserRouter([
   {
@@ -82,6 +83,10 @@ export const router = createBrowserRouter([
       {
         path: ROUTES.DASHBOARD_PENDING_APPROVALS,
         element: <PendingApprovalsPage />,
+      },
+      {
+        path: ROUTES.DASHBOARD_ANALYTICS,
+        element: <AnalyticsPage />,
       },
     ],
   },

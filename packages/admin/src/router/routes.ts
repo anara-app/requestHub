@@ -18,4 +18,5 @@ export const ROUTES = {
   DASHBOARD_RAISE_REQUEST: "/raise-request",
   DASHBOARD_MY_REQUESTS: "/my-requests",
   DASHBOARD_PENDING_APPROVALS: "/pending-approvals",
+  DASHBOARD_ANALYTICS: "/analytics",
 };

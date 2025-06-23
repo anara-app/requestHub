@@ -78,6 +78,11 @@ msgstr ""
 msgid "All statuses"
 msgstr ""
 
+#: src/pages/dashboard/analytics/analytics.page.tsx:56
+#: src/components/DashboardLayout/DashboardLayout.tsx:123
+msgid "Analytics"
+msgstr ""
+
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:224
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:234
 msgid "Approval"
@@ -148,9 +153,13 @@ msgstr "Cancelled"
 #~ msgid "Change Language"
 #~ msgstr ""
 
-#: src/components/DashboardLayout/DashboardLayout.tsx:187
+#: src/components/DashboardLayout/DashboardLayout.tsx:194
 msgid "Change theme"
 msgstr "Change theme"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:97
+msgid "Chart visualization will be implemented here"
+msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:405
 msgid "Comment (Optional)"
@@ -324,12 +333,16 @@ msgstr "Initiator's Supervisor"
 msgid "Loading organization chart..."
 msgstr ""
 
-#: src/components/DashboardLayout/DashboardLayout.tsx:190
+#: src/components/DashboardLayout/DashboardLayout.tsx:197
 msgid "Logout"
 msgstr "Logout"
 
-#: src/pages/dashboard/users/organization-hierarchy.page.tsx:549
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:530
 msgid "Managers"
+msgstr ""
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:129
+msgid "Most active users and approval statistics will be displayed here"
 msgstr ""
 
 #: src/pages/dashboard/workflows/my-requests.page.tsx:54
@@ -407,7 +420,7 @@ msgstr "Not started"
 msgid "Organization Hierarchy"
 msgstr "Organization Hierarchy"
 
-#: src/components/DashboardLayout/DashboardLayout.tsx:154
+#: src/components/DashboardLayout/DashboardLayout.tsx:161
 msgid "Partner Neft"
 msgstr "Partner Neft"
 
@@ -430,13 +443,17 @@ msgstr "Pending Approvals"
 msgid "Pending your approval"
 msgstr "Pending your approval"
 
+#: src/pages/dashboard/analytics/analytics.page.tsx:113
+msgid "Pie chart will be implemented here"
+msgstr ""
+
 #: src/pages/dashboard/workflows/my-requests.page.tsx:99
 msgid "Progress"
 msgstr "Progress"
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:521
-msgid "Refresh"
-msgstr ""
+#~ msgid "Refresh"
+#~ msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:394
 msgid "Reject"
@@ -477,6 +494,10 @@ msgstr "Request Not Found"
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:60
 msgid "Request rejected successfully"
 msgstr "Request rejected successfully"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:91
+msgid "Request Trends"
+msgstr ""
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:77
 msgid "requests"
@@ -533,8 +554,8 @@ msgid "Search requests..."
 msgstr "Search requests..."
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:511
-msgid "Search users..."
-msgstr ""
+#~ msgid "Search users..."
+#~ msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:464
 msgid "Select a role"
@@ -566,6 +587,10 @@ msgstr "Sign In"
 #: src/pages/dashboard/workflows/all-requests.page.tsx:110
 msgid "Status"
 msgstr "Status"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:107
+msgid "Status Distribution"
+msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:449
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:134
@@ -611,6 +636,10 @@ msgstr "Template"
 msgid "Template Name"
 msgstr "Template Name"
 
+#: src/pages/dashboard/analytics/analytics.page.tsx:138
+msgid "Template Usage"
+msgstr ""
+
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:261
 msgid "Template:"
 msgstr "Template:"
@@ -630,11 +659,15 @@ msgstr ""
 msgid "Title"
 msgstr "Title"
 
-#: src/pages/dashboard/users/organization-hierarchy.page.tsx:561
+#: src/pages/dashboard/analytics/analytics.page.tsx:125
+msgid "Top Performers"
+msgstr ""
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:542
 msgid "Top-level Nodes"
 msgstr ""
 
-#: src/pages/dashboard/users/organization-hierarchy.page.tsx:537
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:518
 msgid "Total Users"
 msgstr ""
 
@@ -651,7 +684,7 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-#: src/pages/dashboard/users/organization-hierarchy.page.tsx:573
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:554
 msgid "Unique Roles"
 msgstr ""
 
@@ -704,6 +737,10 @@ msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:445
 msgid "Workflow Steps"
+msgstr ""
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:142
+msgid "Workflow template popularity and success rates will be shown here"
 msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:291

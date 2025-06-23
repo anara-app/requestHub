@@ -12,7 +12,7 @@ import { useDisclosure, useMediaQuery } from "@mantine/hooks";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../router/routes";
 import ProtectedRoute from "../ProtectedRoute";
-import { ImagesIcon, LogOutIcon, UserCog, Users, Workflow, FileText, Plus, Clock, FileCheck, Network } from "lucide-react";
+import { ImagesIcon, LogOutIcon, UserCog, Users, Workflow, FileText, Plus, Clock, FileCheck, Network, BarChart3 } from "lucide-react";
 import { useLingui } from "@lingui/react/macro";
 import logo from "../../assets/logo.png";
 import ThemeSwitch from "../ThemeSwith";
@@ -117,6 +117,13 @@ export default function DashboardLayout() {
       path: ROUTES.DASHBOARD_ROLES,
       activePaths: [ROUTES.DASHBOARD_ROLES, ROUTES.DASHBOARD_ROLES_ROLE],
       permissionRequired: "READ_ROLES",
+    },
+    {
+      icon: BarChart3,
+      label: t`Analytics`,
+      path: ROUTES.DASHBOARD_ANALYTICS,
+      activePaths: [ROUTES.DASHBOARD_ANALYTICS],
+      permissionRequired: "READ_WORKFLOW_REQUESTS", // Analytics should be available to users who can read workflow requests
     },
   ];
 

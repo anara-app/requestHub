@@ -103,6 +103,11 @@ msgstr "Все заявки"
 msgid "All statuses"
 msgstr "Все статусы"
 
+#: src/pages/dashboard/analytics/analytics.page.tsx:56
+#: src/components/DashboardLayout/DashboardLayout.tsx:123
+msgid "Analytics"
+msgstr "Аналитика"
+
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:224
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:234
 msgid "Approval"
@@ -173,9 +178,13 @@ msgstr "Отменено"
 #~ msgid "Change Language"
 #~ msgstr "Изменить язык"
 
-#: src/components/DashboardLayout/DashboardLayout.tsx:187
+#: src/components/DashboardLayout/DashboardLayout.tsx:194
 msgid "Change theme"
 msgstr "Сменить тему"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:97
+msgid "Chart visualization will be implemented here"
+msgstr "Здесь будет реализована визуализация графиков"
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:405
 msgid "Comment (Optional)"
@@ -349,13 +358,17 @@ msgstr "Руководитель инициатора"
 msgid "Loading organization chart..."
 msgstr "Загрузка организационной схемы..."
 
-#: src/components/DashboardLayout/DashboardLayout.tsx:190
+#: src/components/DashboardLayout/DashboardLayout.tsx:197
 msgid "Logout"
 msgstr "Выход"
 
-#: src/pages/dashboard/users/organization-hierarchy.page.tsx:549
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:530
 msgid "Managers"
 msgstr "Менеджеры"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:129
+msgid "Most active users and approval statistics will be displayed here"
+msgstr "Здесь будут отображены самые активные пользователи и статистика одобрений"
 
 #: src/pages/dashboard/workflows/my-requests.page.tsx:54
 #: src/components/DashboardLayout/DashboardLayout.tsx:74
@@ -432,7 +445,7 @@ msgstr "Не начато"
 msgid "Organization Hierarchy"
 msgstr "Организационная иерархия"
 
-#: src/components/DashboardLayout/DashboardLayout.tsx:154
+#: src/components/DashboardLayout/DashboardLayout.tsx:161
 msgid "Partner Neft"
 msgstr "Партнер Нефт"
 
@@ -455,13 +468,17 @@ msgstr "Ожидающие одобрения"
 msgid "Pending your approval"
 msgstr "Ожидает вашего одобрения"
 
+#: src/pages/dashboard/analytics/analytics.page.tsx:113
+msgid "Pie chart will be implemented here"
+msgstr "Здесь будет реализована круговая диаграмма"
+
 #: src/pages/dashboard/workflows/my-requests.page.tsx:99
 msgid "Progress"
 msgstr "Прогресс"
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:521
-msgid "Refresh"
-msgstr "Обновить"
+#~ msgid "Refresh"
+#~ msgstr "Обновить"
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:394
 msgid "Reject"
@@ -502,6 +519,10 @@ msgstr "Заявка не найдена"
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:60
 msgid "Request rejected successfully"
 msgstr "Заявка успешно отклонена"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:91
+msgid "Request Trends"
+msgstr "Тренды заявок"
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:77
 msgid "requests"
@@ -558,8 +579,8 @@ msgid "Search requests..."
 msgstr "Поиск заявок..."
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:511
-msgid "Search users..."
-msgstr "Поиск пользователей..."
+#~ msgid "Search users..."
+#~ msgstr "Поиск пользователей..."
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:464
 msgid "Select a role"
@@ -591,6 +612,10 @@ msgstr "Войти"
 #: src/pages/dashboard/workflows/all-requests.page.tsx:110
 msgid "Status"
 msgstr "Статус"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:107
+msgid "Status Distribution"
+msgstr "Распределение по статусам"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:449
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:134
@@ -640,6 +665,10 @@ msgstr "Шаблон"
 msgid "Template Name"
 msgstr "Название шаблона"
 
+#: src/pages/dashboard/analytics/analytics.page.tsx:138
+msgid "Template Usage"
+msgstr "Использование шаблонов"
+
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:261
 msgid "Template:"
 msgstr "Шаблон:"
@@ -659,11 +688,15 @@ msgstr "В данный момент нет заявок, ожидающих о�
 msgid "Title"
 msgstr "Название"
 
-#: src/pages/dashboard/users/organization-hierarchy.page.tsx:561
+#: src/pages/dashboard/analytics/analytics.page.tsx:125
+msgid "Top Performers"
+msgstr "Лучшие исполнители"
+
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:542
 msgid "Top-level Nodes"
 msgstr "Узлы верхнего уровня"
 
-#: src/pages/dashboard/users/organization-hierarchy.page.tsx:537
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:518
 msgid "Total Users"
 msgstr "Всего пользователей"
 
@@ -680,7 +713,7 @@ msgstr "Попробуйте изменить условия поиска или
 msgid "Type"
 msgstr "Тип"
 
-#: src/pages/dashboard/users/organization-hierarchy.page.tsx:573
+#: src/pages/dashboard/users/organization-hierarchy.page.tsx:554
 msgid "Unique Roles"
 msgstr "Уникальные роли"
 
@@ -734,6 +767,10 @@ msgstr "Прогресс процесса"
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:445
 msgid "Workflow Steps"
 msgstr "Этапы процесса"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:142
+msgid "Workflow template popularity and success rates will be shown here"
+msgstr "Здесь будут показаны популярность шаблонов процессов и показатели успешности"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:291
 #: src/components/DashboardLayout/DashboardLayout.tsx:88
