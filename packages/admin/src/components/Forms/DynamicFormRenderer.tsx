@@ -16,8 +16,13 @@ import {
   Slider,
   Text,
   Box,
+  Button,
+  Alert,
+  Loader,
 } from "@mantine/core";
 import { UseFormReturnType } from "@mantine/form";
+import { notifications } from "@mantine/notifications";
+import { ENV_KEYS } from "../../common/constants";
 import { FormField } from "./FormBuilder";
 
 interface DynamicFormRendererProps {
@@ -31,6 +36,58 @@ export const DynamicFormRenderer: React.FC<DynamicFormRendererProps> = ({
   form,
   disabled = false,
 }) => {
+  const [uploadingFiles, setUploadingFiles] = React.useState<Set<string>>(
+    new Set()
+  );
+
+  const handleFileUpload = async (file: File, fieldName: string) => {
+    if (!file) return;
+
+    setUploadingFiles((prev) => new Set(prev).add(fieldName));
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch(`${ENV_KEYS.REST_API_URL}/media`, {
+        method: "POST",
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error(`Upload failed: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+
+      // Update form field with the entire response object
+      form.setFieldValue(`formData.${fieldName}`, result);
+
+      notifications.show({
+        title: "Success",
+        message: `File "${file.name}" uploaded successfully`,
+        color: "green",
+      });
+    } catch (error) {
+      console.error("File upload error:", error);
+      notifications.show({
+        title: "Upload Error",
+        message:
+          error instanceof Error ? error.message : "Failed to upload file",
+        color: "red",
+      });
+
+      // Clear the field value on error
+      form.setFieldValue(`formData.${fieldName}`, "");
+    } finally {
+      setUploadingFiles((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(fieldName);
+        return newSet;
+      });
+    }
+  };
+
   const renderField = (field: FormField) => {
     const commonProps = {
       label: field.label,
@@ -160,13 +217,121 @@ export const DynamicFormRenderer: React.FC<DynamicFormRendererProps> = ({
         );
 
       case "file":
+        const isUploading = uploadingFiles.has(field.name);
+        const fileData = form.values.formData?.[field.name];
+
         return (
-          <FileInput
-            {...commonProps}
-            {...inputProps}
-            multiple={field.multiple}
-            accept={field.accept}
-          />
+          <Box>
+            <Text size="sm" fw={500} mb="xs">
+              {field.label}
+              {field.validation?.required && (
+                <span style={{ color: "red" }}> *</span>
+              )}
+            </Text>
+            {field.description && (
+              <Text size="xs" c="dimmed" mb="sm">
+                {field.description}
+              </Text>
+            )}
+
+            <Stack gap="sm">
+              <FileInput
+                placeholder={
+                  fileData
+                    ? "Change file..."
+                    : field.placeholder || "Select file..."
+                }
+                multiple={field.multiple}
+                accept={field.accept}
+                disabled={disabled || isUploading}
+                onChange={(file) => {
+                  if (file) {
+                    if (Array.isArray(file)) {
+                      // Handle multiple files if needed
+                      file.forEach((f) => handleFileUpload(f, field.name));
+                    } else {
+                      handleFileUpload(file, field.name);
+                    }
+                  }
+                }}
+                rightSection={isUploading ? <Loader size="xs" /> : undefined}
+              />
+
+              {isUploading && (
+                <Alert color="blue">
+                  <Group gap="xs">
+                    <Loader size="xs" />
+                    <Text size="sm">Uploading file...</Text>
+                  </Group>
+                </Alert>
+              )}
+
+              {fileData && !isUploading && (
+                <Alert color="green">
+                  <Group justify="space-between">
+                    <Text size="sm">✓ File uploaded successfully</Text>
+                    <Button
+                      size="xs"
+                      variant="subtle"
+                      color="red"
+                      onClick={() =>
+                        form.setFieldValue(`formData.${field.name}`, null)
+                      }
+                      disabled={disabled}
+                    >
+                      Remove
+                    </Button>
+                  </Group>
+                  <Stack gap="xs" mt="sm">
+                    <Group gap="xs">
+                      <Text size="sm" fw={500}>
+                        {fileData.originalFileName || fileData.filename}
+                      </Text>
+                      <Text
+                        size="xs"
+                        c="dimmed"
+                        style={{
+                          backgroundColor: "#f1f3f4",
+                          padding: "2px 6px",
+                          borderRadius: "4px",
+                        }}
+                      >
+                        {fileData.type}
+                      </Text>
+                    </Group>
+                    {fileData.type === "IMAGE" && fileData.url && (
+                      <Box
+                        style={{
+                          border: "1px solid #e0e0e0",
+                          borderRadius: "4px",
+                          padding: "4px",
+                          display: "inline-block",
+                          maxWidth: "200px",
+                        }}
+                      >
+                        <img
+                          src={fileData.url}
+                          alt={fileData.originalFileName || fileData.filename}
+                          style={{
+                            maxWidth: "100%",
+                            height: "auto",
+                            borderRadius: "2px",
+                          }}
+                        />
+                      </Box>
+                    )}
+                    <Text
+                      size="xs"
+                      c="dimmed"
+                      style={{ wordBreak: "break-all" }}
+                    >
+                      URL: {fileData.url}
+                    </Text>
+                  </Stack>
+                </Alert>
+              )}
+            </Stack>
+          </Box>
         );
 
       case "rating":

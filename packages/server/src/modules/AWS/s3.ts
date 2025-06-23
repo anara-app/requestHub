@@ -4,11 +4,11 @@ import {
   PutObjectCommandInput,
   S3,
 } from "@aws-sdk/client-s3";
+import { MultipartFile } from "@fastify/multipart";
+import { FileType } from "@prisma/client";
 import { v4 as uuid } from "uuid";
 import { CONSTANTS } from "../../common/constants";
-import { MultipartFile } from "@fastify/multipart";
 import { db, MediaFile } from "../../common/prisma";
-import { FileType } from "@prisma/client";
 
 /* Config */
 const BUCKET_NAME = CONSTANTS.AWS.BUCKET_NAME;
@@ -44,8 +44,7 @@ interface UploadOptions {
 /* Main */
 export class AWSManager {
   static getFilePath(fileName: string) {
-    return `https://bucket.domain.online/assets/${fileName}`;
-    // return `https://domain.fra1.digitaloceanspaces.com/assets/${fileName}`;
+    return `https://pub-93fd205f2bfa434a961448a647536716.r2.dev/assets/${fileName}`;
   }
 
   static async uploadFileToBucket({
