@@ -1,53 +1,88 @@
-import { Container, Title, Grid, Card, Text, Group, Stack, SimpleGrid } from "@mantine/core";
+import { Container, Title, Grid, Card, Text, Group, Stack, SimpleGrid, Loader, Center, Alert } from "@mantine/core";
 import { Trans } from "@lingui/react/macro";
 import PageTitle from "../../../components/PageTitle";
 import PermissionVisibility from "../../../components/PermissionVisibility";
-import { BarChart3, TrendingUp, Users, FileText, Clock, CheckCircle, XCircle, Activity } from "lucide-react";
+import { BarChart3, TrendingUp, Users, FileText, Clock, CheckCircle, XCircle, Activity, AlertCircle } from "lucide-react";
+import { trpc } from "../../../common/trpc";
 
 export default function AnalyticsPage() {
-  // Placeholder data - in real implementation, this would come from tRPC queries
+  // Fetch real analytics data
+  const { data: metricsData, isLoading: metricsLoading, error: metricsError } = trpc.admin.analytics.getDashboardMetrics.useQuery();
+  const { data: topPerformers, isLoading: performersLoading } = trpc.admin.analytics.getTopPerformers.useQuery();
+  const { data: templateUsage, isLoading: templateLoading } = trpc.admin.analytics.getTemplateUsage.useQuery();
+
+  if (metricsLoading) {
+    return (
+      <PermissionVisibility permissions={["READ_ANALYTICS" as any]}>
+        <Container size="xl" py="md">
+          <PageTitle>
+            <Trans>Analytics</Trans>
+          </PageTitle>
+          <Center mt="xl">
+            <Loader size="lg" />
+          </Center>
+        </Container>
+      </PermissionVisibility>
+    );
+  }
+
+  if (metricsError) {
+    return (
+      <PermissionVisibility permissions={["READ_ANALYTICS" as any]}>
+        <Container size="xl" py="md">
+          <PageTitle>
+            <Trans>Analytics</Trans>
+          </PageTitle>
+          <Alert icon={<AlertCircle size={16} />} title="Error" color="red" mt="md">
+            <Trans>Failed to load analytics data. Please try again later.</Trans>
+          </Alert>
+        </Container>
+      </PermissionVisibility>
+    );
+  }
+
   const metrics = [
     {
       title: "Total Requests",
-      value: "1,234",
+      value: metricsData?.totalRequests?.toLocaleString() || "0",
       icon: FileText,
       color: "blue",
-      trend: "+12%",
+      trend: null as string | null, // We can calculate trends later if needed
     },
     {
       title: "Active Users",
-      value: "89",
+      value: metricsData?.activeUsers?.toLocaleString() || "0",
       icon: Users,
       color: "green",
-      trend: "+5%",
+      trend: null as string | null,
     },
     {
       title: "Pending Approvals",
-      value: "23",
+      value: metricsData?.pendingApprovals?.toLocaleString() || "0",
       icon: Clock,
       color: "orange",
-      trend: "-8%",
+      trend: null as string | null,
     },
     {
       title: "Approved Requests",
-      value: "1,156",
+      value: metricsData?.approvedRequests?.toLocaleString() || "0",
       icon: CheckCircle,
       color: "teal",
-      trend: "+15%",
+      trend: null as string | null,
     },
     {
       title: "Rejected Requests",
-      value: "55",
+      value: metricsData?.rejectedRequests?.toLocaleString() || "0",
       icon: XCircle,
       color: "red",
-      trend: "-3%",
+      trend: null as string | null,
     },
     {
       title: "Avg. Processing Time",
-      value: "2.3 days",
+      value: metricsData?.avgProcessingTime ? `${metricsData.avgProcessingTime} days` : "0 days",
       icon: Activity,
       color: "violet",
-      trend: "-12%",
+      trend: null as string | null,
     },
   ];
 
@@ -72,9 +107,11 @@ export default function AnalyticsPage() {
                         {metric.title}
                       </Text>
                     </Group>
-                    <Text size="xs" c={metric.trend.startsWith('+') ? 'teal' : 'red'} fw={500}>
-                      {metric.trend}
-                    </Text>
+                    {metric.trend && (
+                      <Text size="xs" c={metric.trend.startsWith('+') ? 'teal' : 'red'} fw={500}>
+                        {metric.trend}
+                      </Text>
+                    )}
                   </Group>
                   <Text size="xl" fw={700}>
                     {metric.value}
@@ -126,11 +163,59 @@ export default function AnalyticsPage() {
                 <Title order={3} mb="md">
                   <Trans>Top Performers</Trans>
                 </Title>
-                <Stack gap="xs">
-                  <Text size="sm" c="dimmed">
-                    <Trans>Most active users and approval statistics will be displayed here</Trans>
-                  </Text>
-                </Stack>
+                {performersLoading ? (
+                  <Center py="md">
+                    <Loader size="sm" />
+                  </Center>
+                ) : (
+                  <Stack gap="md">
+                    {topPerformers?.topApprovers && topPerformers.topApprovers.length > 0 && (
+                      <div>
+                        <Text size="sm" fw={500} mb="xs">
+                          <Trans>Top Approvers</Trans>
+                        </Text>
+                        <Stack gap="xs">
+                          {topPerformers.topApprovers.slice(0, 3).map((approver) => (
+                            <Group key={approver.userId} justify="space-between">
+                              <Text size="sm">
+                                {approver.user?.firstName} {approver.user?.lastName}
+                              </Text>
+                              <Text size="xs" c="dimmed">
+                                {approver.approvalCount} approvals
+                              </Text>
+                            </Group>
+                          ))}
+                        </Stack>
+                      </div>
+                    )}
+                    
+                    {topPerformers?.topInitiators && topPerformers.topInitiators.length > 0 && (
+                      <div>
+                        <Text size="sm" fw={500} mb="xs">
+                          <Trans>Top Request Creators</Trans>
+                        </Text>
+                        <Stack gap="xs">
+                          {topPerformers.topInitiators.slice(0, 3).map((initiator) => (
+                            <Group key={initiator.userId} justify="space-between">
+                              <Text size="sm">
+                                {initiator.user?.firstName} {initiator.user?.lastName}
+                              </Text>
+                              <Text size="xs" c="dimmed">
+                                {initiator.requestCount} requests
+                              </Text>
+                            </Group>
+                          ))}
+                        </Stack>
+                      </div>
+                    )}
+                    
+                    {(!topPerformers?.topApprovers?.length && !topPerformers?.topInitiators?.length) && (
+                      <Text size="sm" c="dimmed">
+                        <Trans>No performance data available yet</Trans>
+                      </Text>
+                    )}
+                  </Stack>
+                )}
               </Card>
             </Grid.Col>
 
@@ -139,11 +224,32 @@ export default function AnalyticsPage() {
                 <Title order={3} mb="md">
                   <Trans>Template Usage</Trans>
                 </Title>
-                <Stack gap="xs">
-                  <Text size="sm" c="dimmed">
-                    <Trans>Workflow template popularity and success rates will be shown here</Trans>
-                  </Text>
-                </Stack>
+                {templateLoading ? (
+                  <Center py="md">
+                    <Loader size="sm" />
+                  </Center>
+                ) : (
+                  <Stack gap="xs">
+                    {templateUsage && templateUsage.length > 0 ? (
+                      templateUsage.slice(0, 5).map((template) => (
+                        <Group key={template.templateId} justify="space-between">
+                          <div>
+                            <Text size="sm" fw={500}>
+                              {template.template?.name || 'Unknown Template'}
+                            </Text>
+                            <Text size="xs" c="dimmed">
+                              {template.totalRequests} requests • {template.successRate}% success rate
+                            </Text>
+                          </div>
+                        </Group>
+                      ))
+                    ) : (
+                      <Text size="sm" c="dimmed">
+                        <Trans>No template usage data available yet</Trans>
+                      </Text>
+                    )}
+                  </Stack>
+                )}
               </Card>
             </Grid.Col>
           </Grid>
