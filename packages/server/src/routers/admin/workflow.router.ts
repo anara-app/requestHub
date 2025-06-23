@@ -1,8 +1,14 @@
 import { z } from "zod";
-import { protectedPermissionProcedure, router } from "../../trpc/trpc";
-import { TRPCError } from "@trpc/server";
-import { db } from "../../common/prisma";
 import { RequestStatus, WorkflowRole } from "@prisma/client";
+import { TRPCError } from "@trpc/server";
+import {
+  formFieldSchema,
+  validateFormFields,
+  FORM_FIELD_TYPES,
+  CONDITION_TYPES,
+} from "../../common/form-field-validation";
+import { db } from "../../common/prisma";
+import { protectedPermissionProcedure, router } from "../../trpc/trpc";
 
 // Type definitions for templates with user relations
 type TemplateWithUsers = {
@@ -10,6 +16,7 @@ type TemplateWithUsers = {
   name: string;
   description: string | null;
   steps: any;
+  formFields: any;
   isActive: boolean;
   archivedAt: Date | null;
   archiveReason: string | null;
@@ -75,14 +82,92 @@ const createTemplateSchema = z.object({
       type: z.string(),
     })
   ),
+  formFields: z.array(formFieldSchema).optional().default([]),
 });
 
+export type CreateTemplateInput = z.infer<typeof createTemplateSchema>;
+
+// Re-export types from common module for convenience
+export type {
+  FormField,
+  FormFieldType,
+  ValidationRules,
+  FieldOption,
+} from "../../common/form-field-validation";
+
 export const adminWorkflowRouter = router({
+  // Validate form fields
+  validateFormFields: protectedPermissionProcedure([
+    "MANAGE_WORKFLOW_TEMPLATES" as any,
+  ])
+    .input(
+      z.object({
+        formFields: z.array(formFieldSchema),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const validation = validateFormFields(input.formFields);
+
+      if (!validation.isValid) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Form field validation failed",
+          cause: validation.errors,
+        });
+      }
+
+      return {
+        success: true,
+        message: "Form fields are valid",
+      };
+    }),
+
+  // Get form field types and their requirements
+  getFormFieldTypes: protectedPermissionProcedure([
+    "MANAGE_WORKFLOW_TEMPLATES" as any,
+  ]).query(async () => {
+    return {
+      types: FORM_FIELD_TYPES,
+      conditionTypes: CONDITION_TYPES,
+    };
+  }),
+
   // Get active workflow templates only
-  getTemplates: protectedPermissionProcedure(["MANAGE_WORKFLOW_TEMPLATES" as any])
-    .query(async (): Promise<TemplateWithUsers[]> => {
-      return await (db.workflowTemplate.findMany as any)({
-        where: { isActive: true },
+  getTemplates: protectedPermissionProcedure([
+    "MANAGE_WORKFLOW_TEMPLATES" as any,
+  ]).query(async (): Promise<TemplateWithUsers[]> => {
+    return await (db.workflowTemplate.findMany as any)({
+      where: { isActive: true },
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+        updatedBy: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+  }),
+
+  // Get single workflow template by ID
+  getTemplate: protectedPermissionProcedure([
+    "MANAGE_WORKFLOW_TEMPLATES" as any,
+  ])
+    .input(z.object({ id: z.string().uuid() }))
+    .query(async ({ input }): Promise<TemplateWithUsers> => {
+      const template = await (db.workflowTemplate.findUnique as any)({
+        where: { id: input.id },
         include: {
           createdBy: {
             select: {
@@ -100,22 +185,52 @@ export const adminWorkflowRouter = router({
               email: true,
             },
           },
+          archivedBy: {
+            select: {
+              id: true,
+              firstName: true,
+              lastName: true,
+              email: true,
+            },
+          },
         },
-        orderBy: { createdAt: "desc" },
       });
+
+      if (!template) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Workflow template not found",
+        });
+      }
+
+      return template;
     }),
 
   // Create a new workflow template
-  createTemplate: protectedPermissionProcedure(["MANAGE_WORKFLOW_TEMPLATES" as any])
+  createTemplate: protectedPermissionProcedure([
+    "MANAGE_WORKFLOW_TEMPLATES" as any,
+  ])
     .input(createTemplateSchema)
     .mutation(async ({ input, ctx }): Promise<TemplateWithUsers> => {
       const userId = ctx.user.id;
-      
+
+      // Validate form fields
+      if (input.formFields && input.formFields.length > 0) {
+        const validation = validateFormFields(input.formFields);
+        if (!validation.isValid) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Form field validation failed: ${validation.errors.join(", ")}`,
+          });
+        }
+      }
+
       return await (db.workflowTemplate.create as any)({
         data: {
           name: input.name,
           description: input.description,
           steps: JSON.stringify(input.steps),
+          formFields: JSON.stringify(input.formFields),
           isActive: true,
           createdById: userId,
         },
@@ -133,7 +248,9 @@ export const adminWorkflowRouter = router({
     }),
 
   // Update workflow template
-  updateTemplate: protectedPermissionProcedure(["MANAGE_WORKFLOW_TEMPLATES" as any])
+  updateTemplate: protectedPermissionProcedure([
+    "MANAGE_WORKFLOW_TEMPLATES" as any,
+  ])
     .input(
       z.object({
         id: z.string().uuid(),
@@ -142,7 +259,7 @@ export const adminWorkflowRouter = router({
     )
     .mutation(async ({ input, ctx }): Promise<TemplateWithUsers> => {
       const userId = ctx.user.id;
-      
+
       const template = await db.workflowTemplate.findUnique({
         where: { id: input.id },
       });
@@ -154,12 +271,24 @@ export const adminWorkflowRouter = router({
         });
       }
 
+      // Validate form fields
+      if (input.data.formFields && input.data.formFields.length > 0) {
+        const validation = validateFormFields(input.data.formFields);
+        if (!validation.isValid) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Form field validation failed: ${validation.errors.join(", ")}`,
+          });
+        }
+      }
+
       return await (db.workflowTemplate.update as any)({
         where: { id: input.id },
         data: {
           name: input.data.name,
           description: input.data.description,
           steps: JSON.stringify(input.data.steps),
+          formFields: JSON.stringify(input.data.formFields),
           updatedById: userId,
         },
         include: {
@@ -184,11 +313,15 @@ export const adminWorkflowRouter = router({
     }),
 
   // Archive workflow template (soft delete)
-  archiveTemplate: protectedPermissionProcedure(["MANAGE_WORKFLOW_TEMPLATES" as any])
-    .input(z.object({ 
-      id: z.string().uuid(),
-      reason: z.string().optional(),
-    }))
+  archiveTemplate: protectedPermissionProcedure([
+    "MANAGE_WORKFLOW_TEMPLATES" as any,
+  ])
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        reason: z.string().optional(),
+      })
+    )
     .mutation(async ({ input, ctx }) => {
       const { id, reason } = input;
       const userId = ctx.user.id;
@@ -212,7 +345,9 @@ export const adminWorkflowRouter = router({
       }
 
       // Archive the template
-      const updatedTemplate: TemplateWithUsers = await (db.workflowTemplate.update as any)({
+      const updatedTemplate: TemplateWithUsers = await (
+        db.workflowTemplate.update as any
+      )({
         where: { id },
         data: {
           isActive: false,
@@ -244,10 +379,14 @@ export const adminWorkflowRouter = router({
     }),
 
   // Restore archived template
-  restoreTemplate: protectedPermissionProcedure(["MANAGE_WORKFLOW_TEMPLATES" as any])
-    .input(z.object({ 
-      id: z.string().uuid(),
-    }))
+  restoreTemplate: protectedPermissionProcedure([
+    "MANAGE_WORKFLOW_TEMPLATES" as any,
+  ])
+    .input(
+      z.object({
+        id: z.string().uuid(),
+      })
+    )
     .mutation(async ({ input }) => {
       const { id } = input;
 
@@ -270,7 +409,9 @@ export const adminWorkflowRouter = router({
       }
 
       // Restore the template
-      const updatedTemplate: TemplateWithUsers = await (db.workflowTemplate.update as any)({
+      const updatedTemplate: TemplateWithUsers = await (
+        db.workflowTemplate.update as any
+      )({
         where: { id },
         data: {
           isActive: true,
@@ -294,42 +435,45 @@ export const adminWorkflowRouter = router({
     }),
 
   // Get archived templates
-  getArchivedTemplates: protectedPermissionProcedure(["MANAGE_WORKFLOW_TEMPLATES" as any])
-    .query(async (): Promise<TemplateWithUsers[]> => {
-      return await (db.workflowTemplate.findMany as any)({
-        where: { isActive: false },
-        include: {
-          createdBy: {
-            select: {
-              id: true,
-              firstName: true,
-              lastName: true,
-              email: true,
-            },
-          },
-          updatedBy: {
-            select: {
-              id: true,
-              firstName: true,
-              lastName: true,
-              email: true,
-            },
-          },
-          archivedBy: {
-            select: {
-              id: true,
-              firstName: true,
-              lastName: true,
-              email: true,
-            },
+  getArchivedTemplates: protectedPermissionProcedure([
+    "MANAGE_WORKFLOW_TEMPLATES" as any,
+  ]).query(async (): Promise<TemplateWithUsers[]> => {
+    return await (db.workflowTemplate.findMany as any)({
+      where: { isActive: false },
+      include: {
+        createdBy: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
           },
         },
-        orderBy: { archivedAt: "desc" },
-      });
-    }),
+        updatedBy: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+        archivedBy: {
+          select: {
+            id: true,
+            firstName: true,
+            lastName: true,
+            email: true,
+          },
+        },
+      },
+      orderBy: { archivedAt: "desc" },
+    });
+  }),
 
   // Get all workflow requests (for admin view)
-  getAllRequests: protectedPermissionProcedure(["READ_WORKFLOW_REQUESTS" as any])
+  getAllRequests: protectedPermissionProcedure([
+    "READ_WORKFLOW_REQUESTS" as any,
+  ])
     .input(
       z.object({
         page: z.number().int().positive().default(1),
@@ -399,11 +543,13 @@ export const adminWorkflowRouter = router({
     }),
 
   // Get single workflow request by ID
-  getRequestById: protectedPermissionProcedure(["READ_WORKFLOW_REQUESTS" as any])
+  getRequestById: protectedPermissionProcedure([
+    "READ_WORKFLOW_REQUESTS" as any,
+  ])
     .input(z.object({ id: z.string() }))
     .query(async ({ input }) => {
       const request = await db.workflowRequest.findUnique({
-        where: { 
+        where: {
           id: input.id,
         },
         include: {
@@ -458,7 +604,9 @@ export const adminWorkflowRouter = router({
     }),
 
   // Approve a workflow request
-  approveRequest: protectedPermissionProcedure(["APPROVE_WORKFLOW_REQUEST" as any])
+  approveRequest: protectedPermissionProcedure([
+    "APPROVE_WORKFLOW_REQUEST" as any,
+  ])
     .input(
       z.object({
         requestId: z.string(),
@@ -513,7 +661,7 @@ export const adminWorkflowRouter = router({
 
       // Parse template steps (request is guaranteed to be non-null due to check above)
       const templateSteps = JSON.parse(request!.template.steps as string);
-      
+
       // Check if this was the last step
       const isLastStep = request!.currentStep === templateSteps.length - 1;
 
@@ -543,7 +691,8 @@ export const adminWorkflowRouter = router({
         // For now, we'll throw an error to indicate this needs to be refactored
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
-          message: "Workflow approval system needs to be updated to use the new flexible assignment system. Please create new requests through the client workflow router.",
+          message:
+            "Workflow approval system needs to be updated to use the new flexible assignment system. Please create new requests through the client workflow router.",
         });
       }
 
@@ -551,7 +700,9 @@ export const adminWorkflowRouter = router({
     }),
 
   // Reject a workflow request
-  rejectRequest: protectedPermissionProcedure(["APPROVE_WORKFLOW_REQUEST" as any])
+  rejectRequest: protectedPermissionProcedure([
+    "APPROVE_WORKFLOW_REQUEST" as any,
+  ])
     .input(
       z.object({
         requestId: z.string(),
@@ -687,6 +838,4 @@ export const adminWorkflowRouter = router({
 
       return auditTrails;
     }),
-
-
-}); 
+});

@@ -1,0 +1,36 @@
+{
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "always"
+  },
+  "prettier.configPath": ".prettierrc",
+  "prettier.requireConfig": false,
+  "prettier.resolveGlobalModules": true,
+  "prettier.useEditorConfig": false,
+  "prettier.ignorePath": ".gitignore",
+  "prettier.documentSelectors": [
+    "**/*.{js,jsx,ts,tsx,json,css,scss,md}",
+    "packages/admin/**/*.{js,jsx,ts,tsx,json,css,scss,md}",
+    "packages/server/**/*.{js,ts,json,md}"
+  ],
+  "files.watcherExclude": {
+    "**/node_modules/**": true,
+    "**/dist/**": true,
+    "**/build/**": true
+  }
+}
