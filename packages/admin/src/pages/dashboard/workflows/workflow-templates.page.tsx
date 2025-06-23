@@ -2,31 +2,33 @@ import { useState } from "react";
 import {
   Table,
   Button,
-  Box,
   Loader,
   Center,
   Text,
   ScrollArea,
   Badge,
-  Modal,
-  TextInput,
-  Textarea,
   Group,
-  ActionIcon,
-  Stack,
-  Timeline,
-  Paper,
-  Divider,
-  Select,
   Switch,
 } from "@mantine/core";
-import { Eye, Plus, Edit, Archive, RotateCcw, X, User, ArrowRight, CheckCircle } from "lucide-react";
-import { notifications } from "@mantine/notifications";
+import { Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { trpc } from "../../../common/trpc";
 import Container from "../../../components/Container";
 import PageTitle from "../../../components/PageTitle";
-import { trpc } from "../../../common/trpc";
+import { ROUTES } from "../../../router/routes";
 
-type WorkflowRoleEnum = "INITIATOR_SUPERVISOR" | "CEO" | "LEGAL" | "PROCUREMENT" | "FINANCE_MANAGER" | "ACCOUNTING" | "HR_SPECIALIST" | "SYSTEM_AUTOMATION" | "SECURITY_REVIEW" | "SECURITY_GUARD" | "INDUSTRIAL_SAFETY";
+type WorkflowRoleEnum =
+  | "INITIATOR_SUPERVISOR"
+  | "CEO"
+  | "LEGAL"
+  | "PROCUREMENT"
+  | "FINANCE_MANAGER"
+  | "ACCOUNTING"
+  | "HR_SPECIALIST"
+  | "SYSTEM_AUTOMATION"
+  | "SECURITY_REVIEW"
+  | "SECURITY_GUARD"
+  | "INDUSTRIAL_SAFETY";
 
 interface WorkflowStep {
   role: WorkflowRoleEnum;
@@ -34,216 +36,26 @@ interface WorkflowStep {
   label: string;
 }
 
-// Workflow roles based on the department mapping
-const WORKFLOW_ROLES = [
-  { value: "INITIATOR_SUPERVISOR", label: "Руководитель инициатора (Initiator's Supervisor)" },
-  { value: "CEO", label: "Генеральный директор (CEO)" },
-  { value: "LEGAL", label: "Юрист (Legal)" },
-  { value: "PROCUREMENT", label: "Сотрудник отдела закупок (Procurement)" },
-  { value: "FINANCE_MANAGER", label: "Финансовый менеджер (Finance Manager)" },
-  { value: "ACCOUNTING", label: "Бухгалтерия (Accounting)" },
-  { value: "HR_SPECIALIST", label: "HR Specialist" },
-  { value: "SYSTEM_AUTOMATION", label: "Система (System Automation)" },
-  { value: "SECURITY_REVIEW", label: "Служба безопасности (Security Review)" },
-  { value: "SECURITY_GUARD", label: "Охрана (Security Guard)" },
-  { value: "INDUSTRIAL_SAFETY", label: "Служба промышленной безопасности (Industrial Safety)" },
-];
-
 export default function WorkflowTemplatesPage() {
-  const [opened, setOpened] = useState(false);
-  const [viewOpened, setViewOpened] = useState(false);
-  const [editOpened, setEditOpened] = useState(false);
-  const [archiveOpened, setArchiveOpened] = useState(false);
-  const [restoreOpened, setRestoreOpened] = useState(false);
-  const [selectedTemplate, setSelectedTemplate] = useState<any>(null);
+  const navigate = useNavigate();
   const [showArchived, setShowArchived] = useState(false);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [steps, setSteps] = useState<WorkflowStep[]>([{ role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
-  const [editName, setEditName] = useState("");
-  const [editDescription, setEditDescription] = useState("");
-  const [editSteps, setEditSteps] = useState<WorkflowStep[]>([{ role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
-  const [archiveReason, setArchiveReason] = useState("");
 
-  const { data: templates, isLoading, refetch } = trpc.admin.workflows.getTemplates.useQuery();
-  const { data: archivedTemplates, refetch: refetchArchived } = trpc.admin.workflows.getArchivedTemplates.useQuery();
+  const { data: templates, isLoading } =
+    trpc.admin.workflows.getTemplates.useQuery();
+  const { data: archivedTemplates } =
+    trpc.admin.workflows.getArchivedTemplates.useQuery();
 
   // Filter templates based on showArchived toggle
-  const displayTemplates = showArchived ? archivedTemplates || [] : templates || [];
+  const displayTemplates = showArchived
+    ? archivedTemplates || []
+    : templates || [];
 
-  const createTemplateMutation = trpc.admin.workflows.createTemplate.useMutation({
-    onSuccess: () => {
-      setOpened(false);
-      setName("");
-      setDescription("");
-      setSteps([{ role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
-      refetch();
-    },
-  });
-
-  const updateTemplateMutation = trpc.admin.workflows.updateTemplate.useMutation({
-    onSuccess: () => {
-      setEditOpened(false);
-      setSelectedTemplate(null);
-      refetch();
-      notifications.show({
-        title: "Success",
-        message: "Workflow template updated successfully",
-        color: "green",
-      });
-    },
-    onError: (error: any) => {
-      notifications.show({
-        title: "Error",
-        message: error.message || "Failed to update workflow template",
-        color: "red",
-      });
-    },
-  });
-
-  const archiveTemplateMutation = trpc.admin.workflows.archiveTemplate.useMutation({
-    onSuccess: () => {
-      setArchiveOpened(false);
-      setSelectedTemplate(null);
-      setArchiveReason("");
-      refetch();
-      refetchArchived();
-      notifications.show({
-        title: "Success",
-        message: "Workflow template archived successfully",
-        color: "green",
-      });
-    },
-    onError: (error: any) => {
-      notifications.show({
-        title: "Error",
-        message: error.message || "Failed to archive workflow template",
-        color: "red",
-      });
-    },
-  });
-
-  const restoreTemplateMutation = trpc.admin.workflows.restoreTemplate.useMutation({
-    onSuccess: () => {
-      setRestoreOpened(false);
-      setSelectedTemplate(null);
-      refetch();
-      refetchArchived();
-      notifications.show({
-        title: "Success",
-        message: "Workflow template restored successfully",
-        color: "green",
-      });
-    },
-    onError: (error: any) => {
-      notifications.show({
-        title: "Error",
-        message: error.message || "Failed to restore workflow template",
-        color: "red",
-      });
-    },
-  });
-
-  const addStep = () => {
-    setSteps([...steps, { role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
+  const handleCreateTemplate = () => {
+    navigate(ROUTES.NEW_WORKFLOW_TEMPLATE);
   };
 
-  const removeStep = (index: number) => {
-    if (steps.length > 1) {
-      setSteps(steps.filter((_, i) => i !== index));
-    }
-  };
-
-  const updateStep = (index: number, field: keyof WorkflowStep, value: string) => {
-    const updatedSteps = [...steps];
-    updatedSteps[index] = { ...updatedSteps[index], [field]: value };
-    setSteps(updatedSteps);
-  };
-
-  const addEditStep = () => {
-    setEditSteps([...editSteps, { role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
-  };
-
-  const removeEditStep = (index: number) => {
-    if (editSteps.length > 1) {
-      setEditSteps(editSteps.filter((_, i) => i !== index));
-    }
-  };
-
-  const updateEditStep = (index: number, field: keyof WorkflowStep, value: string) => {
-    const updatedSteps = [...editSteps];
-    updatedSteps[index] = { ...updatedSteps[index], [field]: value };
-    setEditSteps(updatedSteps);
-  };
-
-  const handleCreate = () => {
-    if (!name.trim()) return;
-
-    createTemplateMutation.mutate({
-      name,
-      description,
-      steps,
-    });
-  };
-
-  const handleEdit = (template: any) => {
-    setSelectedTemplate(template);
-    setEditName(template.name);
-    setEditDescription(template.description || "");
-
-    try {
-      const parsedSteps = JSON.parse(template.steps);
-      setEditSteps(parsedSteps);
-    } catch (error) {
-      setEditSteps([{ role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
-    }
-
-    setEditOpened(true);
-  };
-
-  const handleUpdate = () => {
-    if (!selectedTemplate || !editName.trim()) return;
-
-    updateTemplateMutation.mutate({
-      id: selectedTemplate.id,
-      data: {
-        name: editName,
-        description: editDescription,
-        steps: editSteps,
-      },
-    });
-  };
-
-  const handleArchive = (template: any) => {
-    setSelectedTemplate(template);
-    setArchiveOpened(true);
-  };
-
-  const confirmArchive = () => {
-    if (!selectedTemplate) return;
-
-    archiveTemplateMutation.mutate({
-      id: selectedTemplate.id,
-      reason: archiveReason,
-    });
-  };
-
-  const handleRestore = (template: any) => {
-    setSelectedTemplate(template);
-    setRestoreOpened(true);
-  };
-
-  const confirmRestore = () => {
-    if (!selectedTemplate) return;
-
-    restoreTemplateMutation.mutate({
-      id: selectedTemplate.id,
-    });
-  };
-
-  const handleView = (template: any) => {
-    setSelectedTemplate(template);
-    setViewOpened(true);
+  const handleViewTemplate = (template: any) => {
+    navigate(`${ROUTES.DASHBOARD_WORKFLOW_TEMPLATE}/${template.id}`);
   };
 
   if (isLoading) {
@@ -266,7 +78,11 @@ export default function WorkflowTemplatesPage() {
             checked={showArchived}
             onChange={(event) => setShowArchived(event.currentTarget.checked)}
           />
-          <Button leftSection={<Plus size={16} />} onClick={() => setOpened(true)}>
+
+          <Button
+            leftSection={<Plus size={16} />}
+            onClick={handleCreateTemplate}
+          >
             Create Template
           </Button>
         </Group>
@@ -275,7 +91,9 @@ export default function WorkflowTemplatesPage() {
       {displayTemplates.length === 0 ? (
         <Center style={{ height: 200 }}>
           <Text c="dimmed">
-            {showArchived ? "No archived templates found" : "No workflow templates found. Create one to get started."}
+            {showArchived
+              ? "No archived templates found"
+              : "No workflow templates found. Create one to get started."}
           </Text>
         </Center>
       ) : (
@@ -290,7 +108,6 @@ export default function WorkflowTemplatesPage() {
                 <Table.Th>Created By</Table.Th>
                 {showArchived && <Table.Th>Archived Date</Table.Th>}
                 {showArchived && <Table.Th>Archived By</Table.Th>}
-                <Table.Th>Actions</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -303,7 +120,11 @@ export default function WorkflowTemplatesPage() {
                 }
 
                 return (
-                  <Table.Tr key={template.id}>
+                  <Table.Tr
+                    key={template.id}
+                    style={{ cursor: "pointer" }}
+                    onClick={() => handleViewTemplate(template)}
+                  >
                     <Table.Td>
                       <Text fw={500}>{template.name}</Text>
                     </Table.Td>
@@ -316,16 +137,19 @@ export default function WorkflowTemplatesPage() {
                       <Badge variant="light">{steps.length} steps</Badge>
                     </Table.Td>
                     <Table.Td>
-                      <Badge color={template.isActive ? "green" : "gray"} variant="light">
+                      <Badge
+                        color={template.isActive ? "green" : "gray"}
+                        variant="light"
+                      >
                         {template.isActive ? "Active" : "Archived"}
                       </Badge>
                     </Table.Td>
                     <Table.Td>
                       <Text size="sm" c="dimmed">
                         {template.createdBy
-                          ? `${template.createdBy.firstName || ''} ${template.createdBy.lastName || ''}`.trim() || template.createdBy.email
-                          : "Unknown"
-                        }
+                          ? `${template.createdBy.firstName || ""} ${template.createdBy.lastName || ""}`.trim() ||
+                            template.createdBy.email
+                          : "Unknown"}
                       </Text>
                     </Table.Td>
                     {showArchived && (
@@ -333,8 +157,7 @@ export default function WorkflowTemplatesPage() {
                         <Text size="sm" c="dimmed">
                           {template.archivedAt
                             ? new Date(template.archivedAt).toLocaleDateString()
-                            : "N/A"
-                          }
+                            : "N/A"}
                         </Text>
                       </Table.Td>
                     )}
@@ -342,52 +165,12 @@ export default function WorkflowTemplatesPage() {
                       <Table.Td>
                         <Text size="sm" c="dimmed">
                           {template.archivedBy
-                            ? `${template.archivedBy.firstName || ''} ${template.archivedBy.lastName || ''}`.trim() || template.archivedBy.email
-                            : "N/A"
-                          }
+                            ? `${template.archivedBy.firstName || ""} ${template.archivedBy.lastName || ""}`.trim() ||
+                              template.archivedBy.email
+                            : "N/A"}
                         </Text>
                       </Table.Td>
                     )}
-                    <Table.Td>
-                      <Group gap={4}>
-                        <ActionIcon
-                          variant="subtle"
-                          onClick={() => handleView(template)}
-                          title="View Template"
-                        >
-                          <Eye size={16} />
-                        </ActionIcon>
-                        {template.isActive && (
-                          <>
-                            <ActionIcon
-                              variant="subtle"
-                              onClick={() => handleEdit(template)}
-                              title="Edit Template"
-                            >
-                              <Edit size={16} />
-                            </ActionIcon>
-                            <ActionIcon
-                              variant="subtle"
-                              color="red"
-                              onClick={() => handleArchive(template)}
-                              title="Archive Template"
-                            >
-                              <Archive size={16} />
-                            </ActionIcon>
-                          </>
-                        )}
-                        {!template.isActive && (
-                          <ActionIcon
-                            variant="subtle"
-                            color="green"
-                            onClick={() => handleRestore(template)}
-                            title="Restore Template"
-                          >
-                            <RotateCcw size={16} />
-                          </ActionIcon>
-                        )}
-                      </Group>
-                    </Table.Td>
                   </Table.Tr>
                 );
               })}
@@ -395,332 +178,6 @@ export default function WorkflowTemplatesPage() {
           </Table>
         </ScrollArea>
       )}
-
-      {/* Create Template Modal */}
-      <Modal opened={opened} onClose={() => setOpened(false)} title="Create Workflow Template" size="lg">
-        <Stack gap="md">
-          <TextInput
-            label="Template Name"
-            placeholder="Enter template name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
-          <Textarea
-            label="Description"
-            placeholder="Enter template description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-
-          <Text fw={500}>Workflow Steps</Text>
-          {steps.map((step, index) => (
-            <Group key={index} align="end">
-              <Select
-                label={`Step ${index + 1} Role`}
-                data={WORKFLOW_ROLES}
-                value={step.role}
-                onChange={(value) => updateStep(index, "role", value || "INITIATOR_SUPERVISOR")}
-                style={{ flex: 1 }}
-              />
-              <TextInput
-                label="Step Label"
-                placeholder="Enter step label"
-                value={step.label}
-                onChange={(e) => updateStep(index, "label", e.target.value)}
-                style={{ flex: 1 }}
-              />
-              {steps.length > 1 && (
-                <ActionIcon color="red" onClick={() => removeStep(index)}>
-                  <X size={16} />
-                </ActionIcon>
-              )}
-            </Group>
-          ))}
-
-          <Button variant="outline" onClick={addStep}>
-            Add Step
-          </Button>
-
-          <Group justify="flex-end">
-            <Button variant="outline" onClick={() => setOpened(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleCreate} loading={createTemplateMutation.isPending}>
-              Create Template
-            </Button>
-          </Group>
-        </Stack>
-      </Modal>
-
-      {/* Archive Template Modal */}
-      <Modal
-        opened={archiveOpened}
-        onClose={() => setArchiveOpened(false)}
-        title="Archive Template"
-        size="md"
-      >
-        {selectedTemplate && (
-          <Stack gap="md">
-            <Text>
-              Are you sure you want to archive the template{" "}
-              <Text component="span" fw={700} c="red">
-                "{selectedTemplate.name}"
-              </Text>
-              ?
-            </Text>
-
-            <Text size="sm" c="dimmed">
-              Archived templates will no longer be available for creating new requests, but existing requests using this template will continue to work.
-            </Text>
-
-            <Textarea
-              label="Reason for archiving (optional)"
-              placeholder="Enter a reason for archiving this template..."
-              value={archiveReason}
-              onChange={(e) => setArchiveReason(e.target.value)}
-            />
-
-            <Group justify="flex-end" gap="sm">
-              <Button
-                variant="outline"
-                onClick={() => setArchiveOpened(false)}
-                disabled={archiveTemplateMutation.isPending}
-              >
-                Cancel
-              </Button>
-              <Button
-                color="red"
-                onClick={confirmArchive}
-                loading={archiveTemplateMutation.isPending}
-              >
-                Archive Template
-              </Button>
-            </Group>
-          </Stack>
-        )}
-      </Modal>
-
-      {/* Restore Template Modal */}
-      <Modal
-        opened={restoreOpened}
-        onClose={() => setRestoreOpened(false)}
-        title="Restore Template"
-        size="md"
-      >
-        {selectedTemplate && (
-          <Stack gap="md">
-            <Text>
-              Are you sure you want to restore the template{" "}
-              <Text component="span" fw={700} c="green">
-                "{selectedTemplate.name}"
-              </Text>
-              ?
-            </Text>
-
-            <Text size="sm" c="dimmed">
-              This will make the template available for creating new workflow requests again.
-            </Text>
-
-            <Group justify="flex-end" gap="sm">
-              <Button
-                variant="outline"
-                onClick={() => setRestoreOpened(false)}
-                disabled={restoreTemplateMutation.isPending}
-              >
-                Cancel
-              </Button>
-              <Button
-                color="green"
-                onClick={confirmRestore}
-                loading={restoreTemplateMutation.isPending}
-              >
-                Restore Template
-              </Button>
-            </Group>
-          </Stack>
-        )}
-      </Modal>
-
-      {/* View Template Modal */}
-      <Modal opened={viewOpened} onClose={() => setViewOpened(false)} title="Template Details" size="lg">
-        {selectedTemplate && (
-          <Stack gap="md">
-            <div>
-              <Text fw={500}>Template Name</Text>
-              <Text>{selectedTemplate.name}</Text>
-            </div>
-
-            <div>
-              <Text fw={500}>Description</Text>
-              <Text>{selectedTemplate.description || "No description"}</Text>
-            </div>
-
-            <div>
-              <Text fw={500}>Status</Text>
-              <Badge color={selectedTemplate.isActive ? "green" : "gray"} variant="light">
-                {selectedTemplate.isActive ? "Active" : "Archived"}
-              </Badge>
-            </div>
-
-            {!selectedTemplate.isActive && selectedTemplate.archiveReason && (
-              <div>
-                <Text fw={500}>Archive Reason</Text>
-                <Text size="sm" c="dimmed">{selectedTemplate.archiveReason}</Text>
-              </div>
-            )}
-
-            <Divider />
-
-            <div>
-              <Text fw={500} mb="sm">Workflow Steps</Text>
-              <Timeline>
-                {(() => {
-                  try {
-                    const steps = JSON.parse(selectedTemplate.steps);
-                    return steps.map((step: any, index: number) => (
-                      <Timeline.Item
-                        key={index}
-                        bullet={<User size={14} />}
-                        title={`Step ${index + 1}: ${step.label || step.role}`}
-                      >
-                        <Text size="sm" c="dimmed">
-                          Role: {WORKFLOW_ROLES.find(r => r.value === step.role)?.label || step.role}
-                        </Text>
-                        <Text size="sm" c="dimmed">
-                          Type: {step.type}
-                        </Text>
-                      </Timeline.Item>
-                    ));
-                  } catch (error) {
-                    return <Text c="red">Error parsing workflow steps</Text>;
-                  }
-                })()}
-              </Timeline>
-            </div>
-
-            <Divider />
-
-            {/* Audit Trail Section */}
-            <div>
-              <Text fw={500} mb="sm">Audit Trail</Text>
-              <Paper p="md" withBorder>
-                <Stack gap="sm">
-                  {/* Created */}
-                  <Group justify="space-between">
-                    <Group gap="xs">
-                      <Badge color="blue" variant="light" size="sm">Created</Badge>
-                      <Text size="sm">
-                        by {selectedTemplate.createdBy
-                          ? `${selectedTemplate.createdBy.firstName || ''} ${selectedTemplate.createdBy.lastName || ''}`.trim() || selectedTemplate.createdBy.email
-                          : "Unknown"
-                        }
-                      </Text>
-                    </Group>
-                    <Text size="sm" c="dimmed">
-                      {new Date(selectedTemplate.createdAt).toLocaleString()}
-                    </Text>
-                  </Group>
-
-                  {/* Last Updated */}
-                  {selectedTemplate.updatedAt && selectedTemplate.updatedAt !== selectedTemplate.createdAt && (
-                    <Group justify="space-between">
-                      <Group gap="xs">
-                        <Badge color="yellow" variant="light" size="sm">Updated</Badge>
-                        <Text size="sm">
-                          by {selectedTemplate.updatedBy
-                            ? `${selectedTemplate.updatedBy.firstName || ''} ${selectedTemplate.updatedBy.lastName || ''}`.trim() || selectedTemplate.updatedBy.email
-                            : "Unknown"
-                          }
-                        </Text>
-                      </Group>
-                      <Text size="sm" c="dimmed">
-                        {new Date(selectedTemplate.updatedAt).toLocaleString()}
-                      </Text>
-                    </Group>
-                  )}
-
-                  {/* Archived */}
-                  {!selectedTemplate.isActive && selectedTemplate.archivedAt && (
-                    <Group justify="space-between">
-                      <Group gap="xs">
-                        <Badge color="red" variant="light" size="sm">Archived</Badge>
-                        <Text size="sm">
-                          by {selectedTemplate.archivedBy
-                            ? `${selectedTemplate.archivedBy.firstName || ''} ${selectedTemplate.archivedBy.lastName || ''}`.trim() || selectedTemplate.archivedBy.email
-                            : "Unknown"
-                          }
-                        </Text>
-                      </Group>
-                      <Text size="sm" c="dimmed">
-                        {new Date(selectedTemplate.archivedAt).toLocaleString()}
-                      </Text>
-                    </Group>
-                  )}
-                </Stack>
-              </Paper>
-            </div>
-
-          </Stack>
-        )}
-      </Modal>
-
-      {/* Edit Template Modal */}
-      <Modal opened={editOpened} onClose={() => setEditOpened(false)} title="Edit Workflow Template" size="lg">
-        <Stack gap="md">
-          <TextInput
-            label="Template Name"
-            placeholder="Enter template name"
-            value={editName}
-            onChange={(e) => setEditName(e.target.value)}
-            required
-          />
-          <Textarea
-            label="Description"
-            placeholder="Enter template description"
-            value={editDescription}
-            onChange={(e) => setEditDescription(e.target.value)}
-          />
-
-          <Text fw={500}>Workflow Steps</Text>
-          {editSteps.map((step, index) => (
-            <Group key={index} align="end">
-              <Select
-                label={`Step ${index + 1} Role`}
-                data={WORKFLOW_ROLES}
-                value={step.role}
-                onChange={(value) => updateEditStep(index, "role", value || "INITIATOR_SUPERVISOR")}
-                style={{ flex: 1 }}
-              />
-              <TextInput
-                label="Step Label"
-                placeholder="Enter step label"
-                value={step.label}
-                onChange={(e) => updateEditStep(index, "label", e.target.value)}
-                style={{ flex: 1 }}
-              />
-              {editSteps.length > 1 && (
-                <ActionIcon color="red" onClick={() => removeEditStep(index)}>
-                  <X size={16} />
-                </ActionIcon>
-              )}
-            </Group>
-          ))}
-
-          <Button variant="outline" onClick={addEditStep}>
-            Add Step
-          </Button>
-
-          <Group justify="flex-end">
-            <Button variant="outline" onClick={() => setEditOpened(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleUpdate} loading={updateTemplateMutation.isPending}>
-              Update Template
-            </Button>
-          </Group>
-        </Stack>
-      </Modal>
     </Container>
   );
-} 
+}

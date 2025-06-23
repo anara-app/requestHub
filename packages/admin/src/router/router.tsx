@@ -15,6 +15,8 @@ import WorkflowRequestPage from "../pages/dashboard/workflows/workflow-request.p
 import RaiseRequestPage from "../pages/dashboard/workflows/raise-request.page";
 import MyRequestsPage from "../pages/dashboard/workflows/my-requests.page";
 import PendingApprovalsPage from "../pages/dashboard/workflows/pending-approvals.page";
+import { NewWorkflowTemplatePage } from "../pages/dashboard/workflows/new-workflow-template.page";
+import WorkflowTemplatePage from "../pages/dashboard/workflows/workflow-template.page";
 
 export const router = createBrowserRouter([
   {
@@ -63,10 +65,18 @@ export const router = createBrowserRouter([
         path: ROUTES.DASHBOARD_WORKFLOW_TEMPLATES,
         element: <WorkflowTemplatesPage />,
       },
-          {
-      path: ROUTES.DASHBOARD_ALL_REQUESTS,
-      element: <AllRequestsPage />,
-    },
+      {
+        path: ROUTES.NEW_WORKFLOW_TEMPLATE,
+        element: <NewWorkflowTemplatePage />,
+      },
+      {
+        path: `${ROUTES.DASHBOARD_WORKFLOW_TEMPLATE}/:id`,
+        element: <WorkflowTemplatePage />,
+      },
+      {
+        path: ROUTES.DASHBOARD_ALL_REQUESTS,
+        element: <AllRequestsPage />,
+      },
       {
         path: `${ROUTES.DASHBOARD_WORKFLOW_REQUEST}/:id`,
         element: <WorkflowRequestPage />,

@@ -12,6 +12,7 @@ export const ROUTES = {
   DASHBOARD_GALLERY: "/gallery",
 
   DASHBOARD_WORKFLOW_TEMPLATES: "/workflow-templates",
+  NEW_WORKFLOW_TEMPLATE: "/new-workflow-template",
   DASHBOARD_WORKFLOW_TEMPLATE: "/workflow-template",
   DASHBOARD_ALL_REQUESTS: "/all-requests",
   DASHBOARD_WORKFLOW_REQUEST: "/workflow-request",
