@@ -26,28 +26,13 @@ import Container from "../../../components/Container";
 import PageTitle from "../../../components/PageTitle";
 import { trpc } from "../../../common/trpc";
 
-type WorkflowRoleEnum = "INITIATOR_SUPERVISOR" | "CEO" | "LEGAL" | "PROCUREMENT" | "FINANCE_MANAGER" | "ACCOUNTING" | "HR_SPECIALIST" | "SYSTEM_AUTOMATION" | "SECURITY_REVIEW" | "SECURITY_GUARD" | "INDUSTRIAL_SAFETY";
-
 interface WorkflowStep {
-  role: WorkflowRoleEnum;
+  assigneeType: 'ROLE_BASED' | 'DYNAMIC';
+  roleBasedAssignee?: string;
+  dynamicAssignee?: string;
+  actionLabel: string;
   type: string;
-  label: string;
 }
-
-// Workflow roles based on the department mapping
-const WORKFLOW_ROLES = [
-  { value: "INITIATOR_SUPERVISOR", label: "Руководитель инициатора (Initiator's Supervisor)" },
-  { value: "CEO", label: "Генеральный директор (CEO)" },
-  { value: "LEGAL", label: "Юрист (Legal)" },
-  { value: "PROCUREMENT", label: "Сотрудник отдела закупок (Procurement)" },
-  { value: "FINANCE_MANAGER", label: "Финансовый менеджер (Finance Manager)" },
-  { value: "ACCOUNTING", label: "Бухгалтерия (Accounting)" },
-  { value: "HR_SPECIALIST", label: "HR Specialist" },
-  { value: "SYSTEM_AUTOMATION", label: "Система (System Automation)" },
-  { value: "SECURITY_REVIEW", label: "Служба безопасности (Security Review)" },
-  { value: "SECURITY_GUARD", label: "Охрана (Security Guard)" },
-  { value: "INDUSTRIAL_SAFETY", label: "Служба промышленной безопасности (Industrial Safety)" },
-];
 
 export default function WorkflowTemplatesPage() {
   const [opened, setOpened] = useState(false);
@@ -59,14 +44,36 @@ export default function WorkflowTemplatesPage() {
   const [showArchived, setShowArchived] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [steps, setSteps] = useState<WorkflowStep[]>([{ role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
+  const [steps, setSteps] = useState<WorkflowStep[]>([{ 
+    assigneeType: "DYNAMIC", 
+    dynamicAssignee: "INITIATOR_SUPERVISOR", 
+    type: "approval", 
+    actionLabel: "" 
+  }]);
   const [editName, setEditName] = useState("");
   const [editDescription, setEditDescription] = useState("");
-  const [editSteps, setEditSteps] = useState<WorkflowStep[]>([{ role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
+  const [editSteps, setEditSteps] = useState<WorkflowStep[]>([{ 
+    assigneeType: "DYNAMIC", 
+    dynamicAssignee: "INITIATOR_SUPERVISOR", 
+    type: "approval", 
+    actionLabel: "" 
+  }]);
   const [archiveReason, setArchiveReason] = useState("");
 
   const { data: templates, isLoading, refetch } = trpc.admin.workflows.getTemplates.useQuery();
   const { data: archivedTemplates, refetch: refetchArchived } = trpc.admin.workflows.getArchivedTemplates.useQuery();
+  const { data: roles } = trpc.admin.roles.getRoles.useQuery();
+
+  // Create options for role selection
+  const roleOptions = roles?.map(role => ({
+    value: role.name,
+    label: role.name,
+  })) || [];
+
+  // Dynamic assignment options
+  const dynamicOptions = [
+    { value: "INITIATOR_SUPERVISOR", label: "Initiator's Supervisor" },
+  ];
 
   // Filter templates based on showArchived toggle
   const displayTemplates = showArchived ? archivedTemplates || [] : templates || [];
@@ -76,7 +83,12 @@ export default function WorkflowTemplatesPage() {
       setOpened(false);
       setName("");
       setDescription("");
-      setSteps([{ role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
+      setSteps([{ 
+        assigneeType: "DYNAMIC", 
+        dynamicAssignee: "INITIATOR_SUPERVISOR", 
+        type: "approval", 
+        actionLabel: "" 
+      }]);
       refetch();
     },
   });
@@ -145,7 +157,12 @@ export default function WorkflowTemplatesPage() {
   });
 
   const addStep = () => {
-    setSteps([...steps, { role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
+    setSteps([...steps, { 
+      assigneeType: "DYNAMIC", 
+      dynamicAssignee: "INITIATOR_SUPERVISOR", 
+      type: "approval", 
+      actionLabel: "" 
+    }]);
   };
 
   const removeStep = (index: number) => {
@@ -161,7 +178,12 @@ export default function WorkflowTemplatesPage() {
   };
 
   const addEditStep = () => {
-    setEditSteps([...editSteps, { role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
+    setEditSteps([...editSteps, { 
+      assigneeType: "DYNAMIC", 
+      dynamicAssignee: "INITIATOR_SUPERVISOR", 
+      type: "approval", 
+      actionLabel: "" 
+    }]);
   };
 
   const removeEditStep = (index: number) => {
@@ -195,7 +217,12 @@ export default function WorkflowTemplatesPage() {
       const parsedSteps = JSON.parse(template.steps);
       setEditSteps(parsedSteps);
     } catch (error) {
-      setEditSteps([{ role: "INITIATOR_SUPERVISOR", type: "approval", label: "" }]);
+      setEditSteps([{ 
+        assigneeType: "DYNAMIC", 
+        dynamicAssignee: "INITIATOR_SUPERVISOR", 
+        type: "approval", 
+        actionLabel: "" 
+      }]);
     }
 
     setEditOpened(true);
@@ -415,27 +442,56 @@ export default function WorkflowTemplatesPage() {
 
           <Text fw={500}>Workflow Steps</Text>
           {steps.map((step, index) => (
-            <Group key={index} align="end">
-              <Select
-                label={`Step ${index + 1} Role`}
-                data={WORKFLOW_ROLES}
-                value={step.role}
-                onChange={(value) => updateStep(index, "role", value || "INITIATOR_SUPERVISOR")}
-                style={{ flex: 1 }}
-              />
-              <TextInput
-                label="Step Label"
-                placeholder="Enter step label"
-                value={step.label}
-                onChange={(e) => updateStep(index, "label", e.target.value)}
-                style={{ flex: 1 }}
-              />
-              {steps.length > 1 && (
-                <ActionIcon color="red" onClick={() => removeStep(index)}>
-                  <X size={16} />
-                </ActionIcon>
-              )}
-            </Group>
+            <Paper key={index} p="md" withBorder>
+              <Stack gap="sm">
+                <Text fw={500} size="sm">Step {index + 1}</Text>
+                
+                <Select
+                  label="Assignment Type"
+                  data={[
+                    { value: "ROLE_BASED", label: "Role-based (assign to users with specific role)" },
+                    { value: "DYNAMIC", label: "Dynamic (assign based on relationships)" },
+                  ]}
+                  value={step.assigneeType}
+                  onChange={(value) => updateStep(index, "assigneeType", value || "DYNAMIC")}
+                />
+
+                {step.assigneeType === "ROLE_BASED" && (
+                  <Select
+                    label="Role"
+                    placeholder="Select a role"
+                    data={roleOptions}
+                    value={step.roleBasedAssignee || ""}
+                    onChange={(value) => updateStep(index, "roleBasedAssignee", value || "")}
+                    searchable
+                  />
+                )}
+
+                {step.assigneeType === "DYNAMIC" && (
+                  <Select
+                    label="Dynamic Assignment"
+                    data={dynamicOptions}
+                    value={step.dynamicAssignee || ""}
+                    onChange={(value) => updateStep(index, "dynamicAssignee", value || "")}
+                  />
+                )}
+
+                <TextInput
+                  label="Action Label"
+                  placeholder="Enter action label (e.g., 'Review and Approve')"
+                  value={step.actionLabel}
+                  onChange={(e) => updateStep(index, "actionLabel", e.target.value)}
+                />
+
+                {steps.length > 1 && (
+                  <Group justify="flex-end">
+                    <ActionIcon color="red" onClick={() => removeStep(index)}>
+                      <X size={16} />
+                    </ActionIcon>
+                  </Group>
+                )}
+              </Stack>
+            </Paper>
           ))}
 
           <Button variant="outline" onClick={addStep}>
@@ -582,10 +638,13 @@ export default function WorkflowTemplatesPage() {
                       <Timeline.Item
                         key={index}
                         bullet={<User size={14} />}
-                        title={`Step ${index + 1}: ${step.label || step.role}`}
+                        title={`Step ${index + 1}: ${step.actionLabel || step.label || 'Approval'}`}
                       >
                         <Text size="sm" c="dimmed">
-                          Role: {WORKFLOW_ROLES.find(r => r.value === step.role)?.label || step.role}
+                          Assignment: {step.assigneeType === 'ROLE_BASED' 
+                            ? `Role-based (${step.roleBasedAssignee || 'Unknown role'})` 
+                            : `Dynamic (${step.dynamicAssignee || 'Unknown dynamic assignment'})`
+                          }
                         </Text>
                         <Text size="sm" c="dimmed">
                           Type: {step.type}
@@ -684,27 +743,56 @@ export default function WorkflowTemplatesPage() {
 
           <Text fw={500}>Workflow Steps</Text>
           {editSteps.map((step, index) => (
-            <Group key={index} align="end">
-              <Select
-                label={`Step ${index + 1} Role`}
-                data={WORKFLOW_ROLES}
-                value={step.role}
-                onChange={(value) => updateEditStep(index, "role", value || "INITIATOR_SUPERVISOR")}
-                style={{ flex: 1 }}
-              />
-              <TextInput
-                label="Step Label"
-                placeholder="Enter step label"
-                value={step.label}
-                onChange={(e) => updateEditStep(index, "label", e.target.value)}
-                style={{ flex: 1 }}
-              />
-              {editSteps.length > 1 && (
-                <ActionIcon color="red" onClick={() => removeEditStep(index)}>
-                  <X size={16} />
-                </ActionIcon>
-              )}
-            </Group>
+            <Paper key={index} p="md" withBorder>
+              <Stack gap="sm">
+                <Text fw={500} size="sm">Step {index + 1}</Text>
+                
+                <Select
+                  label="Assignment Type"
+                  data={[
+                    { value: "ROLE_BASED", label: "Role-based (assign to users with specific role)" },
+                    { value: "DYNAMIC", label: "Dynamic (assign based on relationships)" },
+                  ]}
+                  value={step.assigneeType}
+                  onChange={(value) => updateEditStep(index, "assigneeType", value || "DYNAMIC")}
+                />
+
+                {step.assigneeType === "ROLE_BASED" && (
+                  <Select
+                    label="Role"
+                    placeholder="Select a role"
+                    data={roleOptions}
+                    value={step.roleBasedAssignee || ""}
+                    onChange={(value) => updateEditStep(index, "roleBasedAssignee", value || "")}
+                    searchable
+                  />
+                )}
+
+                {step.assigneeType === "DYNAMIC" && (
+                  <Select
+                    label="Dynamic Assignment"
+                    data={dynamicOptions}
+                    value={step.dynamicAssignee || ""}
+                    onChange={(value) => updateEditStep(index, "dynamicAssignee", value || "")}
+                  />
+                )}
+
+                <TextInput
+                  label="Action Label"
+                  placeholder="Enter action label (e.g., 'Review and Approve')"
+                  value={step.actionLabel}
+                  onChange={(e) => updateEditStep(index, "actionLabel", e.target.value)}
+                />
+
+                {editSteps.length > 1 && (
+                  <Group justify="flex-end">
+                    <ActionIcon color="red" onClick={() => removeEditStep(index)}>
+                      <X size={16} />
+                    </ActionIcon>
+                  </Group>
+                )}
+              </Stack>
+            </Paper>
           ))}
 
           <Button variant="outline" onClick={addEditStep}>

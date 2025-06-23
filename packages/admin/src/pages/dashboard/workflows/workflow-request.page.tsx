@@ -189,6 +189,49 @@ export default function WorkflowRequestPage() {
     templateSteps = [];
   }
 
+  // Helper function to get step display info (handles both old and new formats)
+  const getStepDisplayInfo = (step: any, stepIndex?: number) => {
+    // New format
+    if (step.assigneeType) {
+      let assignee: string;
+      
+      if (step.assigneeType === 'ROLE_BASED') {
+        // For role-based, just show the role name
+        assignee = step.roleBasedAssignee || 'Unknown role';
+      } else {
+        // For dynamic assignments, try to show the resolved person's name
+        if (typeof stepIndex === 'number') {
+          // Find the approval for this step to get the resolved assignee
+          const approval = request.approvals.find((a: any) => a.step === stepIndex);
+          if (approval?.approver) {
+            const fullName = `${approval.approver.firstName || ''} ${approval.approver.lastName || ''}`.trim();
+            assignee = fullName || approval.approver.email;
+          } else {
+            // Show the dynamic assignment type if no resolved person yet
+            assignee = step.dynamicAssignee === 'INITIATOR_SUPERVISOR' 
+              ? "Initiator's Supervisor" 
+              : step.dynamicAssignee || 'Unknown assignment';
+          }
+        } else {
+          assignee = step.dynamicAssignee === 'INITIATOR_SUPERVISOR' 
+            ? "Initiator's Supervisor" 
+            : step.dynamicAssignee || 'Unknown assignment';
+        }
+      }
+      
+      const label = step.actionLabel || 'Approval';
+      return { assignee, label };
+    }
+    
+    // Old format (backward compatibility)
+    if (step.role && step.label) {
+      return { assignee: step.role, label: step.label };
+    }
+    
+    // Fallback
+    return { assignee: 'Unknown', label: 'Approval' };
+  };
+
   return (
     <Container size="xl" my="lg">
       <Group mb="lg">
@@ -223,7 +266,10 @@ export default function WorkflowRequestPage() {
             <Group>
               <Text fw={500}>Current Step:</Text>
               <Text>{request.currentStep + 1} of {templateSteps.length}</Text>
-              {currentStep && <Text c="dimmed">({currentStep.role} - {currentStep.label})</Text>}
+              {currentStep && (() => {
+                const { assignee, label } = getStepDisplayInfo(currentStep, request.currentStep);
+                return <Text c="dimmed">({assignee} - {label})</Text>;
+              })()}
             </Group>
             <Group>
               <Text fw={500}>Created:</Text>
@@ -292,11 +338,13 @@ export default function WorkflowRequestPage() {
                 color = 'blue';
               }
               
+              const { assignee, label } = getStepDisplayInfo(step, index);
+              
               return (
                 <Timeline.Item 
                   key={index}
                   bullet={bullet}
-                  title={`${step.role} - ${step.label}`}
+                  title={`${assignee} - ${label}`}
                   color={color}
                 >
                   <Text size="sm" c="dimmed">

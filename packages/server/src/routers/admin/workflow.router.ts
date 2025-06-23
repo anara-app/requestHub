@@ -68,9 +68,11 @@ const createTemplateSchema = z.object({
   description: z.string().optional(),
   steps: z.array(
     z.object({
-      role: z.nativeEnum(WorkflowRole),
+      assigneeType: z.enum(['ROLE_BASED', 'DYNAMIC']),
+      roleBasedAssignee: z.string().optional(),
+      dynamicAssignee: z.string().optional(),
+      actionLabel: z.string(),
       type: z.string(),
-      label: z.string(),
     })
   ),
 });
