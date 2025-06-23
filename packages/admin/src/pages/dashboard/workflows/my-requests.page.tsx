@@ -1,5 +1,6 @@
 import { Container, Paper, Text, Badge, Group, Stack, Button, Table, LoadingOverlay, TextInput } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
+import { useLingui } from "@lingui/react/macro";
 import { trpc } from "../../../common/trpc";
 import { ROUTES } from "../../../router/routes";
 import { Eye, Plus } from "lucide-react";
@@ -9,6 +10,7 @@ import PageTitle from "../../../components/PageTitle";
 
 
 export default function MyRequestsPage() {
+  const { t } = useLingui();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 500);
@@ -36,28 +38,28 @@ export default function MyRequestsPage() {
 
   const getStatusLabel = (status: string) => {
     switch (status) {
-      case "DRAFT": return "Draft";
-      case "PENDING": return "Pending";
-      case "IN_PROGRESS": return "In Progress";
-      case "APPROVED": return "Approved";
-      case "REJECTED": return "Rejected";
-      case "CANCELLED": return "Cancelled";
+      case "DRAFT": return t`Draft`;
+      case "PENDING": return t`Pending`;
+      case "IN_PROGRESS": return t`In Progress`;
+      case "APPROVED": return t`Approved`;
+      case "REJECTED": return t`Rejected`;
+      case "CANCELLED": return t`Cancelled`;
       default: return status;
     }
   };
 
   return (
     <Container size="xl" my="lg">
-      <PageTitle>My Requests</PageTitle>
+      <PageTitle>{t`My Requests`}</PageTitle>
       <Group justify="space-between" mb="lg">
         <div></div>
         <Group>
-          <TextInput value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search" />
+          <TextInput value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t`Search`} />
         <Button 
            leftSection={<Plus size={16} />}
            onClick={() => navigate(ROUTES.DASHBOARD_RAISE_REQUEST)}
          >
-           New Request
+           {t`New Request`}
          </Button>
         </Group>
        
@@ -68,21 +70,21 @@ export default function MyRequestsPage() {
         
         {error && (
           <Stack align="center" py="xl">
-            <Text size="lg" c="red">Error loading requests</Text>
+            <Text size="lg" c="red">{t`Error loading requests`}</Text>
             <Text size="sm" c="dimmed">{error.message}</Text>
           </Stack>
         )}
         
         {!error && (!requests || requests.length === 0) ? (
           <Stack align="center" py="xl">
-            <Text size="lg" c="dimmed">No requests found</Text>
-            <Text size="sm" c="dimmed">You haven't submitted any workflow requests yet.</Text>
+            <Text size="lg" c="dimmed">{t`No requests found`}</Text>
+            <Text size="sm" c="dimmed">{t`You haven't submitted any workflow requests yet.`}</Text>
                          <Button 
                leftSection={<Plus size={16} />}
                onClick={() => navigate(ROUTES.DASHBOARD_RAISE_REQUEST)}
                mt="md"
              >
-               Create Your First Request
+               {t`Create Your First Request`}
              </Button>
           </Stack>
         ) : (
@@ -90,12 +92,12 @@ export default function MyRequestsPage() {
             <Table striped highlightOnHover>
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th>Title</Table.Th>
-                  <Table.Th>Type</Table.Th>
-                  <Table.Th>Status</Table.Th>
-                  <Table.Th>Progress</Table.Th>
-                  <Table.Th>Created</Table.Th>
-                  <Table.Th>Actions</Table.Th>
+                  <Table.Th>{t`Title`}</Table.Th>
+                  <Table.Th>{t`Type`}</Table.Th>
+                  <Table.Th>{t`Status`}</Table.Th>
+                  <Table.Th>{t`Progress`}</Table.Th>
+                  <Table.Th>{t`Created`}</Table.Th>
+                  <Table.Th>{t`Actions`}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -125,7 +127,7 @@ export default function MyRequestsPage() {
                     </Table.Td>
                     <Table.Td>
                       <Text size="sm" c="dimmed">
-                        Step {progress}
+                        {t`Step`} {progress}
                       </Text>
                     </Table.Td>
                     <Table.Td>
@@ -140,7 +142,7 @@ export default function MyRequestsPage() {
                          leftSection={<Eye size={14} />}
                          onClick={() => navigate(`${ROUTES.DASHBOARD_WORKFLOW_REQUEST}/${request.id}`)}
                        >
-                         View
+                         {t`View`}
                        </Button>
                     </Table.Td>
                   </Table.Tr>

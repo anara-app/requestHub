@@ -2,6 +2,7 @@ import { Container, Table, Badge, Text, Button, Group, Pagination, Select, TextI
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDebouncedValue } from "@mantine/hooks";
+import { Trans, useLingui } from "@lingui/react/macro";
 import { trpc } from "../../../common/trpc";
 import { ROUTES } from "../../../router/routes";
 import LoadingPlaceholder from "../../../components/LoadingPlaceholder";
@@ -12,6 +13,7 @@ import PageTitle from "../../../components/PageTitle";
 type RequestStatus = "DRAFT" | "PENDING" | "IN_PROGRESS" | "APPROVED" | "REJECTED" | "CANCELLED";
 
 export default function AllRequestsPage() {
+  const { t } = useLingui();
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<RequestStatus | "">("");
@@ -42,6 +44,18 @@ export default function AllRequestsPage() {
     }
   };
 
+  const getStatusLabel = (status: string) => {
+    switch (status) {
+      case "DRAFT": return t`Draft`;
+      case "PENDING": return t`Pending`;
+      case "IN_PROGRESS": return t`In Progress`;
+      case "APPROVED": return t`Approved`;
+      case "REJECTED": return t`Rejected`;
+      case "CANCELLED": return t`Cancelled`;
+      default: return status;
+    }
+  };
+
   if (isLoading) {
     return <LoadingPlaceholder />;
   }
@@ -51,29 +65,29 @@ export default function AllRequestsPage() {
 
   return (
     <Container size="xl" my="lg">
-      <PageTitle>All Requests</PageTitle>
+      <PageTitle><Trans>Все заявки</Trans></PageTitle>
 
       {/* Always show search and filter controls */}
       <Group mb="md">
         <TextInput
-          placeholder="Search by title, description, template, or initiator..."
+          placeholder={t`Search by title, description, template, or initiator...`}
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           leftSection={<Search size={16} />}
           style={{ flex: 1 }}
         />
         <Select
-          placeholder="Filter by status"
+          placeholder={t`Filter by status`}
           value={statusFilter}
           onChange={(value) => setStatusFilter((value as RequestStatus) || "")}
           data={[
-            { value: "", label: "All statuses" },
-            { value: "DRAFT", label: "Draft" },
-            { value: "PENDING", label: "Pending" },
-            { value: "IN_PROGRESS", label: "In Progress" },
-            { value: "APPROVED", label: "Approved" },
-            { value: "REJECTED", label: "Rejected" },
-            { value: "CANCELLED", label: "Cancelled" },
+            { value: "", label: t`All statuses` },
+            { value: "DRAFT", label: t`Draft` },
+            { value: "PENDING", label: t`Pending` },
+            { value: "IN_PROGRESS", label: t`In Progress` },
+            { value: "APPROVED", label: t`Approved` },
+            { value: "REJECTED", label: t`Rejected` },
+            { value: "CANCELLED", label: t`Cancelled` },
           ]}
           clearable
         />
@@ -82,21 +96,21 @@ export default function AllRequestsPage() {
       {/* Show appropriate content based on data availability */}
       {!hasRequests ? (
         <EmptyPlaceholder
-          title={hasFilters ? "No requests match your search" : "No workflow requests found"}
-          subtitle={hasFilters ? "Try adjusting your search criteria or filters." : "No workflow requests have been submitted yet."}
+          title={hasFilters ? t`No requests match your search` : t`No workflow requests found`}
+          subtitle={hasFilters ? t`Try adjusting your search criteria or filters.` : t`No workflow requests have been submitted yet.`}
         />
       ) : (
         <>
           <Table striped highlightOnHover>
             <Table.Thead>
               <Table.Tr>
-                <Table.Th>Title</Table.Th>
-                <Table.Th>Template</Table.Th>
-                <Table.Th>Initiator</Table.Th>
-                <Table.Th>Status</Table.Th>
-                <Table.Th>Current Step</Table.Th>
-                <Table.Th>Created</Table.Th>
-                <Table.Th>Actions</Table.Th>
+                <Table.Th>{t`Title`}</Table.Th>
+                <Table.Th>{t`Template`}</Table.Th>
+                <Table.Th>{t`Initiator`}</Table.Th>
+                <Table.Th>{t`Status`}</Table.Th>
+                <Table.Th>{t`Current Step`}</Table.Th>
+                <Table.Th>{t`Created`}</Table.Th>
+                <Table.Th>{t`Actions`}</Table.Th>
               </Table.Tr>
             </Table.Thead>
             <Table.Tbody>
@@ -118,7 +132,7 @@ export default function AllRequestsPage() {
                   </Table.Td>
                   <Table.Td>
                     <Badge color={getStatusColor(request.status)} variant="light">
-                      {request.status}
+                      {getStatusLabel(request.status)}
                     </Badge>
                   </Table.Td>
                   <Table.Td>{request.currentStep + 1}</Table.Td>
@@ -132,7 +146,7 @@ export default function AllRequestsPage() {
                       leftSection={<Eye size={14} />}
                       onClick={() => navigate(`${ROUTES.DASHBOARD_WORKFLOW_REQUEST}/${request.id}`)}
                     >
-                      View Details
+                      {t`View Details`}
                     </Button>
                   </Table.Td>
                 </Table.Tr>

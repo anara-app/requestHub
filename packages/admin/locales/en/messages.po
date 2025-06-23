@@ -13,21 +13,656 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#. js-lingui-explicit-id
+#: src/App.tsx:39
+msgid "Access Denied"
+msgstr ""
+
+#. js-lingui-explicit-id
+#: src/App.tsx:40
+msgid "You don't have permission to perform this action"
+msgstr ""
+
 #. placeholder {0}: props.children
 #: src/components/Typography.tsx:8
 msgid "{0}"
 msgstr "{0}"
 
-#: src/pages/auth/auth.page.tsx:78
-#: src/pages/auth/auth.page.tsx:82
+#. placeholder {0}: request.currentStep + 1
+#. placeholder {1}: templateSteps.length
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:270
+msgid "{0} of {1}"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:482
+msgid "Action Label"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:322
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:90
+#: src/pages/dashboard/workflows/my-requests.page.tsx:100
+#: src/pages/dashboard/workflows/all-requests.page.tsx:113
+msgid "Actions"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:349
+msgid "Active"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:406
+msgid "Add a comment about your decision..."
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:436
+msgid "Add a comment..."
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:446
+msgid "Add Comment"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:500
+msgid "Add Step"
+msgstr ""
+
+#: src/components/DashboardLayout/DashboardLayout.tsx:95
+msgid "All Requests"
+msgstr ""
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:84
+msgid "All statuses"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:224
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:234
+msgid "Approval"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:387
+msgid "Approve"
+msgstr ""
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:44
+#: src/pages/dashboard/workflows/all-requests.page.tsx:52
+#: src/pages/dashboard/workflows/all-requests.page.tsx:88
+msgid "Approved"
+msgstr ""
+
+#. placeholder {0}: approval.comment
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:354
+msgid "Approved: {0}"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:402
+msgid "Archive Template"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:349
+msgid "Archived"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:321
+msgid "Archived By"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:320
+msgid "Archived Date"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:452
+msgid "Assignment Type"
+msgstr ""
+
+#. placeholder {0}: approvalInfo.dynamicAssignee
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:138
+msgid "Assignment: {0}"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:241
+msgid "Back to Requests"
+msgstr ""
+
+#. placeholder {0}: approval.approver.firstName
+#. placeholder {1}: approval.approver.lastName
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:366
+msgid "by {0} {1}"
+msgstr "by {0} {1}"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:505
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:419
+msgid "Cancel"
+msgstr "Cancel"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:46
+#: src/pages/dashboard/workflows/all-requests.page.tsx:54
+#: src/pages/dashboard/workflows/all-requests.page.tsx:90
+msgid "Cancelled"
+msgstr "Cancelled"
+
+#: src/components/LanguageSwitcher.tsx:21
+#~ msgid "Change Language"
+#~ msgstr ""
+
+#: src/components/DashboardLayout/DashboardLayout.tsx:187
+msgid "Change theme"
+msgstr "Change theme"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:405
+msgid "Comment (Optional)"
+msgstr "Comment (Optional)"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:80
+msgid "Comment added successfully"
+msgstr "Comment added successfully"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:100
+msgid "Comment is required"
+msgstr "Comment is required"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:430
+msgid "Comments"
+msgstr "Comments"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:356
+msgid "Completed"
+msgstr "Completed"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:416
+msgid "Confirm Approval"
+msgstr "Confirm Approval"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:416
+msgid "Confirm Rejection"
+msgstr "Confirm Rejection"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:299
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:508
+msgid "Create Template"
+msgstr "Create Template"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:429
+msgid "Create Workflow Template"
+msgstr "Create Workflow Template"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:87
+msgid "Create Your First Request"
+msgstr "Create Your First Request"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:99
+#: src/pages/dashboard/workflows/all-requests.page.tsx:112
+msgid "Created"
+msgstr "Created"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:319
+msgid "Created By"
+msgstr "Created By"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:277
+msgid "Created:"
+msgstr "Created:"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:87
+#: src/pages/dashboard/workflows/all-requests.page.tsx:111
+msgid "Current Step"
+msgstr "Current Step"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:269
+msgid "Current Step:"
+msgstr "Current Step:"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:316
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:439
+msgid "Description"
+msgstr "Description"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:285
+msgid "Description:"
+msgstr "Description:"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:41
+#: src/pages/dashboard/workflows/all-requests.page.tsx:49
+#: src/pages/dashboard/workflows/all-requests.page.tsx:85
+msgid "Draft"
+msgstr "Draft"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:455
+msgid "Dynamic (assign based on relationships)"
+msgstr "Dynamic (assign based on relationships)"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:474
+msgid "Dynamic Assignment"
+msgstr "Dynamic Assignment"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:394
+msgid "Edit Template"
+msgstr "Edit Template"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:483
+msgid "Enter action label (e.g., 'Review and Approve')"
+msgstr "Enter action label (e.g., 'Review and Approve')"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:440
+msgid "Enter template description"
+msgstr "Enter template description"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:433
+msgid "Enter template name"
+msgstr "Enter template name"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:50
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:60
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:70
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:86
+msgid "Error"
+msgstr "Error"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:35
+#: src/pages/dashboard/workflows/my-requests.page.tsx:30
+msgid "Error loading requests"
+msgstr "Error loading requests"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:87
+msgid "Failed to add comment"
+msgstr "Failed to add comment"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:51
+msgid "Failed to approve request"
+msgstr "Failed to approve request"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:61
+msgid "Failed to reject request"
+msgstr "Failed to reject request"
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:80
+msgid "Filter by status"
+msgstr "Filter by status"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:114
+msgid "Go Back"
+msgstr ""
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:43
+#: src/pages/dashboard/workflows/all-requests.page.tsx:51
+#: src/pages/dashboard/workflows/all-requests.page.tsx:87
+msgid "In Progress"
+msgstr "In Progress"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:265
+msgid "Initiated by:"
+msgstr "Initiated by:"
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:109
+msgid "Initiator"
+msgstr "Initiator"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:214
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:219
+msgid "Initiator's Supervisor"
+msgstr "Initiator's Supervisor"
+
+#: src/components/DashboardLayout/DashboardLayout.tsx:181
+msgid "Logout"
+msgstr "Logout"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:53
+#: src/components/DashboardLayout/DashboardLayout.tsx:74
+msgid "My Requests"
+msgstr "My Requests"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:365
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:375
+msgid "N/A"
+msgstr "N/A"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:315
+msgid "Name"
+msgstr "Name"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:62
+msgid "New Request"
+msgstr "New Request"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:307
+msgid "No archived templates found"
+msgstr "No archived templates found"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:459
+msgid "No comments yet"
+msgstr "No comments yet"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:341
+msgid "No description"
+msgstr "No description"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:61
+msgid "No matching requests found"
+msgstr ""
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:61
+msgid "No pending approvals"
+msgstr "No pending approvals"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:80
+msgid "No requests found"
+msgstr "No requests found"
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:99
+msgid "No requests match your search"
+msgstr "No requests match your search"
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:99
+msgid "No workflow requests found"
+msgstr ""
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:100
+msgid "No workflow requests have been submitted yet."
+msgstr "No workflow requests have been submitted yet."
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:307
+msgid "No workflow templates found. Create one to get started."
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:362
+msgid "Not started"
+msgstr "Not started"
+
+#: src/components/DashboardLayout/DashboardLayout.tsx:109
+msgid "Organization Hierarchy"
+msgstr "Organization Hierarchy"
+
+#: src/components/DashboardLayout/DashboardLayout.tsx:154
+msgid "Partner Neft"
+msgstr "Partner Neft"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:42
+#: src/pages/dashboard/workflows/all-requests.page.tsx:50
+#: src/pages/dashboard/workflows/all-requests.page.tsx:86
+msgid "Pending"
+msgstr "Pending"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:361
+msgid "Pending approval"
+msgstr "Pending approval"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:35
+#: src/components/DashboardLayout/DashboardLayout.tsx:81
+msgid "Pending Approvals"
+msgstr "Pending Approvals"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:140
+msgid "Pending your approval"
+msgstr "Pending your approval"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:98
+msgid "Progress"
+msgstr "Progress"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:394
+msgid "Reject"
+msgstr "Reject"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:360
+#: src/pages/dashboard/workflows/my-requests.page.tsx:45
+#: src/pages/dashboard/workflows/all-requests.page.tsx:53
+#: src/pages/dashboard/workflows/all-requests.page.tsx:89
+msgid "Rejected"
+msgstr "Rejected"
+
+#. placeholder {0}: approval.comment
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:358
+msgid "Rejected: {0}"
+msgstr "Rejected: {0}"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:77
+msgid "request"
+msgstr "request"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:40
+msgid "Request approved successfully"
+msgstr "Request approved successfully"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:293
+msgid "Request Data:"
+msgstr "Request Data:"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:251
+msgid "Request Details"
+msgstr "Request Details"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:109
+msgid "Request Not Found"
+msgstr "Request Not Found"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:60
+msgid "Request rejected successfully"
+msgstr "Request rejected successfully"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:77
+msgid "requests"
+msgstr "requests"
+
+#. placeholder {0}: currentStep.role
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:139
+msgid "Requires {0} approval"
+msgstr "Requires {0} approval"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:413
+msgid "Restore Template"
+msgstr "Restore Template"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:162
+msgid "Review"
+msgstr "Review"
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:134
+msgid "Review Required"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:463
+msgid "Role"
+msgstr "Role"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:454
+msgid "Role-based (assign to users with specific role)"
+msgstr ""
+
+#. placeholder {0}: approvalInfo.roleBasedAssignee
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:137
+msgid "Role: {0}"
+msgstr ""
+
+#: src/components/DashboardLayout/DashboardLayout.tsx:116
+msgid "Roles"
+msgstr "Roles"
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:57
+msgid "Search"
+msgstr "Search"
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:73
+msgid "Search by title, description, template, or initiator..."
+msgstr "Search by title, description, template, or initiator..."
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:40
+msgid "Search requests..."
+msgstr "Search requests..."
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:464
+msgid "Select a role"
+msgstr "Select a role"
+
+#: src/components/LanguageSwitcher.tsx:24
+msgid "Select Language"
+msgstr "Select Language"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:294
+msgid "Show Active"
+msgstr "Show Active"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:294
+msgid "Show Archived"
+msgstr ""
+
+#: src/pages/auth/auth.page.tsx:108
+msgid "Sign In"
+msgstr "Sign In"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:318
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:88
+#: src/pages/dashboard/workflows/my-requests.page.tsx:97
+#: src/pages/dashboard/workflows/all-requests.page.tsx:110
+msgid "Status"
+msgstr "Status"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:449
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:134
+#: src/pages/dashboard/workflows/my-requests.page.tsx:130
+msgid "Step"
+msgstr "Step"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:345
+msgid "steps"
+msgstr "steps"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:317
+msgid "Steps"
+msgstr ""
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:89
+msgid "Submitted"
+msgstr ""
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:86
+msgid "Submitted By"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:39
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:59
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:79
+msgid "Success"
+msgstr "Success"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:378
+msgid "Take Action"
+msgstr "Take Action"
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:108
+msgid "Template"
+msgstr "Template"
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:432
+msgid "Template Name"
+msgstr "Template Name"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:261
+msgid "Template:"
+msgstr "Template:"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:112
+msgid "The requested workflow request could not be found."
+msgstr "The requested workflow request could not be found."
+
+#. placeholder {0}: currentUser.role.name
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:67
+msgid "There are no requests waiting for {0} approval at this time."
+msgstr ""
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:84
+#: src/pages/dashboard/workflows/my-requests.page.tsx:95
+#: src/pages/dashboard/workflows/all-requests.page.tsx:107
+msgid "Title"
+msgstr "Title"
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:100
+msgid "Try adjusting your search criteria or filters."
+msgstr ""
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:65
+msgid "Try adjusting your search terms or clear the search to see all pending approvals."
+msgstr ""
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:85
+#: src/pages/dashboard/workflows/my-requests.page.tsx:96
+msgid "Type"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:356
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:234
+msgid "Unknown"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:215
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:220
+msgid "Unknown assignment"
+msgstr ""
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:124
+msgid "Unknown Template"
+msgstr ""
+
+#: src/components/DashboardLayout/DashboardLayout.tsx:102
+msgid "Users"
+msgstr ""
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:145
+msgid "View"
+msgstr ""
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:149
+msgid "View Details"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:385
+msgid "View Template"
+msgstr ""
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:77
+msgid "waiting for your approval"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:310
+msgid "Workflow Progress"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:445
+msgid "Workflow Steps"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-templates.page.tsx:291
+#: src/components/DashboardLayout/DashboardLayout.tsx:88
+msgid "Workflow Templates"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:401
+msgid "You are about to {actionType} this request. Please provide a comment explaining your decision."
+msgstr ""
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:53
+msgid "You don't have a role assigned. Please contact an administrator."
+msgstr ""
+
+#: src/pages/dashboard/workflows/my-requests.page.tsx:81
+msgid "You haven't submitted any workflow requests yet."
+msgstr ""
+
+#: src/pages/dashboard/workflows/pending-approvals.page.tsx:68
+msgid "You need a role assigned to approve requests."
+msgstr ""
+
+#: src/pages/dashboard/workflows/all-requests.page.tsx:68
+msgid "Все заявки"
+msgstr "All Requests"
+
+#: src/pages/auth/auth.page.tsx:84
+#: src/pages/auth/auth.page.tsx:88
 msgid "Логин"
 msgstr "Login"
 
-#: src/pages/auth/auth.page.tsx:91
-#: src/pages/auth/auth.page.tsx:92
+#: src/pages/auth/auth.page.tsx:97
+#: src/pages/auth/auth.page.tsx:98
 msgid "Пароль"
 msgstr "Password"
 
 #: src/pages/auth/auth.page.tsx:73
-msgid "Привет"
-msgstr "Hello"
+#~ msgid "Привет"
+#~ msgstr "Hello"

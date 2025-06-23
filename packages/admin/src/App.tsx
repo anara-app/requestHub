@@ -7,6 +7,7 @@ import { httpBatchLink } from "@trpc/client";
 import { notifications, Notifications } from "@mantine/notifications";
 import { ENV_KEYS } from "./common/constants";
 import { ROUTES } from "./router/routes";
+import { i18n } from "./common/i18n";
 
 function App() {
   const [queryClient] = useState(() => new QueryClient());
@@ -35,8 +36,8 @@ function App() {
 
             if (response.status === 403) {
               notifications.show({
-                title: "Доступ запрещен",
-                message: "У вас нет разрешения на выполнение этого действия",
+                title: i18n._("Access Denied"),
+                message: i18n._("You don't have permission to perform this action"),
                 color: "red",
               });
               return response;

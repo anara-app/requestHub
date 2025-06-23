@@ -1,5 +1,6 @@
 import { Container, Paper, Text, Badge, Group, Stack, Button, Table, LoadingOverlay, Alert, TextInput } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
+import { useLingui } from "@lingui/react/macro";
 import { trpc } from "../../../common/trpc";
 import { ROUTES } from "../../../router/routes";
 import { Eye, Clock, CheckCircle, AlertCircle, Search } from "lucide-react";
@@ -8,6 +9,7 @@ import { useDebouncedValue } from "@mantine/hooks";
 import PageTitle from "../../../components/PageTitle";
 
 export default function PendingApprovalsPage() {
+  const { t } = useLingui();
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebouncedValue(search, 500);
@@ -30,12 +32,12 @@ export default function PendingApprovalsPage() {
 
   return (
     <Container size="xl" my="lg">
-      <PageTitle>Pending Approvals</PageTitle>
+      <PageTitle>{t`Pending Approvals`}</PageTitle>
 
       <Group justify="space-between" mb="lg">
         <div></div>
         <TextInput
-          placeholder="Search requests..."
+          placeholder={t`Search requests...`}
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           leftSection={<Search size={16} />}
@@ -48,7 +50,7 @@ export default function PendingApprovalsPage() {
         
         {!currentUser?.role && (
           <Alert color="orange" icon={<AlertCircle size={16} />} mb="md">
-            You don't have a role assigned. Please contact an administrator.
+            {t`You don't have a role assigned. Please contact an administrator.`}
           </Alert>
         )}
 
@@ -56,14 +58,14 @@ export default function PendingApprovalsPage() {
           <Stack align="center" py="xl">
             <Clock size={48} color="gray" />
             <Text size="lg" c="dimmed">
-              {search ? "No matching requests found" : "No pending approvals"}
+              {search ? t`No matching requests found` : t`No pending approvals`}
             </Text>
             <Text size="sm" c="dimmed" ta="center">
               {search 
-                ? "Try adjusting your search terms or clear the search to see all pending approvals."
+                ? t`Try adjusting your search terms or clear the search to see all pending approvals.`
                 : currentUser?.role 
-                  ? `There are no requests waiting for ${currentUser.role.name} approval at this time.`
-                  : "You need a role assigned to approve requests."
+                  ? t`There are no requests waiting for ${currentUser.role.name} approval at this time.`
+                  : t`You need a role assigned to approve requests.`
               }
             </Text>
           </Stack>
@@ -72,20 +74,20 @@ export default function PendingApprovalsPage() {
             <Group mb="md">
               <CheckCircle size={20} color="green" />
               <Text fw={500}>
-                {myPendingRequests.length} request{myPendingRequests.length !== 1 ? 's' : ''} waiting for your approval
+                {myPendingRequests.length} {myPendingRequests.length !== 1 ? t`requests` : t`request`} {t`waiting for your approval`}
               </Text>
             </Group>
 
             <Table striped highlightOnHover>
               <Table.Thead>
                 <Table.Tr>
-                  <Table.Th>Title</Table.Th>
-                  <Table.Th>Type</Table.Th>
-                  <Table.Th>Submitted By</Table.Th>
-                  <Table.Th>Current Step</Table.Th>
-                  <Table.Th>Status</Table.Th>
-                  <Table.Th>Submitted</Table.Th>
-                  <Table.Th>Actions</Table.Th>
+                  <Table.Th>{t`Title`}</Table.Th>
+                  <Table.Th>{t`Type`}</Table.Th>
+                  <Table.Th>{t`Submitted By`}</Table.Th>
+                  <Table.Th>{t`Current Step`}</Table.Th>
+                  <Table.Th>{t`Status`}</Table.Th>
+                  <Table.Th>{t`Submitted`}</Table.Th>
+                  <Table.Th>{t`Actions`}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -119,7 +121,7 @@ export default function PendingApprovalsPage() {
                         </div>
                       </Table.Td>
                       <Table.Td>
-                        <Text size="sm">{request.template?.name || 'Unknown Template'}</Text>
+                        <Text size="sm">{request.template?.name || t`Unknown Template`}</Text>
                       </Table.Td>
                       <Table.Td>
                         <Text size="sm">
@@ -129,13 +131,13 @@ export default function PendingApprovalsPage() {
                       <Table.Td>
                         <div>
                           <Text size="sm" fw={500}>
-                            Step {request.currentStep + 1}: {approvalInfo?.actionLabel || currentStep?.label || 'Review Required'}
+                            {t`Step`} {request.currentStep + 1}: {approvalInfo?.actionLabel || currentStep?.label || t`Review Required`}
                           </Text>
                           <Text size="xs" c="dimmed">
-                            {approvalInfo?.roleBasedAssignee && `Role: ${approvalInfo.roleBasedAssignee}`}
-                            {approvalInfo?.dynamicAssignee && `Assignment: ${approvalInfo.dynamicAssignee}`}
-                            {!approvalInfo && currentStep?.role && `Requires ${currentStep.role} approval`}
-                            {!approvalInfo && !currentStep && 'Pending your approval'}
+                            {approvalInfo?.roleBasedAssignee && t`Role: ${approvalInfo.roleBasedAssignee}`}
+                            {approvalInfo?.dynamicAssignee && t`Assignment: ${approvalInfo.dynamicAssignee}`}
+                            {!approvalInfo && currentStep?.role && t`Requires ${currentStep.role} approval`}
+                            {!approvalInfo && !currentStep && t`Pending your approval`}
                           </Text>
                         </div>
                       </Table.Td>
@@ -157,7 +159,7 @@ export default function PendingApprovalsPage() {
                           leftSection={<Eye size={14} />}
                           onClick={() => navigate(`${ROUTES.DASHBOARD_WORKFLOW_REQUEST}/${request.id}`)}
                         >
-                          Review
+                          {t`Review`}
                         </Button>
                       </Table.Td>
                     </Table.Tr>
