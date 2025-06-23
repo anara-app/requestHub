@@ -1,9 +1,9 @@
 import { db } from "../common/prisma";
 
 export interface WorkflowStepDefinition {
-  assigneeType: 'ROLE_BASED' | 'DYNAMIC';
-  roleBasedAssignee?: string;  // Role name like "Ceo", "Finance_manager", etc.
-  dynamicAssignee?: string;    // Dynamic type like "INITIATOR_SUPERVISOR"
+  assigneeType: "ROLE_BASED" | "DYNAMIC";
+  roleBasedAssignee?: string; // Role name like "Ceo", "Finance_manager", etc.
+  dynamicAssignee?: string; // Dynamic type like "INITIATOR_SUPERVISOR"
   actionLabel: string;
   type: string;
 }
@@ -19,12 +19,17 @@ export class WorkflowAssignmentService {
     stepDefinition: WorkflowStepDefinition,
     initiatorId: string
   ): Promise<string | null> {
-    if (stepDefinition.assigneeType === 'DYNAMIC') {
-      return await this.resolveDynamicAssignee(stepDefinition.dynamicAssignee!, initiatorId);
-    } else if (stepDefinition.assigneeType === 'ROLE_BASED') {
-      return await this.resolveRoleBasedAssignee(stepDefinition.roleBasedAssignee!);
+    if (stepDefinition.assigneeType === "DYNAMIC") {
+      return await this.resolveDynamicAssignee(
+        stepDefinition.dynamicAssignee!,
+        initiatorId
+      );
+    } else if (stepDefinition.assigneeType === "ROLE_BASED") {
+      return await this.resolveRoleBasedAssignee(
+        stepDefinition.roleBasedAssignee!
+      );
     }
-    
+
     return null;
   }
 
@@ -39,13 +44,13 @@ export class WorkflowAssignmentService {
     initiatorId: string
   ): Promise<string | null> {
     switch (dynamicType) {
-      case 'INITIATOR_SUPERVISOR':
+      case "INITIATOR_SUPERVISOR":
         return await this.resolveManagerForUser(initiatorId);
-      
+
       // Add more dynamic types here as needed
       // case 'INITIATOR_DEPARTMENT_HEAD':
       //   return await this.resolveDepartmentHeadForUser(initiatorId);
-      
+
       default:
         console.warn(`Unknown dynamic assignee type: ${dynamicType}`);
         return null;
@@ -57,7 +62,9 @@ export class WorkflowAssignmentService {
    * @param roleName - The role name to find (e.g., "Ceo", "Finance_manager")
    * @returns A user ID with that role, or null if none found
    */
-  static async resolveRoleBasedAssignee(roleName: string): Promise<string | null> {
+  static async resolveRoleBasedAssignee(
+    roleName: string
+  ): Promise<string | null> {
     const user = await db.user.findFirst({
       where: {
         role: {
@@ -70,6 +77,18 @@ export class WorkflowAssignmentService {
     });
 
     return user?.id || null;
+  }
+
+  /**
+   * Diagnostic method to check what roles exist in the system
+   * @returns Array of role names available in the system
+   */
+  static async getAvailableRoles(): Promise<string[]> {
+    const roles = await db.role.findMany({
+      select: { name: true },
+      orderBy: { name: "asc" },
+    });
+    return roles.map((role: { name: string }) => role.name);
   }
 
   /**
@@ -104,10 +123,14 @@ export class WorkflowAssignmentService {
     for (const [index, step] of stepDefinitions.entries()) {
       const assignee = await this.resolveStepAssignee(step, initiatorId);
       if (!assignee) {
-        if (step.assigneeType === 'DYNAMIC') {
-          errors.push(`Step ${index + 1}: No user found for dynamic assignment "${step.dynamicAssignee}"`);
+        if (step.assigneeType === "DYNAMIC") {
+          errors.push(
+            `Step ${index + 1}: No user found for dynamic assignment "${step.dynamicAssignee}"`
+          );
         } else {
-          errors.push(`Step ${index + 1}: No user found with role "${step.roleBasedAssignee}"`);
+          errors.push(
+            `Step ${index + 1}: No user found with role "${step.roleBasedAssignee}"`
+          );
         }
       }
     }
@@ -134,14 +157,26 @@ export class WorkflowAssignmentService {
 
     for (const [index, step] of stepDefinitions.entries()) {
       const assigneeId = await this.resolveStepAssignee(step, initiatorId);
-      
+
+      // BUGFIX: Don't create approval records with null approverId
+      if (!assigneeId) {
+        const assigneeInfo =
+          step.assigneeType === "DYNAMIC"
+            ? `${step.assigneeType}(${step.dynamicAssignee})`
+            : `${step.assigneeType}(${step.roleBasedAssignee})`;
+
+        throw new Error(
+          `Cannot resolve assignee for workflow step ${index + 1}. No user found for ${assigneeInfo}. Please ensure the required role exists and has users assigned.`
+        );
+      }
+
       // Create approval with proper schema fields
       const approval = await db.workflowApproval.create({
         data: {
           requestId,
           step: index,
           actionLabel: step.actionLabel,
-          approverId: assigneeId, // Resolved user ID
+          approverId: assigneeId, // Resolved user ID - guaranteed to be non-null now
           status: "PENDING",
           assigneeType: step.assigneeType,
           roleBasedAssignee: step.roleBasedAssignee,
@@ -156,56 +191,31 @@ export class WorkflowAssignmentService {
   }
 
   /**
-   * Converts legacy workflow role to new step definition format
-   * @param legacyRole - The old WorkflowRole enum value
+   * Converts workflow step role to step definition format
+   * @param roleName - The role name from database or dynamic assignment type
    * @param actionLabel - The action label for the step
    * @returns WorkflowStepDefinition
    */
-  static convertLegacyRoleToStepDefinition(
-    legacyRole: string,
+  static convertRoleToStepDefinition(
+    roleName: string,
     actionLabel: string
   ): WorkflowStepDefinition {
     // Dynamic assignments
-    if (legacyRole === 'INITIATOR_SUPERVISOR') {
+    if (roleName === "INITIATOR_SUPERVISOR") {
       return {
-        assigneeType: 'DYNAMIC',
-        dynamicAssignee: 'INITIATOR_SUPERVISOR',
+        assigneeType: "DYNAMIC",
+        dynamicAssignee: "INITIATOR_SUPERVISOR",
         actionLabel,
-        type: 'approval',
+        type: "approval",
       };
     }
 
-    // Role-based assignments - map to actual system role names
-    const roleMapping: Record<string, string> = {
-      'CEO': 'Ceo',
-      'LEGAL': 'Lawyer',
-      'PROCUREMENT': 'Procurement',
-      'FINANCE_MANAGER': 'Finance_manager',
-      'ACCOUNTING': 'Accountant',
-      'HR_SPECIALIST': 'Hr_specialist',
-      'SYSTEM_AUTOMATION': 'System',
-      'SECURITY_REVIEW': 'Security',
-      'SECURITY_GUARD': 'Security Guard',
-      'INDUSTRIAL_SAFETY': 'Safety',
-    };
-
-    const mappedRole = roleMapping[legacyRole];
-    if (mappedRole) {
-      return {
-        assigneeType: 'ROLE_BASED',
-        roleBasedAssignee: mappedRole,
-        actionLabel,
-        type: 'approval',
-      };
-    }
-
-    // Fallback - treat as role-based with the role name as-is
-    console.warn(`Unknown legacy role: ${legacyRole}, treating as role-based`);
+    // All other roles are treated as role-based assignments using the exact role name from database
     return {
-      assigneeType: 'ROLE_BASED',
-      roleBasedAssignee: legacyRole,
+      assigneeType: "ROLE_BASED",
+      roleBasedAssignee: roleName,
       actionLabel,
-      type: 'approval',
+      type: "approval",
     };
   }
 
@@ -288,7 +298,7 @@ export class WorkflowAssignmentService {
         assigneeType: approval.assigneeType,
         roleBasedAssignee: approval.roleBasedAssignee,
         dynamicAssignee: approval.dynamicAssignee,
-      }
+      },
     }));
   }
-} 
+}

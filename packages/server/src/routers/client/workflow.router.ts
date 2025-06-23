@@ -1,8 +1,8 @@
 import { z } from "zod";
-import { protectedPermissionProcedure, router } from "../../trpc/trpc";
 import { TRPCError } from "@trpc/server";
 import { db } from "../../common/prisma";
 import { WorkflowAssignmentService } from "../../services/workflow-assignment.service";
+import { protectedPermissionProcedure, router } from "../../trpc/trpc";
 
 const createRequestSchema = z.object({
   title: z.string().min(1),
@@ -14,16 +14,19 @@ const createRequestSchema = z.object({
 
 export const workflowRouter: any = router({
   // Get available workflow templates
-  getTemplates: protectedPermissionProcedure(["CREATE_WORKFLOW_REQUEST" as any])
-    .query(async () => {
-      return db.workflowTemplate.findMany({
-        where: { isActive: true },
-        orderBy: { createdAt: "desc" },
-      });
-    }),
+  getTemplates: protectedPermissionProcedure([
+    "CREATE_WORKFLOW_REQUEST" as any,
+  ]).query(async () => {
+    return db.workflowTemplate.findMany({
+      where: { isActive: true },
+      orderBy: { createdAt: "desc" },
+    });
+  }),
 
   // Create a new workflow request
-  createRequest: protectedPermissionProcedure(["CREATE_WORKFLOW_REQUEST" as any])
+  createRequest: protectedPermissionProcedure([
+    "CREATE_WORKFLOW_REQUEST" as any,
+  ])
     .input(createRequestSchema)
     .mutation(async ({ ctx, input }) => {
       // Get the workflow template
@@ -38,17 +41,33 @@ export const workflowRouter: any = router({
         });
       }
 
-      // Parse template steps and convert to new format
-      const legacySteps = JSON.parse(template.steps as string);
-      const stepDefinitions = legacySteps.map((step: any) => 
-        WorkflowAssignmentService.convertLegacyRoleToStepDefinition(step.role, step.label)
-      );
+      // Parse template steps - they're already in the new format
+      const templateSteps = JSON.parse(template.steps as string);
+      const stepDefinitions = templateSteps.map((step: any) => {
+        // Check if step is already in new format (has assigneeType)
+        if (step.assigneeType) {
+          return {
+            assigneeType: step.assigneeType,
+            roleBasedAssignee: step.roleBasedAssignee,
+            dynamicAssignee: step.dynamicAssignee,
+            actionLabel: step.actionLabel || "",
+            type: step.type || "approval",
+          };
+        } else {
+          // Legacy format - convert using role and label
+          return WorkflowAssignmentService.convertRoleToStepDefinition(
+            step.role,
+            step.label
+          );
+        }
+      });
 
       // Validate that the workflow can be processed
-      const validation = await WorkflowAssignmentService.validateWorkflowRequest(
-        stepDefinitions,
-        ctx.user.id
-      );
+      const validation =
+        await WorkflowAssignmentService.validateWorkflowRequest(
+          stepDefinitions,
+          ctx.user.id
+        );
 
       if (!validation.isValid) {
         throw new TRPCError({
@@ -102,11 +121,13 @@ export const workflowRouter: any = router({
 
   // Get user's requests
   getMyRequests: protectedPermissionProcedure(["READ_WORKFLOW_REQUESTS" as any])
-    .input(z.object({
-      search: z.string().optional(),
-      cursor: z.string().optional(),
-      limit: z.number().min(1).max(100).default(10),
-    }))
+    .input(
+      z.object({
+        search: z.string().optional(),
+        cursor: z.string().optional(),
+        limit: z.number().min(1).max(100).default(10),
+      })
+    )
     .query(async ({ ctx, input }) => {
       const requests = await db.workflowRequest.findMany({
         where: {
@@ -135,16 +156,21 @@ export const workflowRouter: any = router({
     }),
 
   // Get requests that need user's approval - using new assignment system
-  getPendingApprovals: protectedPermissionProcedure(["APPROVE_WORKFLOW_REQUEST" as any])
-    .input(z.object({
-      search: z.string().optional(),
-    }))
+  getPendingApprovals: protectedPermissionProcedure([
+    "APPROVE_WORKFLOW_REQUEST" as any,
+  ])
+    .input(
+      z.object({
+        search: z.string().optional(),
+      })
+    )
     .query(async ({ ctx, input }) => {
       console.log("getPendingApprovals called for user:", ctx.user.id);
-      
+
       // Use the new assignment service to get pending approvals for this user
-      const pendingApprovals = await WorkflowAssignmentService.getPendingApprovalsForUser(ctx.user.id);
-      
+      const pendingApprovals =
+        await WorkflowAssignmentService.getPendingApprovalsForUser(ctx.user.id);
+
       // Apply search filter if provided
       let filteredApprovals = pendingApprovals;
       if (input.search) {
@@ -160,14 +186,18 @@ export const workflowRouter: any = router({
           );
         });
       }
-      
-      console.log(`Found ${filteredApprovals.length} pending approvals for user ${ctx.user.id} (after search filter)`);
-      
+
+      console.log(
+        `Found ${filteredApprovals.length} pending approvals for user ${ctx.user.id} (after search filter)`
+      );
+
       return filteredApprovals;
     }),
 
   // Approve a workflow request
-  approveRequest: protectedPermissionProcedure(["APPROVE_WORKFLOW_REQUEST" as any])
+  approveRequest: protectedPermissionProcedure([
+    "APPROVE_WORKFLOW_REQUEST" as any,
+  ])
     .input(
       z.object({
         requestId: z.string(),
@@ -218,12 +248,18 @@ export const workflowRouter: any = router({
         orderBy: { step: "asc" },
       });
 
-      const currentStepApprovals = allApprovals.filter(a => a.step === currentApproval.step);
-      const allCurrentStepApproved = currentStepApprovals.every(a => a.status === "APPROVED");
+      const currentStepApprovals = allApprovals.filter(
+        (a) => a.step === currentApproval.step
+      );
+      const allCurrentStepApproved = currentStepApprovals.every(
+        (a) => a.status === "APPROVED"
+      );
 
       if (allCurrentStepApproved) {
-        const nextStepApprovals = allApprovals.filter(a => a.step === currentApproval.step + 1);
-        
+        const nextStepApprovals = allApprovals.filter(
+          (a) => a.step === currentApproval.step + 1
+        );
+
         if (nextStepApprovals.length > 0) {
           // Move to next step
           await db.workflowRequest.update({
@@ -270,7 +306,9 @@ export const workflowRouter: any = router({
     }),
 
   // Reject a workflow request
-  rejectRequest: protectedPermissionProcedure(["APPROVE_WORKFLOW_REQUEST" as any])
+  rejectRequest: protectedPermissionProcedure([
+    "APPROVE_WORKFLOW_REQUEST" as any,
+  ])
     .input(
       z.object({
         requestId: z.string(),
@@ -327,4 +365,4 @@ export const workflowRouter: any = router({
 
       return { success: true };
     }),
-}); 
+});
