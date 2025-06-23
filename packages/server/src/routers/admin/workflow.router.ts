@@ -1,6 +1,12 @@
 import { z } from "zod";
 import { RequestStatus, WorkflowRole } from "@prisma/client";
 import { TRPCError } from "@trpc/server";
+import {
+  formFieldSchema,
+  validateFormFields,
+  FORM_FIELD_TYPES,
+  CONDITION_TYPES,
+} from "../../common/form-field-validation";
 import { db } from "../../common/prisma";
 import { protectedPermissionProcedure, router } from "../../trpc/trpc";
 
@@ -10,6 +16,7 @@ type TemplateWithUsers = {
   name: string;
   description: string | null;
   steps: any;
+  formFields: any;
   isActive: boolean;
   archivedAt: Date | null;
   archiveReason: string | null;
@@ -73,9 +80,56 @@ const createTemplateSchema = z.object({
       label: z.string(),
     })
   ),
+  formFields: z.array(formFieldSchema).optional().default([]),
 });
 
+export type CreateTemplateInput = z.infer<typeof createTemplateSchema>;
+
+// Re-export types from common module for convenience
+export type {
+  FormField,
+  FormFieldType,
+  ValidationRules,
+  FieldOption,
+} from "../../common/form-field-validation";
+
 export const adminWorkflowRouter = router({
+  // Validate form fields
+  validateFormFields: protectedPermissionProcedure([
+    "MANAGE_WORKFLOW_TEMPLATES" as any,
+  ])
+    .input(
+      z.object({
+        formFields: z.array(formFieldSchema),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const validation = validateFormFields(input.formFields);
+
+      if (!validation.isValid) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "Form field validation failed",
+          cause: validation.errors,
+        });
+      }
+
+      return {
+        success: true,
+        message: "Form fields are valid",
+      };
+    }),
+
+  // Get form field types and their requirements
+  getFormFieldTypes: protectedPermissionProcedure([
+    "MANAGE_WORKFLOW_TEMPLATES" as any,
+  ]).query(async () => {
+    return {
+      types: FORM_FIELD_TYPES,
+      conditionTypes: CONDITION_TYPES,
+    };
+  }),
+
   // Get active workflow templates only
   getTemplates: protectedPermissionProcedure([
     "MANAGE_WORKFLOW_TEMPLATES" as any,
@@ -158,11 +212,23 @@ export const adminWorkflowRouter = router({
     .mutation(async ({ input, ctx }): Promise<TemplateWithUsers> => {
       const userId = ctx.user.id;
 
+      // Validate form fields
+      if (input.formFields && input.formFields.length > 0) {
+        const validation = validateFormFields(input.formFields);
+        if (!validation.isValid) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Form field validation failed: ${validation.errors.join(", ")}`,
+          });
+        }
+      }
+
       return await (db.workflowTemplate.create as any)({
         data: {
           name: input.name,
           description: input.description,
           steps: JSON.stringify(input.steps),
+          formFields: JSON.stringify(input.formFields),
           isActive: true,
           createdById: userId,
         },
@@ -203,12 +269,24 @@ export const adminWorkflowRouter = router({
         });
       }
 
+      // Validate form fields
+      if (input.data.formFields && input.data.formFields.length > 0) {
+        const validation = validateFormFields(input.data.formFields);
+        if (!validation.isValid) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Form field validation failed: ${validation.errors.join(", ")}`,
+          });
+        }
+      }
+
       return await (db.workflowTemplate.update as any)({
         where: { id: input.id },
         data: {
           name: input.data.name,
           description: input.data.description,
           steps: JSON.stringify(input.data.steps),
+          formFields: JSON.stringify(input.data.formFields),
           updatedById: userId,
         },
         include: {

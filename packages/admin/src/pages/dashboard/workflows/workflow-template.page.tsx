@@ -15,12 +15,19 @@ import {
   Loader,
   Center,
   Modal,
+  Grid,
+  Box,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { User, Edit, Save, X, Plus, Archive, RotateCcw } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 import { trpc } from "../../../common/trpc";
 import Container from "../../../components/Container";
+import {
+  FormBuilder,
+  FormField,
+  FormFieldType,
+} from "../../../components/Forms";
 import PageTitle from "../../../components/PageTitle";
 import { ROUTES } from "../../../router/routes";
 
@@ -78,6 +85,7 @@ export default function WorkflowTemplatePage() {
   const [editSteps, setEditSteps] = useState<WorkflowStep[]>([
     { role: "INITIATOR_SUPERVISOR", type: "approval", label: "" },
   ]);
+  const [editFormFields, setEditFormFields] = useState<FormField[]>([]);
 
   const {
     data: template,
@@ -160,6 +168,15 @@ export default function WorkflowTemplatePage() {
           { role: "INITIATOR_SUPERVISOR", type: "approval", label: "" },
         ]);
       }
+
+      try {
+        const parsedFormFields = template.formFields
+          ? JSON.parse(template.formFields)
+          : [];
+        setEditFormFields(parsedFormFields);
+      } catch (error) {
+        setEditFormFields([]);
+      }
     }
   }, [template, isEditMode]);
 
@@ -203,6 +220,7 @@ export default function WorkflowTemplatePage() {
         name: editName,
         description: editDescription,
         steps: editSteps,
+        formFields: editFormFields,
       },
     });
   };
@@ -451,6 +469,99 @@ export default function WorkflowTemplatePage() {
                   Add Step
                 </Button>
               </Stack>
+            )}
+          </div>
+
+          <Divider />
+
+          {/* Form Fields Section */}
+          <div>
+            <Text fw={500} mb="sm">
+              Form Fields
+            </Text>
+            {!isEditMode ? (
+              <>
+                {(() => {
+                  try {
+                    const formFields: FormField[] = template.formFields
+                      ? JSON.parse(template.formFields)
+                      : [];
+
+                    if (formFields.length === 0) {
+                      return (
+                        <Text size="sm" c="dimmed">
+                          No form fields configured for this template.
+                        </Text>
+                      );
+                    }
+
+                    return (
+                      <Stack gap="md">
+                        {formFields.map((field) => (
+                          <Paper key={field.id} p="md" withBorder>
+                            <Group justify="space-between">
+                              <Box>
+                                <Group gap="xs">
+                                  <Text fw={500}>{field.label}</Text>
+                                  <Badge size="sm" variant="outline">
+                                    {field.type}
+                                  </Badge>
+                                  {field.validation?.required && (
+                                    <Badge size="sm" color="red">
+                                      Required
+                                    </Badge>
+                                  )}
+                                </Group>
+                                <Text size="sm" c="dimmed">
+                                  Field name: {field.name}
+                                </Text>
+                                {field.description && (
+                                  <Text size="sm" c="dimmed" mt="xs">
+                                    {field.description}
+                                  </Text>
+                                )}
+                                {field.placeholder && (
+                                  <Text size="sm" c="dimmed">
+                                    Placeholder: {field.placeholder}
+                                  </Text>
+                                )}
+                                {field.options && field.options.length > 0 && (
+                                  <Box mt="xs">
+                                    <Text size="xs" c="dimmed" mb="xs">
+                                      Options:
+                                    </Text>
+                                    <Group gap="xs">
+                                      {field.options.map((option, idx) => (
+                                        <Badge
+                                          key={idx}
+                                          size="xs"
+                                          variant="outline"
+                                          color={
+                                            option.disabled ? "gray" : "blue"
+                                          }
+                                        >
+                                          {option.label}
+                                        </Badge>
+                                      ))}
+                                    </Group>
+                                  </Box>
+                                )}
+                              </Box>
+                            </Group>
+                          </Paper>
+                        ))}
+                      </Stack>
+                    );
+                  } catch (error) {
+                    return <Text c="red">Error parsing form fields</Text>;
+                  }
+                })()}
+              </>
+            ) : (
+              <FormBuilder
+                formFields={editFormFields}
+                onFormFieldsChange={setEditFormFields}
+              />
             )}
           </div>
 
