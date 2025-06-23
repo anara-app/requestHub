@@ -1,3 +1,4 @@
+import { useLingui } from "@lingui/react/macro";
 import { Container, Card, Text, Button, Group } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { trpc } from "../../../common/trpc";
@@ -7,6 +8,7 @@ import PageTitle from "../../../components/PageTitle";
 import { ROUTES } from "../../../router/routes";
 
 export default function RaiseRequestPage() {
+  const { t } = useLingui();
   const navigate = useNavigate();
 
   const { data: templates, isLoading } =
@@ -23,10 +25,10 @@ export default function RaiseRequestPage() {
   if (!templates?.length) {
     return (
       <Container size="xl" my="lg">
-        <PageTitle>Raise Request</PageTitle>
+        <PageTitle>{t`Raise Request`}</PageTitle>
         <EmptyPlaceholder
-          title="No workflow templates available"
-          subtitle="No workflow templates have been created yet. Contact your administrator."
+          title={t`No workflow templates available`}
+          subtitle={t`No workflow templates have been created yet. Contact your administrator.`}
         />
       </Container>
     );
@@ -34,11 +36,10 @@ export default function RaiseRequestPage() {
 
   return (
     <Container size="xl" my="lg">
-      <PageTitle>Raise Request</PageTitle>
+      <PageTitle>{t`Raise Request`}</PageTitle>
 
       <Text size="sm" c="dimmed" mb="xl">
-        Select a workflow template to start a new request. Each request will
-        follow the approval process defined in the template.
+        {t`Select a workflow template to start a new request. Each request will follow the approval process defined in the template.`}
       </Text>
 
       <div
@@ -59,12 +60,12 @@ export default function RaiseRequestPage() {
             <Group justify="space-between" mb="xs">
               <Text fw={500}>{template.name}</Text>
               <Text size="xs" c="dimmed">
-                {template.steps?.length || 0} steps
+                {JSON.parse(template.steps)?.length || 0} {t`steps`}
               </Text>
             </Group>
 
             <Text size="sm" c="dimmed" mb="md" style={{ minHeight: "40px" }}>
-              {template.description || "No description available"}
+              {template.description || t`No description available`}
             </Text>
 
             <Button
@@ -72,7 +73,7 @@ export default function RaiseRequestPage() {
               fullWidth
               onClick={() => handleTemplateSelect(template)}
             >
-              Start Request
+              {t`Start Request`}
             </Button>
           </Card>
         ))}

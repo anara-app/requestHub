@@ -1,4 +1,5 @@
 import React from "react";
+import { useLingui } from "@lingui/react/macro";
 import {
   TextInput,
   Textarea,
@@ -36,6 +37,7 @@ export const DynamicFormRenderer: React.FC<DynamicFormRendererProps> = ({
   form,
   disabled = false,
 }) => {
+  const { t } = useLingui();
   const [uploadingFiles, setUploadingFiles] = React.useState<Set<string>>(
     new Set()
   );
@@ -64,16 +66,16 @@ export const DynamicFormRenderer: React.FC<DynamicFormRendererProps> = ({
       form.setFieldValue(`formData.${fieldName}`, result);
 
       notifications.show({
-        title: "Success",
-        message: `File "${file.name}" uploaded successfully`,
+        title: t`Success`,
+        message: t`File "${file.name}" uploaded successfully`,
         color: "green",
       });
     } catch (error) {
       console.error("File upload error:", error);
       notifications.show({
-        title: "Upload Error",
+        title: t`Upload Error`,
         message:
-          error instanceof Error ? error.message : "Failed to upload file",
+          error instanceof Error ? error.message : t`Failed to upload file`,
         color: "red",
       });
 
@@ -238,8 +240,8 @@ export const DynamicFormRenderer: React.FC<DynamicFormRendererProps> = ({
               <FileInput
                 placeholder={
                   fileData
-                    ? "Change file..."
-                    : field.placeholder || "Select file..."
+                    ? t`Change file...`
+                    : field.placeholder || t`Select file...`
                 }
                 multiple={field.multiple}
                 accept={field.accept}
@@ -261,7 +263,7 @@ export const DynamicFormRenderer: React.FC<DynamicFormRendererProps> = ({
                 <Alert color="blue">
                   <Group gap="xs">
                     <Loader size="xs" />
-                    <Text size="sm">Uploading file...</Text>
+                    <Text size="sm">{t`Uploading file...`}</Text>
                   </Group>
                 </Alert>
               )}
@@ -269,7 +271,7 @@ export const DynamicFormRenderer: React.FC<DynamicFormRendererProps> = ({
               {fileData && !isUploading && (
                 <Alert color="green">
                   <Group justify="space-between">
-                    <Text size="sm">✓ File uploaded successfully</Text>
+                    <Text size="sm">{t`✓ File uploaded successfully`}</Text>
                     <Button
                       size="xs"
                       variant="subtle"
@@ -279,7 +281,7 @@ export const DynamicFormRenderer: React.FC<DynamicFormRendererProps> = ({
                       }
                       disabled={disabled}
                     >
-                      Remove
+                      {t`Remove`}
                     </Button>
                   </Group>
                   <Stack gap="xs" mt="sm">

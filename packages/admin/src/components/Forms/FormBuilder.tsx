@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useLingui } from "@lingui/react/macro";
 import {
   Button,
   TextInput,
@@ -13,7 +14,6 @@ import {
   NumberInput,
   Badge,
   Box,
-  Divider,
   Checkbox,
   Grid,
   Modal,
@@ -93,6 +93,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
   formFields,
   onFormFieldsChange,
 }) => {
+  const { t } = useLingui();
   const [editingField, setEditingField] = useState<FormField | null>(null);
   const [modalOpened, setModalOpened] = useState(false);
 
@@ -126,8 +127,8 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
 
     if (!editingField.label.trim() || !editingField.name.trim()) {
       notifications.show({
-        title: "Error",
-        message: "Field label and name are required",
+        title: t`Error`,
+        message: t`Field label and name are required`,
         color: "red",
       });
       return;
@@ -141,8 +142,8 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
 
     if (isDuplicateName) {
       notifications.show({
-        title: "Error",
-        message: "Field name must be unique",
+        title: t`Error`,
+        message: t`Field name must be unique`,
         color: "red",
       });
       return;
@@ -224,10 +225,9 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
 
   return (
     <Box>
-      <Text fw={500}>Custom Form Fields</Text>
+      <Text fw={500}>{t`Custom Form Fields`}</Text>
       <Text size="sm" c="dimmed" mb="md">
-        Create custom form fields that users will fill when creating requests
-        with this template
+        {t`Create custom form fields that users will fill when creating requests with this template`}
       </Text>
 
       {formFields.length > 0 ? (
@@ -237,19 +237,19 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
               <Group justify="space-between">
                 <Box>
                   <Group gap="xs">
-                    <Text fw={500}>{field.label || "Untitled Field"}</Text>
+                    <Text fw={500}>{field.label || t`Untitled Field`}</Text>
                     <Badge size="sm" variant="outline">
                       {fieldTypes?.types.find((t) => t.value === field.type)
                         ?.label || field.type}
                     </Badge>
                     {field.validation?.required && (
                       <Badge size="sm" color="red">
-                        Required
+                        {t`Required`}
                       </Badge>
                     )}
                   </Group>
                   <Text size="sm" c="dimmed">
-                    Field name: {field.name || "Not set"}
+                    {t`Field name`}: {field.name || t`Not set`}
                   </Text>
                   {field.description && (
                     <Text size="sm" c="dimmed" mt="xs">
@@ -279,7 +279,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
       ) : (
         <Box py="xl" style={{ textAlign: "center" }}>
           <Text c="dimmed" mb="md">
-            No form fields added yet. Add your first field to get started.
+            {t`No form fields added yet. Add your first field to get started.`}
           </Text>
         </Box>
       )}
@@ -289,7 +289,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
         onClick={addFormField}
         leftSection={<Plus size={16} />}
       >
-        Add Form Field
+        {t`Add Form Field`}
       </Button>
 
       {/* Form Field Editor Modal */}
@@ -298,8 +298,8 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
         onClose={cancelEditField}
         title={
           editingField
-            ? `${formFields.some((f) => f.id === editingField.id) ? "Edit" : "Add"} Form Field`
-            : "Form Field"
+            ? `${formFields.some((f) => f.id === editingField.id) ? t`Edit` : t`Add`} ${t`Form Field`}`
+            : t`Form Field`
         }
         size="lg"
         centered
@@ -309,8 +309,8 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
             <Grid>
               <Grid.Col span={6}>
                 <TextInput
-                  label="Field Label"
-                  placeholder="Enter field label"
+                  label={t`Field Label`}
+                  placeholder={t`Enter field label`}
                   value={editingField.label}
                   onChange={(e) =>
                     setEditingField({ ...editingField, label: e.target.value })
@@ -320,8 +320,8 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
               </Grid.Col>
               <Grid.Col span={6}>
                 <TextInput
-                  label="Field Name"
-                  placeholder="Enter field name (no spaces)"
+                  label={t`Field Name`}
+                  placeholder={t`Enter field name (no spaces)`}
                   value={editingField.name}
                   onChange={(e) =>
                     setEditingField({
@@ -334,7 +334,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
               </Grid.Col>
               <Grid.Col span={6}>
                 <Select
-                  label="Field Type"
+                  label={t`Field Type`}
                   data={
                     fieldTypes?.types.map((type) => ({
                       value: type.value,
@@ -354,7 +354,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
               </Grid.Col>
               <Grid.Col span={6}>
                 <NumberInput
-                  label="Column Width (1-12)"
+                  label={t`Column Width (1-12)`}
                   min={1}
                   max={12}
                   value={editingField.columns}
@@ -368,8 +368,8 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
               </Grid.Col>
               <Grid.Col span={12}>
                 <TextInput
-                  label="Placeholder"
-                  placeholder="Enter placeholder text"
+                  label={t`Placeholder`}
+                  placeholder={t`Enter placeholder text`}
                   value={editingField.placeholder || ""}
                   onChange={(e) =>
                     setEditingField({
@@ -381,8 +381,8 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
               </Grid.Col>
               <Grid.Col span={12}>
                 <Textarea
-                  label="Description"
-                  placeholder="Enter field description"
+                  label={t`Description`}
+                  placeholder={t`Enter field description`}
                   value={editingField.description || ""}
                   onChange={(e) =>
                     setEditingField({
@@ -396,11 +396,11 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
               {/* Validation Settings */}
               <Grid.Col span={12}>
                 <Text fw={500} mt="md" mb="md">
-                  Validation Rules
+                  {t`Validation Rules`}
                 </Text>
                 <Group gap="lg">
                   <Checkbox
-                    label="Required"
+                    label={t`Required`}
                     checked={editingField.validation?.required || false}
                     onChange={(e) =>
                       setEditingField({
@@ -414,7 +414,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
                   />
                   {editingField.type === "textarea" && (
                     <NumberInput
-                      label="Rows"
+                      label={t`Rows`}
                       min={1}
                       max={10}
                       value={editingField.rows || 3}
@@ -435,7 +435,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
                 <>
                   <Grid.Col span={6}>
                     <NumberInput
-                      label="Min Length"
+                      label={t`Min Length`}
                       min={0}
                       value={editingField.validation?.minLength || ""}
                       onChange={(value) =>
@@ -452,7 +452,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
                   </Grid.Col>
                   <Grid.Col span={6}>
                     <NumberInput
-                      label="Max Length"
+                      label={t`Max Length`}
                       min={0}
                       value={editingField.validation?.maxLength || ""}
                       onChange={(value) =>
@@ -474,7 +474,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
                 <>
                   <Grid.Col span={6}>
                     <NumberInput
-                      label="Min Value"
+                      label={t`Min Value`}
                       value={editingField.validation?.min || ""}
                       onChange={(value) =>
                         setEditingField({
@@ -489,7 +489,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
                   </Grid.Col>
                   <Grid.Col span={6}>
                     <NumberInput
-                      label="Max Value"
+                      label={t`Max Value`}
                       value={editingField.validation?.max || ""}
                       onChange={(value) =>
                         setEditingField({
@@ -509,7 +509,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
                 <>
                   <Grid.Col span={6}>
                     <Switch
-                      label="Allow Multiple Files"
+                      label={t`Allow Multiple Files`}
                       checked={editingField.multiple || false}
                       onChange={(e) =>
                         setEditingField({
@@ -521,8 +521,8 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
                   </Grid.Col>
                   <Grid.Col span={6}>
                     <TextInput
-                      label="Accepted File Types"
-                      placeholder="e.g., .pdf,.doc,.jpg"
+                      label={t`Accepted File Types`}
+                      placeholder={t`e.g., .pdf,.doc,.jpg`}
                       value={editingField.accept || ""}
                       onChange={(e) =>
                         setEditingField({
@@ -541,13 +541,13 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
               ) && (
                 <Grid.Col span={12}>
                   <Text fw={500} mt="md" mb="md">
-                    Options
+                    {t`Options`}
                   </Text>
                   {editingField.options?.map((option, index) => (
                     <Group key={index} align="end" mb="xs">
                       <TextInput
-                        label="Label"
-                        placeholder="Option label"
+                        label={t`Label`}
+                        placeholder={t`Option label`}
                         value={option.label}
                         onChange={(e) =>
                           updateFieldOption(index, "label", e.target.value)
@@ -555,8 +555,8 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
                         style={{ flex: 1 }}
                       />
                       <TextInput
-                        label="Value"
-                        placeholder="Option value"
+                        label={t`Value`}
+                        placeholder={t`Option value`}
                         value={option.value.toString()}
                         onChange={(e) =>
                           updateFieldOption(index, "value", e.target.value)
@@ -564,7 +564,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
                         style={{ flex: 1 }}
                       />
                       <Checkbox
-                        label="Disabled"
+                        label={t`Disabled`}
                         checked={option.disabled || false}
                         onChange={(e) =>
                           updateFieldOption(
@@ -589,7 +589,7 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
                     onClick={addFieldOption}
                     leftSection={<Plus size={16} />}
                   >
-                    Add Option
+                    {t`Add Option`}
                   </Button>
                 </Grid.Col>
               )}
@@ -597,13 +597,13 @@ export const FormBuilder: React.FC<FormBuilderProps> = ({
 
             <Group justify="flex-end" mt="xl">
               <Button variant="outline" onClick={cancelEditField}>
-                Cancel
+                {t`Cancel`}
               </Button>
               <Button onClick={saveFormField}>
                 {formFields.some((f) => f.id === editingField.id)
-                  ? "Update"
-                  : "Add"}{" "}
-                Field
+                  ? t`Update`
+                  : t`Add`}{" "}
+                {t`Field`}
               </Button>
             </Group>
           </>

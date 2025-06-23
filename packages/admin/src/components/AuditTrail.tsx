@@ -1,5 +1,14 @@
+import { useLingui } from "@lingui/react/macro";
 import { Paper, Text, Table, Group, Badge, Stack } from "@mantine/core";
-import { User, CheckCircle, XCircle, MessageCircle, Plus, ArrowRight, FileText } from "lucide-react";
+import {
+  User,
+  CheckCircle,
+  XCircle,
+  MessageCircle,
+  Plus,
+  ArrowRight,
+  FileText,
+} from "lucide-react";
 
 interface AuditTrailEntry {
   id: string;
@@ -23,6 +32,7 @@ interface AuditTrailProps {
 }
 
 export default function AuditTrail({ auditTrail, isLoading }: AuditTrailProps) {
+  const { t } = useLingui();
   const getActionIcon = (action: string) => {
     switch (action) {
       case "REQUEST_CREATED":
@@ -66,15 +76,15 @@ export default function AuditTrail({ auditTrail, isLoading }: AuditTrailProps) {
   const formatActionLabel = (action: string) => {
     return action
       .split("_")
-      .map(word => word.charAt(0) + word.slice(1).toLowerCase())
+      .map((word) => word.charAt(0) + word.slice(1).toLowerCase())
       .join(" ");
   };
 
   if (isLoading) {
     return (
       <Paper shadow="sm" p="lg" withBorder>
-        <Text size="lg" fw={500} mb="md">Audit Trail</Text>
-        <Text c="dimmed">Loading audit trail...</Text>
+        <Text size="lg" fw={500} mb="md">{t`Audit Trail`}</Text>
+        <Text c="dimmed">{t`Loading audit trail...`}</Text>
       </Paper>
     );
   }
@@ -82,9 +92,9 @@ export default function AuditTrail({ auditTrail, isLoading }: AuditTrailProps) {
   if (!auditTrail || auditTrail.length === 0) {
     return (
       <Paper shadow="sm" p="lg" withBorder>
-        <Text size="lg" fw={500} mb="md">Audit Trail</Text>
+        <Text size="lg" fw={500} mb="md">{t`Audit Trail`}</Text>
         <Text c="dimmed" ta="center" py="md">
-          No audit trail entries found
+          {t`No audit trail entries found`}
         </Text>
       </Paper>
     );
@@ -92,16 +102,16 @@ export default function AuditTrail({ auditTrail, isLoading }: AuditTrailProps) {
 
   return (
     <Paper shadow="sm" p="lg" withBorder>
-      <Text size="lg" fw={500} mb="md">Audit Trail</Text>
-      
+      <Text size="lg" fw={500} mb="md">{t`Audit Trail`}</Text>
+
       <Table striped highlightOnHover>
         <Table.Thead>
           <Table.Tr>
-            <Table.Th>Action</Table.Th>
-            <Table.Th>Description</Table.Th>
-            <Table.Th>User</Table.Th>
-            <Table.Th>Role</Table.Th>
-            <Table.Th>Date</Table.Th>
+            <Table.Th>{t`Action`}</Table.Th>
+            <Table.Th>{t`Description`}</Table.Th>
+            <Table.Th>{t`User`}</Table.Th>
+            <Table.Th>{t`Role`}</Table.Th>
+            <Table.Th>{t`Date`}</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>
@@ -110,9 +120,9 @@ export default function AuditTrail({ auditTrail, isLoading }: AuditTrailProps) {
               <Table.Td>
                 <Group gap="xs">
                   {getActionIcon(entry.action)}
-                  <Badge 
-                    color={getActionColor(entry.action)} 
-                    variant="light" 
+                  <Badge
+                    color={getActionColor(entry.action)}
+                    variant="light"
                     size="sm"
                   >
                     {formatActionLabel(entry.action)}
@@ -154,4 +164,4 @@ export default function AuditTrail({ auditTrail, isLoading }: AuditTrailProps) {
       </Table>
     </Paper>
   );
-} 
+}

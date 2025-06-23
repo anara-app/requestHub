@@ -33,18 +33,63 @@ msgstr ""
 msgid "{0}"
 msgstr "{0}"
 
+#. placeholder {0}: field.label
+#: src/pages/dashboard/workflows/new-request.page.tsx:108
+msgid "{0} is required"
+msgstr ""
+
+#. placeholder {0}: field.label
+#. placeholder {1}: field.validation.min
+#: src/pages/dashboard/workflows/new-request.page.tsx:136
+msgid "{0} must be at least {1}"
+msgstr ""
+
+#. placeholder {0}: field.label
+#. placeholder {1}: field.validation.minLength
+#: src/pages/dashboard/workflows/new-request.page.tsx:118
+msgid "{0} must be at least {1} characters"
+msgstr ""
+
+#. placeholder {0}: field.label
+#. placeholder {1}: field.validation.max
+#: src/pages/dashboard/workflows/new-request.page.tsx:143
+msgid "{0} must be no more than {1}"
+msgstr ""
+
+#. placeholder {0}: field.label
+#. placeholder {1}: field.validation.maxLength
+#: src/pages/dashboard/workflows/new-request.page.tsx:125
+msgid "{0} must be no more than {1} characters"
+msgstr ""
+
 #. placeholder {0}: request.currentStep + 1
 #. placeholder {1}: templateSteps.length
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:291
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:290
 msgid "{0} of {1}"
 msgstr ""
+
+#: src/pages/dashboard/workflows/new-request.page.tsx:203
+#~ msgid "{0} request."
+#~ msgstr ""
 
 #: src/pages/dashboard/analytics/analytics.page.tsx:245
 msgid "{status}"
 msgstr ""
 
+#: src/components/Forms/DynamicFormRenderer.tsx:274
+msgid "✓ File uploaded successfully"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:524
+msgid "Accepted File Types"
+msgstr ""
+
 #: src/components/ProtectedRoute.tsx:44
 msgid "Access Denied"
+msgstr ""
+
+#: src/components/AuditTrail.tsx:110
+msgid "Action"
 msgstr ""
 
 #: src/components/WorkflowStepEditor.tsx:127
@@ -65,17 +110,30 @@ msgstr ""
 msgid "Active Users"
 msgstr ""
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:406
-#~ msgid "Add a comment about your decision..."
-#~ msgstr ""
+#: src/components/Forms/FormBuilder.tsx:301
+#: src/components/Forms/FormBuilder.tsx:605
+msgid "Add"
+msgstr ""
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:436
-#~ msgid "Add a comment..."
-#~ msgstr ""
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:473
+msgid "Add a comment about your decision..."
+msgstr ""
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:446
-#~ msgid "Add Comment"
-#~ msgstr ""
+#: src/components/CommentsSection.tsx:86
+msgid "Add a comment..."
+msgstr ""
+
+#: src/components/CommentsSection.tsx:96
+msgid "Add Comment"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:292
+msgid "Add Form Field"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:592
+msgid "Add Option"
+msgstr ""
 
 #: src/components/WorkflowStepEditor.tsx:150
 msgid "Add Step"
@@ -94,6 +152,10 @@ msgstr ""
 msgid "All types"
 msgstr ""
 
+#: src/components/Forms/FormBuilder.tsx:512
+msgid "Allow Multiple Files"
+msgstr ""
+
 #: src/pages/dashboard/analytics/analytics.page.tsx:92
 #: src/pages/dashboard/analytics/analytics.page.tsx:107
 #: src/pages/dashboard/analytics/analytics.page.tsx:167
@@ -101,12 +163,12 @@ msgstr ""
 msgid "Analytics"
 msgstr ""
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:228
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:238
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:227
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:237
 msgid "Approval"
 msgstr ""
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:456
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:455
 msgid "Approve"
 msgstr ""
 
@@ -122,7 +184,7 @@ msgid "Approved Requests"
 msgstr ""
 
 #. placeholder {0}: approval.comment
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:414
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:413
 msgid "Approved: {0}"
 msgstr ""
 
@@ -175,6 +237,9 @@ msgid "Assignment: {0}"
 msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:532
+#: src/components/AuditTrail.tsx:86
+#: src/components/AuditTrail.tsx:95
+#: src/components/AuditTrail.tsx:105
 msgid "Audit Trail"
 msgstr ""
 
@@ -182,12 +247,13 @@ msgstr ""
 msgid "Avg. Processing Time"
 msgstr ""
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:249
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:248
 msgid "Back to Requests"
 msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:235
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:251
+#: src/pages/dashboard/workflows/new-request.page.tsx:286
 msgid "Back to Templates"
 msgstr ""
 
@@ -199,14 +265,16 @@ msgstr ""
 
 #. placeholder {0}: approval.approver.firstName
 #. placeholder {1}: approval.approver.lastName
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:430
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:429
 msgid "by {0} {1}"
 msgstr "by {0} {1}"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:283
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:638
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:677
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:488
 #: src/pages/dashboard/workflows/new-workflow-template.page.tsx:122
+#: src/components/Forms/FormBuilder.tsx:600
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -216,6 +284,10 @@ msgstr "Cancel"
 #: src/pages/dashboard/analytics/analytics.page.tsx:243
 msgid "Cancelled"
 msgstr "Cancelled"
+
+#: src/components/Forms/DynamicFormRenderer.tsx:243
+msgid "Change file..."
+msgstr ""
 
 #: src/components/LanguageSwitcher.tsx:21
 #~ msgid "Change Language"
@@ -229,23 +301,27 @@ msgstr "Change theme"
 #~ msgid "Chart visualization will be implemented here"
 #~ msgstr ""
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:405
-#~ msgid "Comment (Optional)"
-#~ msgstr "Comment (Optional)"
+#: src/components/Forms/FormBuilder.tsx:357
+msgid "Column Width (1-12)"
+msgstr ""
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:80
-#~ msgid "Comment added successfully"
-#~ msgstr "Comment added successfully"
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:472
+msgid "Comment (Optional)"
+msgstr "Comment (Optional)"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:100
-#~ msgid "Comment is required"
-#~ msgstr "Comment is required"
+#: src/components/CommentsSection.tsx:54
+msgid "Comment added successfully"
+msgstr "Comment added successfully"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:430
-#~ msgid "Comments"
-#~ msgstr "Comments"
+#: src/components/CommentsSection.tsx:46
+msgid "Comment is required"
+msgstr "Comment is required"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:417
+#: src/components/CommentsSection.tsx:79
+msgid "Comments"
+msgstr "Comments"
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:416
 msgid "Completed"
 msgstr "Completed"
 
@@ -257,8 +333,16 @@ msgstr "Completed"
 #~ msgid "Confirm Rejection"
 #~ msgstr "Confirm Rejection"
 
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:485
+msgid "Confirm status update"
+msgstr ""
+
 #: src/pages/dashboard/analytics/analytics.page.tsx:79
 msgid "Create a new workflow request"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:230
+msgid "Create custom form fields that users will fill when creating requests with this template"
 msgstr ""
 
 #: src/pages/dashboard/workflows/new-workflow-template.page.tsx:88
@@ -292,7 +376,7 @@ msgstr "Created"
 msgid "Created By"
 msgstr "Created By"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:310
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:309
 msgid "Created:"
 msgstr "Created:"
 
@@ -301,9 +385,13 @@ msgstr "Created:"
 msgid "Current Step"
 msgstr "Current Step"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:288
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:287
 msgid "Current Step:"
 msgstr "Current Step:"
+
+#: src/components/Forms/FormBuilder.tsx:228
+msgid "Custom Form Fields"
+msgstr ""
 
 #: src/components/Analytics/RequestTrendsChart.tsx:47
 msgid "Daily"
@@ -311,6 +399,10 @@ msgstr ""
 
 #: src/components/Analytics/RequestTrendsChart.tsx:211
 msgid "Data Points:"
+msgstr ""
+
+#: src/components/AuditTrail.tsx:114
+msgid "Date"
 msgstr ""
 
 #: src/components/Analytics/RequestTrendsChart.tsx:149
@@ -329,12 +421,23 @@ msgstr ""
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:311
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:349
 #: src/pages/dashboard/workflows/new-workflow-template.page.tsx:100
+#: src/pages/dashboard/workflows/new-request.page.tsx:244
+#: src/components/AuditTrail.tsx:111
+#: src/components/Forms/FormBuilder.tsx:384
 msgid "Description"
 msgstr "Description"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:320
+#: src/pages/dashboard/workflows/new-request.page.tsx:48
+msgid "Description must be at least 10 characters"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:319
 msgid "Description:"
 msgstr "Description:"
+
+#: src/components/Forms/FormBuilder.tsx:567
+msgid "Disabled"
+msgstr ""
 
 #: src/pages/dashboard/workflows/my-requests.page.tsx:67
 #: src/pages/dashboard/workflows/all-requests.page.tsx:50
@@ -359,6 +462,14 @@ msgstr ""
 msgid "Dynamic Assignment: {dynamicLabel}"
 msgstr ""
 
+#: src/components/Forms/FormBuilder.tsx:525
+msgid "e.g., .pdf,.doc,.jpg"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:301
+msgid "Edit"
+msgstr ""
+
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:247
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:258
 msgid "Edit Template"
@@ -368,6 +479,10 @@ msgstr "Edit Template"
 msgid "Edit User"
 msgstr ""
 
+#: src/pages/dashboard/workflows/new-request.page.tsx:225
+msgid "Enter a descriptive title for your request"
+msgstr ""
+
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:627
 msgid "Enter a reason for archiving this template..."
 msgstr ""
@@ -375,6 +490,22 @@ msgstr ""
 #: src/components/WorkflowStepEditor.tsx:128
 msgid "Enter action label (e.g., 'Review and Approve')"
 msgstr "Enter action label (e.g., 'Review and Approve')"
+
+#: src/components/Forms/FormBuilder.tsx:385
+msgid "Enter field description"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:313
+msgid "Enter field label"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:324
+msgid "Enter field name (no spaces)"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:372
+msgid "Enter placeholder text"
+msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:350
 #: src/pages/dashboard/workflows/new-workflow-template.page.tsx:101
@@ -386,12 +517,16 @@ msgstr "Enter template description"
 msgid "Enter template name"
 msgstr "Enter template name"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:74
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:93
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:73
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:92
 #: src/pages/dashboard/workflows/new-workflow-template.page.tsx:53
 #: src/pages/dashboard/workflows/new-workflow-template.page.tsx:63
+#: src/pages/dashboard/workflows/new-request.page.tsx:79
 #: src/pages/dashboard/users/user.page.tsx:66
 #: src/pages/auth/auth.page.tsx:66
+#: src/components/CommentsSection.tsx:62
+#: src/components/Forms/FormBuilder.tsx:130
+#: src/components/Forms/FormBuilder.tsx:145
 msgid "Error"
 msgstr "Error"
 
@@ -411,11 +546,11 @@ msgstr ""
 msgid "Error parsing workflow steps"
 msgstr ""
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:89
-#~ msgid "Failed to add comment"
-#~ msgstr "Failed to add comment"
+#: src/components/CommentsSection.tsx:63
+msgid "Failed to add comment"
+msgstr "Failed to add comment"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:75
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:74
 msgid "Failed to approve request"
 msgstr "Failed to approve request"
 
@@ -435,13 +570,55 @@ msgstr ""
 msgid "Failed to load the organization hierarchy. Please try again later."
 msgstr ""
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:94
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:93
 msgid "Failed to reject request"
 msgstr "Failed to reject request"
 
+#: src/pages/dashboard/workflows/new-request.page.tsx:80
+msgid "Failed to submit request"
+msgstr ""
+
+#: src/components/Forms/DynamicFormRenderer.tsx:78
+msgid "Failed to upload file"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:606
+msgid "Field"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:312
+msgid "Field Label"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:131
+msgid "Field label and name are required"
+msgstr ""
+
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:473
+#: src/components/Forms/FormBuilder.tsx:252
 msgid "Field name"
 msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:323
+msgid "Field Name"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:146
+msgid "Field name must be unique"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:337
+msgid "Field Type"
+msgstr ""
+
+#. placeholder {0}: file.name
+#: src/components/Forms/DynamicFormRenderer.tsx:70
+msgid "File \"{0}\" uploaded successfully"
+msgstr ""
+
+#: src/pages/dashboard/workflows/new-request.page.tsx:202
+#~ msgid "Fill out the form below to create a new {0} request."
+#~ msgstr ""
 
 #: src/pages/dashboard/workflows/all-requests.page.tsx:82
 msgid "Filter by status"
@@ -455,11 +632,16 @@ msgstr ""
 msgid "Fit View"
 msgstr ""
 
+#: src/components/Forms/FormBuilder.tsx:301
+#: src/components/Forms/FormBuilder.tsx:302
+msgid "Form Field"
+msgstr ""
+
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:437
 msgid "Form Fields"
 msgstr ""
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:114
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:113
 msgid "Go Back"
 msgstr ""
 
@@ -478,7 +660,7 @@ msgstr ""
 msgid "In Progress"
 msgstr "In Progress"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:280
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:279
 msgid "Initiated by:"
 msgstr "Initiated by:"
 
@@ -487,10 +669,14 @@ msgid "Initiator"
 msgstr "Initiator"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:385
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:217
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:223
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:216
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:222
 msgid "Initiator's Supervisor"
 msgstr "Initiator's Supervisor"
+
+#: src/components/Forms/FormBuilder.tsx:549
+msgid "Label"
+msgstr ""
 
 #: src/components/Analytics/RequestTrendsChart.tsx:42
 msgid "Last 30 days"
@@ -507,6 +693,10 @@ msgstr ""
 #. placeholder {0}: step.role
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:394
 msgid "Legacy Role: {0}"
+msgstr ""
+
+#: src/components/AuditTrail.tsx:87
+msgid "Loading audit trail..."
 msgstr ""
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:378
@@ -537,6 +727,26 @@ msgstr ""
 msgid "Managers"
 msgstr ""
 
+#: src/components/Forms/FormBuilder.tsx:455
+msgid "Max Length"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:492
+msgid "Max Value"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:438
+msgid "Min Length"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:477
+msgid "Min Value"
+msgstr ""
+
+#: src/pages/dashboard/workflows/new-request.page.tsx:171
+msgid "Missing Template"
+msgstr ""
+
 #: src/components/Analytics/RequestTrendsChart.tsx:49
 msgid "Monthly"
 msgstr ""
@@ -564,6 +774,12 @@ msgstr "Name"
 msgid "Navigate quickly to other sections of the dashboard"
 msgstr ""
 
+#: src/pages/dashboard/workflows/new-request.page.tsx:199
+#~ msgid "New {selectedTemplate.name} Request"
+#~ msgstr ""
+
+#: src/pages/dashboard/workflows/new-request.page.tsx:170
+#: src/pages/dashboard/workflows/new-request.page.tsx:185
 #: src/pages/dashboard/workflows/my-requests.page.tsx:99
 msgid "New Request"
 msgstr "New Request"
@@ -572,9 +788,13 @@ msgstr "New Request"
 msgid "No archived templates found"
 msgstr "No archived templates found"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:473
-#~ msgid "No comments yet"
-#~ msgstr "No comments yet"
+#: src/components/AuditTrail.tsx:97
+msgid "No audit trail entries found"
+msgstr ""
+
+#: src/components/CommentsSection.tsx:123
+msgid "No comments yet"
+msgstr "No comments yet"
 
 #: src/components/Analytics/RequestTrendsChart.tsx:319
 msgid "No data available for the selected period"
@@ -583,6 +803,14 @@ msgstr ""
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:124
 msgid "No description"
 msgstr "No description"
+
+#: src/pages/dashboard/workflows/raise-request.page.tsx:68
+msgid "No description available"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:282
+msgid "No form fields added yet. Add your first field to get started."
+msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:450
 msgid "No form fields configured for this template."
@@ -616,6 +844,10 @@ msgstr "No requests match your search"
 msgid "No Results Found"
 msgstr ""
 
+#: src/pages/dashboard/workflows/new-request.page.tsx:172
+msgid "No template ID provided. Please select a template from the raise request page."
+msgstr ""
+
 #: src/pages/dashboard/analytics/analytics.page.tsx:376
 msgid "No template usage data available yet"
 msgstr ""
@@ -632,15 +864,36 @@ msgstr ""
 msgid "No workflow requests have been submitted yet."
 msgstr "No workflow requests have been submitted yet."
 
+#: src/pages/dashboard/workflows/raise-request.page.tsx:30
+msgid "No workflow templates available"
+msgstr ""
+
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:87
 msgid "No workflow templates found. Create one to get started."
 msgstr ""
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:426
+#: src/pages/dashboard/workflows/raise-request.page.tsx:31
+msgid "No workflow templates have been created yet. Contact your administrator."
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:252
+msgid "Not set"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:425
 msgid "Not started"
 msgstr "Not started"
 
+#: src/components/Forms/FormBuilder.tsx:550
+msgid "Option label"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:559
+msgid "Option value"
+msgstr ""
+
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:488
+#: src/components/Forms/FormBuilder.tsx:544
 msgid "Options"
 msgstr ""
 
@@ -664,7 +917,7 @@ msgstr "Partner Neft"
 msgid "Pending"
 msgstr "Pending"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:425
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:424
 msgid "Pending approval"
 msgstr "Pending approval"
 
@@ -688,6 +941,7 @@ msgstr ""
 #~ msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:482
+#: src/components/Forms/FormBuilder.tsx:371
 msgid "Placeholder"
 msgstr ""
 
@@ -695,10 +949,16 @@ msgstr ""
 msgid "Progress"
 msgstr "Progress"
 
+#: src/pages/dashboard/workflows/new-request.page.tsx:247
+msgid "Provide details about your request"
+msgstr ""
+
 #: src/pages/dashboard/analytics/analytics.page.tsx:388
 msgid "Quick Access"
 msgstr ""
 
+#: src/pages/dashboard/workflows/raise-request.page.tsx:28
+#: src/pages/dashboard/workflows/raise-request.page.tsx:39
 #: src/pages/dashboard/analytics/analytics.page.tsx:78
 msgid "Raise Request"
 msgstr ""
@@ -711,11 +971,11 @@ msgstr ""
 #~ msgid "Refresh"
 #~ msgstr ""
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:463
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:462
 msgid "Reject"
 msgstr "Reject"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:423
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:422
 #: src/pages/dashboard/workflows/my-requests.page.tsx:75
 #: src/pages/dashboard/workflows/all-requests.page.tsx:54
 #: src/pages/dashboard/workflows/all-requests.page.tsx:91
@@ -728,33 +988,50 @@ msgid "Rejected Requests"
 msgstr ""
 
 #. placeholder {0}: approval.comment
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:420
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:419
 msgid "Rejected: {0}"
 msgstr "Rejected: {0}"
+
+#: src/components/Forms/DynamicFormRenderer.tsx:284
+msgid "Remove"
+msgstr ""
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:79
 msgid "request"
 msgstr "request"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:66
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:65
 msgid "Request approved successfully"
 msgstr "Request approved successfully"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:330
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:329
 msgid "Request Data:"
 msgstr "Request Data:"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:260
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:259
+#: src/pages/dashboard/workflows/new-request.page.tsx:270
 msgid "Request Details"
 msgstr "Request Details"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:108
+#: src/pages/dashboard/workflows/new-request.page.tsx:216
+msgid "Request Information"
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:107
 msgid "Request Not Found"
 msgstr "Request Not Found"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:85
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:84
 msgid "Request rejected successfully"
 msgstr "Request rejected successfully"
+
+#: src/pages/dashboard/workflows/new-request.page.tsx:71
+msgid "Request submitted successfully"
+msgstr ""
+
+#: src/pages/dashboard/workflows/new-request.page.tsx:221
+msgid "Request Title"
+msgstr ""
 
 #: src/components/Analytics/RequestTrendsChart.tsx:139
 msgid "Request Trends"
@@ -769,6 +1046,8 @@ msgid "requests"
 msgstr "requests"
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:468
+#: src/components/Forms/FormBuilder.tsx:247
+#: src/components/Forms/FormBuilder.tsx:403
 msgid "Required"
 msgstr ""
 
@@ -803,6 +1082,7 @@ msgid "Review Required"
 msgstr ""
 
 #: src/components/WorkflowStepEditor.tsx:104
+#: src/components/AuditTrail.tsx:113
 msgid "Role"
 msgstr "Role"
 
@@ -825,6 +1105,10 @@ msgstr ""
 #: src/components/DashboardLayout/DashboardLayout.tsx:162
 msgid "Roles"
 msgstr "Roles"
+
+#: src/components/Forms/FormBuilder.tsx:417
+msgid "Rows"
+msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:290
 msgid "Save Changes"
@@ -854,6 +1138,14 @@ msgstr "Search requests..."
 msgid "Select a role"
 msgstr "Select a role"
 
+#: src/pages/dashboard/workflows/raise-request.page.tsx:42
+msgid "Select a workflow template to start a new request. Each request will follow the approval process defined in the template."
+msgstr ""
+
+#: src/components/Forms/DynamicFormRenderer.tsx:244
+msgid "Select file..."
+msgstr ""
+
 #: src/components/Analytics/RequestTrendsChart.tsx:161
 msgid "Select grouping"
 msgstr ""
@@ -882,6 +1174,10 @@ msgstr ""
 msgid "Sign In"
 msgstr "Sign In"
 
+#: src/pages/dashboard/workflows/raise-request.page.tsx:76
+msgid "Start Request"
+msgstr ""
+
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:98
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:318
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:90
@@ -901,11 +1197,16 @@ msgid "Step"
 msgstr "Step"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:129
+#: src/pages/dashboard/workflows/raise-request.page.tsx:63
 msgid "steps"
 msgstr "steps"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:97
 msgid "Steps"
+msgstr ""
+
+#: src/pages/dashboard/workflows/new-request.page.tsx:289
+msgid "Submit Request"
 msgstr ""
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:91
@@ -920,13 +1221,16 @@ msgstr ""
 #~ msgid "subordinate{0}"
 #~ msgstr ""
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:65
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:84
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:64
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:83
 #: src/pages/dashboard/workflows/new-workflow-template.page.tsx:45
+#: src/pages/dashboard/workflows/new-request.page.tsx:70
+#: src/components/CommentsSection.tsx:53
+#: src/components/Forms/DynamicFormRenderer.tsx:69
 msgid "Success"
 msgstr "Success"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:446
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:445
 msgid "Take Action"
 msgstr "Take Action"
 
@@ -952,15 +1256,23 @@ msgstr ""
 msgid "Template not found"
 msgstr ""
 
+#: src/pages/dashboard/workflows/new-request.page.tsx:186
+msgid "Template Not Found"
+msgstr ""
+
 #: src/pages/dashboard/analytics/analytics.page.tsx:353
 msgid "Template Usage"
 msgstr ""
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:274
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:273
 msgid "Template:"
 msgstr "Template:"
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:111
+#: src/pages/dashboard/workflows/new-request.page.tsx:187
+msgid "The requested template could not be found or you don't have permission to access it."
+msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:110
 msgid "The requested workflow request could not be found."
 msgstr "The requested workflow request could not be found."
 
@@ -978,6 +1290,10 @@ msgstr ""
 #: src/pages/dashboard/workflows/all-requests.page.tsx:109
 msgid "Title"
 msgstr "Title"
+
+#: src/pages/dashboard/workflows/new-request.page.tsx:45
+msgid "Title must be at least 3 characters"
+msgstr ""
 
 #: src/pages/dashboard/analytics/analytics.page.tsx:303
 msgid "Top Approvers"
@@ -1033,14 +1349,14 @@ msgstr ""
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:547
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:568
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:589
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:238
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:237
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:99
 msgid "Unknown"
 msgstr ""
 
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:398
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:218
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:224
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:217
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:223
 msgid "Unknown assignment"
 msgstr ""
 
@@ -1052,8 +1368,28 @@ msgstr ""
 msgid "Unnamed User"
 msgstr ""
 
+#: src/components/Forms/FormBuilder.tsx:240
+msgid "Untitled Field"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:604
+msgid "Update"
+msgstr ""
+
 #: src/pages/dashboard/workflows/workflow-template.page.tsx:561
 msgid "Updated"
+msgstr ""
+
+#: src/components/Forms/DynamicFormRenderer.tsx:76
+msgid "Upload Error"
+msgstr ""
+
+#: src/components/Forms/DynamicFormRenderer.tsx:266
+msgid "Uploading file..."
+msgstr ""
+
+#: src/components/AuditTrail.tsx:112
+msgid "User"
 msgstr ""
 
 #: src/pages/dashboard/users/user.page.tsx:59
@@ -1067,6 +1403,14 @@ msgstr ""
 #: src/pages/dashboard/analytics/analytics.page.tsx:54
 #: src/components/DashboardLayout/DashboardLayout.tsx:148
 msgid "Users"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:399
+msgid "Validation Rules"
+msgstr ""
+
+#: src/components/Forms/FormBuilder.tsx:558
+msgid "Value"
 msgstr ""
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:448
@@ -1105,7 +1449,7 @@ msgstr ""
 msgid "Weekly"
 msgstr ""
 
-#: src/pages/dashboard/workflows/workflow-request.page.tsx:360
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:359
 msgid "Workflow Progress"
 msgstr ""
 
@@ -1131,6 +1475,10 @@ msgstr ""
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:401
 #~ msgid "You are about to {actionType} this request. Please provide a comment explaining your decision."
 #~ msgstr ""
+
+#: src/pages/dashboard/workflows/workflow-request.page.tsx:468
+msgid "You are about to update the status of this request. Please provide a comment explaining your decision."
+msgstr ""
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:55
 msgid "You don't have a role assigned. Please contact an administrator."

@@ -1,4 +1,5 @@
 import React from "react";
+import { useLingui } from "@lingui/react/macro";
 import {
   Paper,
   Text,
@@ -35,21 +36,22 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
   comments,
   onCommentAdded,
 }) => {
+  const { t } = useLingui();
   const commentForm = useForm({
     initialValues: {
       comment: "",
     },
     validate: {
       comment: (value: string) =>
-        value.length < 1 ? "Comment is required" : null,
+        value.length < 1 ? t`Comment is required` : null,
     },
   });
 
   const addCommentMutation = trpc.admin.workflows.addComment.useMutation({
     onSuccess: () => {
       notifications.show({
-        title: "Success",
-        message: "Comment added successfully",
+        title: t`Success`,
+        message: t`Comment added successfully`,
         color: "green",
       });
       commentForm.reset();
@@ -57,8 +59,8 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
     },
     onError: (error: any) => {
       notifications.show({
-        title: "Error",
-        message: error.message || "Failed to add comment",
+        title: t`Error`,
+        message: error.message || t`Failed to add comment`,
         color: "red",
       });
     },
@@ -74,14 +76,14 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
   return (
     <Paper shadow="sm" p="lg" withBorder>
       <Text size="lg" fw={500} mb="md">
-        Comments
+        {t`Comments`}
       </Text>
 
       {/* Add Comment Form */}
       <form onSubmit={commentForm.onSubmit(handleAddComment)}>
         <Stack gap="md">
           <Textarea
-            placeholder="Add a comment..."
+            placeholder={t`Add a comment...`}
             {...commentForm.getInputProps("comment")}
           />
           <Group justify="flex-end">
@@ -91,7 +93,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
               loading={addCommentMutation.isPending}
               disabled={!commentForm.values.comment.trim()}
             >
-              Add Comment
+              {t`Add Comment`}
             </Button>
           </Group>
         </Stack>
@@ -118,7 +120,7 @@ export const CommentsSection: React.FC<CommentsSectionProps> = ({
         </Stack>
       ) : (
         <Text c="dimmed" ta="center" py="md">
-          No comments yet
+          {t`No comments yet`}
         </Text>
       )}
     </Paper>

@@ -1,5 +1,5 @@
-import { spawn } from "child_process";
 import { PrismaClient } from "@prisma/client";
+import { spawn } from "child_process";
 import * as readline from "readline";
 
 const prisma = new PrismaClient();
@@ -21,7 +21,7 @@ function runScript(scriptName: string): Promise<void> {
   return new Promise((resolve, reject) => {
     console.log(`\n🚀 Running ${scriptName}...`);
     console.log("=".repeat(50));
-    
+
     const child = spawn("npx", ["tsx", `./scripts/${scriptName}`], {
       stdio: "inherit",
       shell: true,
@@ -52,7 +52,9 @@ async function checkDatabaseConnection() {
     await prisma.$disconnect();
   } catch (error) {
     console.error("❌ Database connection failed:", error);
-    throw new Error("Cannot connect to database. Please ensure your database is running and migrations are applied.");
+    throw new Error(
+      "Cannot connect to database. Please ensure your database is running and migrations are applied."
+    );
   }
 }
 
@@ -64,7 +66,7 @@ async function runAllCreateScripts() {
   console.log("3. assign-workflow-permissions.ts");
   console.log("4. create-sample-workflows.ts");
   console.log("5. create-sample-requests.ts");
-  
+
   const proceed = await askQuestion("\nDo you want to proceed? (y/N): ");
   if (proceed.toLowerCase() !== "y" && proceed.toLowerCase() !== "yes") {
     console.log("❌ Operation cancelled");
@@ -77,25 +79,26 @@ async function runAllCreateScripts() {
     await checkDatabaseConnection();
 
     // Run scripts in order
-    await runScript("create-admin-user.ts");
+    // await runScript("create-admin-user.ts");
     await runScript("create-sample-users.ts");
-    await runScript("assign-workflow-permissions.ts");
-    await runScript("create-sample-workflows.ts");
-    await runScript("create-sample-requests.ts");
+    // await runScript("assign-workflow-permissions.ts");
+    // await runScript("create-sample-workflows.ts");
+    // await runScript("create-sample-requests.ts");
 
     console.log("\n🎉 All create scripts completed successfully!");
     console.log("\n📋 Summary of what was created:");
     console.log("✅ Admin user and role");
-    console.log("✅ Sample users (manager, ceo, lawyer, finance, accountant, hr)");
+    console.log(
+      "✅ Sample users (manager, ceo, lawyer, finance, accountant, hr)"
+    );
     console.log("✅ Workflow permissions for all roles");
     console.log("✅ Sample workflow templates");
     console.log("✅ Sample workflow requests");
-    
+
     console.log("\n🔗 You can now:");
     console.log("  - Login to the admin panel");
     console.log("  - Test workflow functionality");
     console.log("  - Use sample data for development");
-
   } catch (error) {
     console.error("\n❌ Error running create scripts:", error);
     console.log("\n💡 Troubleshooting tips:");
@@ -121,4 +124,4 @@ process.on("SIGTERM", () => {
   process.exit(0);
 });
 
-runAllCreateScripts(); 
+runAllCreateScripts();

@@ -13,7 +13,6 @@ import {
   Divider,
   Alert,
 } from "@mantine/core";
-import { useForm } from "@mantine/form";
 import { notifications } from "@mantine/notifications";
 import { CheckCircle, XCircle, Clock, ArrowLeft, User } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -59,7 +58,7 @@ export default function WorkflowRequestPage() {
   };
 
   const approveRequestMutation =
-    trpc.admin.workflows.approveRequest.useMutation({
+    trpc.nextClient.workflows.approveRequest.useMutation({
       onSuccess: () => {
         notifications.show({
           title: t`Success`,
@@ -78,24 +77,25 @@ export default function WorkflowRequestPage() {
       },
     });
 
-  const rejectRequestMutation = trpc.admin.workflows.rejectRequest.useMutation({
-    onSuccess: () => {
-      notifications.show({
-        title: t`Success`,
-        message: t`Request rejected successfully`,
-        color: "green",
-      });
-      refetchAll();
-      setActionType(null);
-    },
-    onError: (error: any) => {
-      notifications.show({
-        title: t`Error`,
-        message: error.message || t`Failed to reject request`,
-        color: "red",
-      });
-    },
-  });
+  const rejectRequestMutation =
+    trpc.nextClient.workflows.rejectRequest.useMutation({
+      onSuccess: () => {
+        notifications.show({
+          title: t`Success`,
+          message: t`Request rejected successfully`,
+          color: "green",
+        });
+        refetchAll();
+        setActionType(null);
+      },
+      onError: (error: any) => {
+        notifications.show({
+          title: t`Error`,
+          message: error.message || t`Failed to reject request`,
+          color: "red",
+        });
+      },
+    });
 
   if (isLoading || !currentUser) {
     return <LoadingPlaceholder />;
@@ -466,13 +466,12 @@ export default function WorkflowRequestPage() {
             ) : (
               <Stack gap="md">
                 <Alert color={actionType === "approve" ? "green" : "red"}>
-                  You are about to {actionType} this request. Please provide a
-                  comment explaining your decision.
+                  {t`You are about to update the status of this request. Please provide a comment explaining your decision.`}
                 </Alert>
 
                 <Textarea
-                  label="Comment (Optional)"
-                  placeholder="Add a comment about your decision..."
+                  label={t`Comment (Optional)`}
+                  placeholder={t`Add a comment about your decision...`}
                 />
 
                 <Group>
@@ -484,11 +483,10 @@ export default function WorkflowRequestPage() {
                     }
                     onClick={() => handleApproval(actionType === "approve")}
                   >
-                    Confirm{" "}
-                    {actionType === "approve" ? "Approval" : "Rejection"}
+                    {t`Confirm status update`}
                   </Button>
                   <Button variant="subtle" onClick={() => setActionType(null)}>
-                    Cancel
+                    {t`Cancel`}
                   </Button>
                 </Group>
               </Stack>

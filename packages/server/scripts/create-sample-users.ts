@@ -10,48 +10,48 @@ const sampleUsers = [
   {
     role: "ceo",
     email: "ceo@g.com",
-    firstName: "John",
-    lastName: "Smith",
+    firstName: "Manas",
+    lastName: "Abdyraev",
     password: "password",
     managerRole: "ceo", // CEO manages themselves
   },
   {
     role: "operations_director",
     email: "operations@g.com",
-    firstName: "Sarah",
-    lastName: "Johnson",
+    firstName: "Cholpon",
+    lastName: "Isabekova",
     password: "password",
     managerRole: "ceo", // Reports to CEO
   },
   {
     role: "lawyer",
     email: "lawyer@g.com",
-    firstName: "Michael",
-    lastName: "Brown",
+    firstName: "Erkin",
+    lastName: "Toktosunov",
     password: "password",
     managerRole: "ceo", // Reports to CEO
   },
   {
     role: "finance_manager",
     email: "finance@g.com",
-    firstName: "Emily",
-    lastName: "Davis",
+    firstName: "Aigerim",
+    lastName: "Mamatova",
     password: "password",
     managerRole: "operations_director", // Reports to Operations Director
   },
   {
     role: "accountant",
     email: "accountant@g.com",
-    firstName: "David",
-    lastName: "Wilson",
+    firstName: "Bakyt",
+    lastName: "Kadyrbekov",
     password: "password",
     managerRole: "finance_manager", // Reports to Finance Manager
   },
   {
     role: "hr_specialist",
     email: "hr@g.com",
-    firstName: "Lisa",
-    lastName: "Garcia",
+    firstName: "Bermet",
+    lastName: "Usuballieva",
     password: "password",
     managerRole: "operations_director", // Reports to Operations Director
   },
@@ -86,7 +86,8 @@ async function createSampleUsers() {
         // Create the role if it doesn't exist
         role = await prisma.role.create({
           data: {
-            name: userData.role.charAt(0).toUpperCase() + userData.role.slice(1),
+            name:
+              userData.role.charAt(0).toUpperCase() + userData.role.slice(1),
           },
         });
         console.log(`✅ Created role: ${role.name}`);
@@ -119,7 +120,9 @@ async function createSampleUsers() {
 
       // Store the user ID by role for manager relationship setup
       userIdsByRole[userData.role] = user.id;
-      console.log(`✅ Created user: ${userData.email} (${role.name}) - ID: ${user.id}`);
+      console.log(
+        `✅ Created user: ${userData.email} (${role.name}) - ID: ${user.id}`
+      );
     }
 
     // Second pass: Establish manager relationships using user IDs (optimized!)
@@ -134,24 +137,34 @@ async function createSampleUsers() {
             where: { id: userId },
             data: { managerId } as any,
           });
-          console.log(`✅ Set ${userData.email} manager to ${userData.managerRole} (ID: ${managerId})`);
+          console.log(
+            `✅ Set ${userData.email} manager to ${userData.managerRole} (ID: ${managerId})`
+          );
         } else {
-          console.log(`⚠️  Could not establish manager relationship for ${userData.email}`);
+          console.log(
+            `⚠️  Could not establish manager relationship for ${userData.email}`
+          );
         }
       }
     }
 
-    console.log("✅ Sample users created successfully with optimized user ID relationships!");
+    console.log(
+      "✅ Sample users created successfully with optimized user ID relationships!"
+    );
     console.log("\n📋 Login credentials for testing:");
     console.log("Email: [role]@g.com | Password: password");
     console.log("Examples:");
-    sampleUsers.forEach(user => {
-      const managerInfo = user.managerRole ? ` (reports to ${user.managerRole})` : ' (no manager)';
+    sampleUsers.forEach((user) => {
+      const managerInfo = user.managerRole
+        ? ` (reports to ${user.managerRole})`
+        : " (no manager)";
       console.log(`  - ${user.email} | password${managerInfo}`);
     });
 
     // Display hierarchy with actual database relationships
-    console.log("\n🏢 Organization Hierarchy (using optimized DB relationships):");
+    console.log(
+      "\n🏢 Organization Hierarchy (using optimized DB relationships):"
+    );
     const usersWithManagers = await prisma.user.findMany({
       include: {
         role: true,
@@ -164,17 +177,18 @@ async function createSampleUsers() {
           },
         },
       } as any,
-      orderBy: { firstName: 'asc' },
+      orderBy: { firstName: "asc" },
     });
 
-    usersWithManagers.forEach(user => {
+    usersWithManagers.forEach((user) => {
       const manager = (user as any).manager;
-      const managerInfo = manager 
-        ? ` → Manager: ${manager.firstName} ${manager.lastName} (ID: ${manager.id})` 
-        : ' → No manager (Top level)';
-      console.log(`👤 ${user.firstName} ${user.lastName} (ID: ${user.id})${managerInfo}`);
-         });
-
+      const managerInfo = manager
+        ? ` → Manager: ${manager.firstName} ${manager.lastName} (ID: ${manager.id})`
+        : " → No manager (Top level)";
+      console.log(
+        `👤 ${user.firstName} ${user.lastName} (ID: ${user.id})${managerInfo}`
+      );
+    });
   } catch (error) {
     console.error("❌ Error creating sample users:", error);
   } finally {

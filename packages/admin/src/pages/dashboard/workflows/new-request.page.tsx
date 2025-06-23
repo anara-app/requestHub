@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useLingui } from "@lingui/react/macro";
 import {
   Container,
   Card,
@@ -27,6 +28,7 @@ interface RequestFormData {
 }
 
 export default function NewRequestPage() {
+  const { t } = useLingui();
   const navigate = useNavigate();
   const { templateId } = useParams<{ templateId: string }>();
   const utils = trpc.useUtils();
@@ -40,9 +42,11 @@ export default function NewRequestPage() {
     },
     validate: {
       title: (value: string) =>
-        value.length < 3 ? "Title must be at least 3 characters" : null,
+        value.length < 3 ? t`Title must be at least 3 characters` : null,
       description: (value: string) =>
-        value.length < 10 ? "Description must be at least 10 characters" : null,
+        value.length < 10
+          ? t`Description must be at least 10 characters`
+          : null,
     },
   });
 
@@ -55,14 +59,16 @@ export default function NewRequestPage() {
     enabled: !!templateId,
   });
 
-  const selectedTemplate = template?.find((t) => t.id === templateId);
+  const selectedTemplate = template?.find(
+    (template: any) => template.id === templateId
+  );
 
   const createRequestMutation =
     trpc.nextClient.workflows.createRequest.useMutation({
       onSuccess: () => {
         notifications.show({
-          title: "Success",
-          message: "Request submitted successfully",
+          title: t`Success`,
+          message: t`Request submitted successfully`,
           color: "green",
         });
         utils.nextClient.workflows.getMyRequests.invalidate();
@@ -70,8 +76,8 @@ export default function NewRequestPage() {
       },
       onError: (error: any) => {
         notifications.show({
-          title: "Error",
-          message: error.message || "Failed to submit request",
+          title: t`Error`,
+          message: error.message || t`Failed to submit request`,
           color: "red",
         });
       },
@@ -99,7 +105,7 @@ export default function NewRequestPage() {
 
       // Required field validation
       if (field.validation?.required && (!fieldValue || fieldValue === "")) {
-        errors[`formData.${field.name}`] = `${field.label} is required`;
+        errors[`formData.${field.name}`] = t`${field.label} is required`;
       }
 
       // String length validation
@@ -109,14 +115,14 @@ export default function NewRequestPage() {
           fieldValue.length < field.validation.minLength
         ) {
           errors[`formData.${field.name}`] =
-            `${field.label} must be at least ${field.validation.minLength} characters`;
+            t`${field.label} must be at least ${field.validation.minLength} characters`;
         }
         if (
           field.validation?.maxLength &&
           fieldValue.length > field.validation.maxLength
         ) {
           errors[`formData.${field.name}`] =
-            `${field.label} must be no more than ${field.validation.maxLength} characters`;
+            t`${field.label} must be no more than ${field.validation.maxLength} characters`;
         }
       }
 
@@ -127,14 +133,14 @@ export default function NewRequestPage() {
           fieldValue < field.validation.min
         ) {
           errors[`formData.${field.name}`] =
-            `${field.label} must be at least ${field.validation.min}`;
+            t`${field.label} must be at least ${field.validation.min}`;
         }
         if (
           field.validation?.max !== undefined &&
           fieldValue > field.validation.max
         ) {
           errors[`formData.${field.name}`] =
-            `${field.label} must be no more than ${field.validation.max}`;
+            t`${field.label} must be no more than ${field.validation.max}`;
         }
       }
     });
@@ -161,10 +167,9 @@ export default function NewRequestPage() {
   if (!templateId) {
     return (
       <Container size="xl" my="lg">
-        <PageTitle>New Request</PageTitle>
-        <Alert color="red" title="Missing Template">
-          No template ID provided. Please select a template from the raise
-          request page.
+        <PageTitle>{t`New Request`}</PageTitle>
+        <Alert color="red" title={t`Missing Template`}>
+          {t`No template ID provided. Please select a template from the raise request page.`}
         </Alert>
       </Container>
     );
@@ -177,10 +182,9 @@ export default function NewRequestPage() {
   if (templateError || !selectedTemplate) {
     return (
       <Container size="xl" my="lg">
-        <PageTitle>New Request</PageTitle>
-        <Alert color="red" title="Template Not Found">
-          The requested template could not be found or you don't have permission
-          to access it.
+        <PageTitle>{t`New Request`}</PageTitle>
+        <Alert color="red" title={t`Template Not Found`}>
+          {t`The requested template could not be found or you don't have permission to access it.`}
         </Alert>
       </Container>
     );
@@ -192,12 +196,14 @@ export default function NewRequestPage() {
 
   return (
     <Container size="xl" my="lg">
-      <PageTitle>New {selectedTemplate.name} Request</PageTitle>
+      <PageTitle>{selectedTemplate.name}</PageTitle>
 
-      <Text size="sm" c="dimmed" mb="xl">
-        Fill out the form below to create a new{" "}
-        {selectedTemplate.name.toLowerCase()} request.
-        {selectedTemplate.description && ` ${selectedTemplate.description}`}
+      <Text size="sm" c="dimmed" mb="md">
+        {selectedTemplate.description && (
+          <Text size="sm" c="dimmed">
+            {selectedTemplate.description}
+          </Text>
+        )}
       </Text>
 
       <Card shadow="sm" padding="lg" radius="md" withBorder>
@@ -207,16 +213,16 @@ export default function NewRequestPage() {
           <Stack gap="md">
             {/* Basic request information */}
             <Text fw={500} size="lg" mb="md">
-              Request Information
+              {t`Request Information`}
             </Text>
 
             <div>
               <Text size="sm" fw={500} mb="xs">
-                Request Title *
+                {t`Request Title`} *
               </Text>
               <input
                 type="text"
-                placeholder="Enter a descriptive title for your request"
+                placeholder={t`Enter a descriptive title for your request`}
                 style={{
                   width: "100%",
                   padding: "8px 12px",
@@ -235,10 +241,10 @@ export default function NewRequestPage() {
 
             <div>
               <Text size="sm" fw={500} mb="xs">
-                Description *
+                {t`Description`} *
               </Text>
               <textarea
-                placeholder="Provide details about your request"
+                placeholder={t`Provide details about your request`}
                 rows={3}
                 style={{
                   width: "100%",
@@ -261,7 +267,7 @@ export default function NewRequestPage() {
             {formFields.length > 0 && (
               <>
                 <Text fw={500} size="lg" mb="md" mt="xl">
-                  Request Details
+                  {t`Request Details`}
                 </Text>
                 <DynamicFormRenderer
                   formFields={formFields}
@@ -277,10 +283,10 @@ export default function NewRequestPage() {
                 onClick={() => navigate(ROUTES.DASHBOARD_RAISE_REQUEST)}
                 disabled={createRequestMutation.isPending}
               >
-                Back to Templates
+                {t`Back to Templates`}
               </Button>
               <Button type="submit" loading={createRequestMutation.isPending}>
-                Submit Request
+                {t`Submit Request`}
               </Button>
             </Group>
           </Stack>
