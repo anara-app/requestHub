@@ -247,7 +247,7 @@ msgstr "Описание"
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:285
 msgid "Description:"
-msgstr "Description:"
+msgstr "Описание:"
 
 #: src/pages/dashboard/workflows/my-requests.page.tsx:42
 #: src/pages/dashboard/workflows/all-requests.page.tsx:49
@@ -257,27 +257,27 @@ msgstr "Черновик"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:455
 msgid "Dynamic (assign based on relationships)"
-msgstr "Dynamic (assign based on relationships)"
+msgstr "Динамический (назначение на основе отношений)"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:474
 msgid "Dynamic Assignment"
-msgstr "Dynamic Assignment"
+msgstr "Динамическое назначение"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:394
 msgid "Edit Template"
-msgstr "Edit Template"
+msgstr "Редактировать шаблон"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:483
 msgid "Enter action label (e.g., 'Review and Approve')"
-msgstr "Enter action label (e.g., 'Review and Approve')"
+msgstr "Введите метку действия (например, 'Просмотр и Одобрение')"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:440
 msgid "Enter template description"
-msgstr "Enter template description"
+msgstr "Введите описание шаблона"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:433
 msgid "Enter template name"
-msgstr "Enter template name"
+msgstr "Введите название шаблона"
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:49
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:69
@@ -316,7 +316,7 @@ msgstr "Фильтр по статусу"
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:461
 msgid "Fit View"
-msgstr "По размеру"
+msgstr "Поместить в видимую область"
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:114
 msgid "Go Back"
@@ -324,7 +324,7 @@ msgstr "Назад"
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:454
 msgid "Horizontal Layout"
-msgstr "Горизонтальная раскладка"
+msgstr "Горизонтальное расположение"
 
 #: src/pages/dashboard/workflows/my-requests.page.tsx:44
 #: src/pages/dashboard/workflows/all-requests.page.tsx:51
@@ -334,7 +334,7 @@ msgstr "В процессе"
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:265
 msgid "Initiated by:"
-msgstr "Инициировано:"
+msgstr "Инициатор:"
 
 #: src/pages/dashboard/workflows/all-requests.page.tsx:109
 msgid "Initiator"
@@ -347,15 +347,15 @@ msgstr "Руководитель инициатора"
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:377
 msgid "Loading organization chart..."
-msgstr "Загрузка организационной диаграммы..."
+msgstr "Загрузка организационной схемы..."
 
 #: src/components/DashboardLayout/DashboardLayout.tsx:190
 msgid "Logout"
-msgstr "Выйти"
+msgstr "Выход"
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:549
 msgid "Managers"
-msgstr "Managers"
+msgstr "Менеджеры"
 
 #: src/pages/dashboard/workflows/my-requests.page.tsx:54
 #: src/components/DashboardLayout/DashboardLayout.tsx:74
@@ -377,11 +377,11 @@ msgstr "Новая заявка"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:307
 msgid "No archived templates found"
-msgstr "Архивированные шаблоны не найдены"
+msgstr "Архивные шаблоны не найдены"
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:473
 msgid "No comments yet"
-msgstr "Комментариев пока нет"
+msgstr "Комментарии пока отсутствуют"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:341
 msgid "No description"
@@ -389,11 +389,11 @@ msgstr "Без описания"
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:61
 msgid "No matching requests found"
-msgstr "Подходящие заявки не найдены"
+msgstr "Соответствующих заявок не найдено"
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:61
 msgid "No pending approvals"
-msgstr "Нет ожидающих одобрения"
+msgstr "Отсутствуют ожидающие одобрения"
 
 #: src/pages/dashboard/workflows/my-requests.page.tsx:81
 msgid "No requests found"
@@ -401,7 +401,7 @@ msgstr "Заявки не найдены"
 
 #: src/pages/dashboard/workflows/all-requests.page.tsx:99
 msgid "No requests match your search"
-msgstr "Заявки не найдены"
+msgstr "Заявки не соответствуют запросу"
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:479
 msgid "No Results Found"
@@ -409,19 +409,19 @@ msgstr "Результаты не найдены"
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:480
 msgid "No users match the current search criteria."
-msgstr "Пользователи не соответствуют текущим критериям поиска."
+msgstr "Ни один пользователь не соответствует текущим критериям поиска."
 
 #: src/pages/dashboard/workflows/all-requests.page.tsx:99
 msgid "No workflow requests found"
-msgstr "Заявки не найдены"
+msgstr "Заявки на процессы не найдены"
 
 #: src/pages/dashboard/workflows/all-requests.page.tsx:100
 msgid "No workflow requests have been submitted yet."
-msgstr "Заявки еще не были поданы."
+msgstr "Заявки на процессы еще не были поданы."
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:307
 msgid "No workflow templates found. Create one to get started."
-msgstr "Шаблоны процессов не найдены. Создайте первый шаблон для начала работы."
+msgstr "Шаблоны процессов не найдены. Создайте шаблон для начала."
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:362
 msgid "Not started"
@@ -434,13 +434,13 @@ msgstr "Организационная иерархия"
 
 #: src/components/DashboardLayout/DashboardLayout.tsx:154
 msgid "Partner Neft"
-msgstr "Partner Neft"
+msgstr "Партнер Нефт"
 
 #: src/pages/dashboard/workflows/my-requests.page.tsx:43
 #: src/pages/dashboard/workflows/all-requests.page.tsx:50
 #: src/pages/dashboard/workflows/all-requests.page.tsx:86
 msgid "Pending"
-msgstr "Ожидает"
+msgstr "В ожидании"
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:361
 msgid "Pending approval"
@@ -530,7 +530,7 @@ msgstr "Роль"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:454
 msgid "Role-based (assign to users with specific role)"
-msgstr "На основе роли (назначить пользователям с определенной ролью)"
+msgstr "На основе роли (назначение пользователям с определенной ролью)"
 
 #. placeholder {0}: approvalInfo.roleBasedAssignee
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:137
@@ -559,7 +559,7 @@ msgstr "Поиск заявок..."
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:511
 msgid "Search users..."
-msgstr "Search users..."
+msgstr "Поиск пользователей..."
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:464
 msgid "Select a role"
@@ -567,11 +567,11 @@ msgstr "Выберите роль"
 
 #: src/components/LanguageSwitcher.tsx:24
 msgid "Select Language"
-msgstr "Выберите язык"
+msgstr "Выбрать язык"
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:194
 msgid "Self-managed"
-msgstr "Самоуправляемый"
+msgstr "Самоуправляемые"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:294
 msgid "Show Active"
@@ -709,19 +709,19 @@ msgstr "Пользователи"
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:447
 msgid "Vertical Layout"
-msgstr "Вертикальная раскладка"
+msgstr "Вертикальное расположение"
 
 #: src/pages/dashboard/workflows/my-requests.page.tsx:146
 msgid "View"
-msgstr "Просмотреть"
+msgstr "Просмотр"
 
 #: src/pages/dashboard/workflows/all-requests.page.tsx:149
 msgid "View Details"
-msgstr "Подробнее"
+msgstr "Детали"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:385
 msgid "View Template"
-msgstr "Просмотреть шаблон"
+msgstr "Просмотр шаблона"
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:77
 msgid "waiting for your approval"
@@ -742,19 +742,19 @@ msgstr "Шаблоны процессов"
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:401
 msgid "You are about to {actionType} this request. Please provide a comment explaining your decision."
-msgstr "Вы собираетесь {actionType} эту заявку. Пожалуйста, предоставьте комментарий, объясняющий ваше решение."
+msgstr "Вы собираетесь выполнить {actionType} данную заявку. Пожалуйста, предоставьте комментарий с объяснением вашего решения."
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:53
 msgid "You don't have a role assigned. Please contact an administrator."
-msgstr "У вас не назначена роль. Обратитесь к администратору."
+msgstr "У вас нет назначенной роли. Обратитесь к администратору."
 
 #: src/pages/dashboard/workflows/my-requests.page.tsx:82
 msgid "You haven't submitted any workflow requests yet."
-msgstr "Вы еще не подавали заявок на процессы."
+msgstr "Вы еще не подали ни одной заявки на процессы."
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:68
 msgid "You need a role assigned to approve requests."
-msgstr "Для одобрения заявок вам необходимо назначить роль."
+msgstr "Для одобрения заявок вам нужно иметь назначенную роль."
 
 #: src/pages/dashboard/workflows/all-requests.page.tsx:68
 msgid "Все заявки"

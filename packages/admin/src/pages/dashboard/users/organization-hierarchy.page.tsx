@@ -505,25 +505,6 @@ export default function OrganizationHierarchyPage() {
     <Container size="xl">
       <PageTitle 
         title={t`Organization Hierarchy`}
-        right={
-          <Group>
-            <TextInput
-              placeholder={t`Search users...`}
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              leftSection={<Search size={16} />}
-              style={{ minWidth: 250 }}
-            />
-            <ActionIcon 
-              variant="light" 
-              onClick={() => refetch()}
-              loading={isLoading}
-              title={t`Refresh`}
-            >
-              <RotateCcw size={16} />
-            </ActionIcon>
-          </Group>
-        }
       />
 
       {/* Statistics Cards */}
