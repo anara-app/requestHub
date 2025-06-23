@@ -75,6 +75,7 @@
   "devDependencies": {
     "@lingui/babel-plugin-lingui-macro": "^5.3.2",
     "@lingui/cli": "^5.3.2",
+    "@lingui/swc-plugin": "^5.5.2",
     "@lingui/vite-plugin": "^5.3.2",
     "@types/dagre": "^0.7.52",
     "@types/react": "^19.1.8",
