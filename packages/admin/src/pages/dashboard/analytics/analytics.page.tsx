@@ -1,10 +1,12 @@
-import { Container, Title, Grid, Card, Text, Group, Stack, SimpleGrid, Loader, Center, Alert } from "@mantine/core";
+import { Container, Title, Grid, Card, Text, Group, Stack, SimpleGrid, Loader, Center, Alert, Button } from "@mantine/core";
 import { Trans } from "@lingui/react/macro";
 import PageTitle from "../../../components/PageTitle";
 import PermissionVisibility from "../../../components/PermissionVisibility";
-import { BarChart3, TrendingUp, Users, FileText, Clock, CheckCircle, XCircle, Activity, AlertCircle } from "lucide-react";
+import { BarChart3, TrendingUp, Users, FileText, Clock, CheckCircle, XCircle, Activity, AlertCircle, UserCog, Network, Workflow, Plus } from "lucide-react";
 import { trpc } from "../../../common/trpc";
 import RequestTrendsChart from "../../../components/Analytics/RequestTrendsChart";
+import { Link } from "react-router-dom";
+import { ROUTES } from "../../../router/routes";
 
 export default function AnalyticsPage() {
   // Fetch real analytics data
@@ -12,6 +14,75 @@ export default function AnalyticsPage() {
   const { data: statusDistribution, isLoading: statusLoading } = trpc.admin.analytics.getStatusDistribution.useQuery();
   const { data: topPerformers, isLoading: performersLoading } = trpc.admin.analytics.getTopPerformers.useQuery();
   const { data: templateUsage, isLoading: templateLoading } = trpc.admin.analytics.getTemplateUsage.useQuery();
+  const { data: userPermissions } = trpc.admin.users.getMyPermissions.useQuery();
+
+  // Quick access navigation items
+  const quickAccessItems = [
+    {
+      title: <Trans>My Requests</Trans>,
+      description: <Trans>View and manage your requests</Trans>,
+      icon: FileText,
+      route: ROUTES.DASHBOARD_MY_REQUESTS,
+      color: "blue",
+      permission: "CREATE_WORKFLOW_REQUEST",
+    },
+    {
+      title: <Trans>Pending Approvals</Trans>,
+      description: <Trans>Review requests awaiting approval</Trans>,
+      icon: Clock,
+      route: ROUTES.DASHBOARD_PENDING_APPROVALS,
+      color: "orange",
+      permission: "APPROVE_WORKFLOW_REQUEST",
+    },
+    {
+      title: <Trans>Workflow Templates</Trans>,
+      description: <Trans>Manage workflow templates</Trans>,
+      icon: FileText,
+      route: ROUTES.DASHBOARD_WORKFLOW_TEMPLATES,
+      color: "purple",
+      permission: "MANAGE_WORKFLOW_TEMPLATES",
+    },
+    {
+      title: <Trans>All Requests</Trans>,
+      description: <Trans>View all system requests</Trans>,
+      icon: Workflow,
+      route: ROUTES.DASHBOARD_ALL_REQUESTS,
+      color: "indigo",
+      permission: "MANAGE_WORKFLOW_TEMPLATES",
+    },
+    {
+      title: <Trans>Users</Trans>,
+      description: <Trans>Manage system users</Trans>,
+      icon: Users,
+      route: ROUTES.DASHBOARD_USERS,
+      color: "green",
+      permission: "READ_USERS",
+    },
+    {
+      title: <Trans>Organization</Trans>,
+      description: <Trans>View organization hierarchy</Trans>,
+      icon: Network,
+      route: ROUTES.DASHBOARD_ORGANIZATION_HIERARCHY,
+      color: "teal",
+      permission: "READ_USERS",
+    },
+    {
+      title: <Trans>Roles</Trans>,
+      description: <Trans>Manage user roles and permissions</Trans>,
+      icon: UserCog,
+      route: ROUTES.DASHBOARD_ROLES,
+      color: "cyan",
+      permission: "READ_ROLES",
+    },
+    {
+      title: <Trans>Raise Request</Trans>,
+      description: <Trans>Create a new workflow request</Trans>,
+      icon: Plus,
+      route: ROUTES.DASHBOARD_RAISE_REQUEST,
+      color: "lime",
+      permission: "CREATE_WORKFLOW_REQUEST",
+    },
+  ];
 
   if (metricsLoading) {
     return (
@@ -45,43 +116,44 @@ export default function AnalyticsPage() {
 
   const metrics = [
     {
-      title: "Total Requests",
+      title: <Trans>Total Requests</Trans>,
       value: metricsData?.totalRequests?.toLocaleString() || "0",
       icon: FileText,
       color: "blue",
       trend: null as string | null, // We can calculate trends later if needed
     },
     {
-      title: "Active Users",
+      title: <Trans>Active Users</Trans>,
       value: metricsData?.activeUsers?.toLocaleString() || "0",
       icon: Users,
       color: "green",
       trend: null as string | null,
     },
     {
-      title: "Pending Approvals",
+      title: <Trans>Pending Approvals</Trans>,
       value: metricsData?.pendingApprovals?.toLocaleString() || "0",
       icon: Clock,
       color: "orange",
       trend: null as string | null,
     },
     {
-      title: "Approved Requests",
+      title: <Trans>Approved Requests</Trans>,
       value: metricsData?.approvedRequests?.toLocaleString() || "0",
       icon: CheckCircle,
       color: "teal",
       trend: null as string | null,
     },
     {
-      title: "Rejected Requests",
+      title: <Trans>Rejected Requests</Trans>,
       value: metricsData?.rejectedRequests?.toLocaleString() || "0",
       icon: XCircle,
       color: "red",
       trend: null as string | null,
     },
     {
-      title: "Avg. Processing Time",
-      value: metricsData?.avgProcessingTime ? `${metricsData.avgProcessingTime} days` : "0 days",
+      title: <Trans>Avg. Processing Time</Trans>,
+      value: `${metricsData?.avgProcessingTime || 0}`,
+      valueType: "days" as const,
       icon: Activity,
       color: "violet",
       trend: null as string | null,
@@ -116,7 +188,13 @@ export default function AnalyticsPage() {
                     )}
                   </Group>
                   <Text size="xl" fw={700}>
-                    {metric.value}
+                    {metric.valueType === "days" ? (
+                      <>
+                        {metric.value} {Number(metric.value) === 1 ? <Trans>day</Trans> : <Trans>days</Trans>}
+                      </>
+                    ) : (
+                      metric.value
+                    )}
                   </Text>
                 </Card>
               );
@@ -152,19 +230,19 @@ export default function AnalyticsPage() {
                         const getStatusInfo = (status: string) => {
                           switch (status) {
                             case 'PENDING':
-                              return { label: 'Pending', color: 'orange', icon: Clock };
+                              return { label: <Trans>Pending</Trans>, color: 'orange', icon: Clock };
                             case 'APPROVED':
-                              return { label: 'Approved', color: 'teal', icon: CheckCircle };
+                              return { label: <Trans>Approved</Trans>, color: 'teal', icon: CheckCircle };
                             case 'REJECTED':
-                              return { label: 'Rejected', color: 'red', icon: XCircle };
+                              return { label: <Trans>Rejected</Trans>, color: 'red', icon: XCircle };
                             case 'IN_PROGRESS':
-                              return { label: 'In Progress', color: 'blue', icon: Activity };
+                              return { label: <Trans>In Progress</Trans>, color: 'blue', icon: Activity };
                             case 'DRAFT':
-                              return { label: 'Draft', color: 'gray', icon: FileText };
+                              return { label: <Trans>Draft</Trans>, color: 'gray', icon: FileText };
                             case 'CANCELLED':
-                              return { label: 'Cancelled', color: 'dark', icon: XCircle };
+                              return { label: <Trans>Cancelled</Trans>, color: 'dark', icon: XCircle };
                             default:
-                              return { label: status, color: 'gray', icon: FileText };
+                              return { label: <Trans>{status}</Trans>, color: 'gray', icon: FileText };
                           }
                         };
 
@@ -179,7 +257,7 @@ export default function AnalyticsPage() {
                                 color={`var(--mantine-color-${statusInfo.color}-6)`} 
                               />
                               <Text size="sm" fw={500}>
-                                <Trans>{statusInfo.label}</Trans>
+                                {statusInfo.label}
                               </Text>
                             </Group>
                             <Group gap="xs">
@@ -303,6 +381,53 @@ export default function AnalyticsPage() {
               </Card>
             </Grid.Col>
           </Grid>
+
+          {/* Quick Access Navigation */}
+          <Card shadow="sm" padding="lg" radius="md" withBorder mt="xl">
+            <Title order={3} mb="md">
+              <Trans>Quick Access</Trans>
+            </Title>
+            <Text size="sm" c="dimmed" mb="lg">
+              <Trans>Navigate quickly to other sections of the dashboard</Trans>
+            </Text>
+            
+            <SimpleGrid cols={{ base: 1, sm: 2, md: 3, lg: 3 }} spacing="md">
+              {quickAccessItems
+                .filter(item => !item.permission || userPermissions?.includes(item.permission as any))
+                .map((item) => {
+                  const IconComponent = item.icon;
+                  return (
+                    <Button
+                      key={item.route}
+                      component={Link}
+                      to={item.route}
+                      variant="light"
+                      color={item.color}
+                      size="md"
+                      h="auto"
+                      p="md"
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'flex-start',
+                        textAlign: 'left',
+                        height: 'auto',
+                      }}
+                    >
+                      <Group gap="xs" mb="xs">
+                        <IconComponent size={20} />
+                        <Text fw={600} size="sm">
+                          {item.title}
+                        </Text>
+                      </Group>
+                      <Text size="xs" mx="md" c="dimmed" style={{ whiteSpace: 'normal' }}>
+                        {item.description}
+                      </Text>
+                    </Button>
+                  );
+                })}
+            </SimpleGrid>
+          </Card>
         </Stack>
       </Container>
     </PermissionVisibility>

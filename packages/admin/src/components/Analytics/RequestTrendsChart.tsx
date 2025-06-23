@@ -14,6 +14,8 @@ import {
 } from "@mantine/core";
 import { LineChart } from "@mantine/charts";
 import { Trans } from "@lingui/react/macro";
+import { msg } from "@lingui/core/macro";
+import { useLingui } from "@lingui/react";
 import { BarChart3, Calendar, Filter, AlertCircle } from "lucide-react";
 import { trpc } from "../../common/trpc";
 
@@ -24,23 +26,28 @@ interface RequestTrendsChartProps {
 type GroupByOption = 'day' | 'week' | 'month';
 type DateRangePreset = 'last7days' | 'last30days' | 'last90days';
 
-const DATE_RANGE_PRESETS = [
-  { value: 'last7days', label: 'Last 7 days' },
-  { value: 'last30days', label: 'Last 30 days' },
-  { value: 'last90days', label: 'Last 90 days' },
-] as const;
-
-const GROUP_BY_OPTIONS = [
-  { value: 'day', label: 'Daily' },
-  { value: 'week', label: 'Weekly' },
-  { value: 'month', label: 'Monthly' },
-] as const;
+// These will be converted to use Trans components in the component
 
 export default function RequestTrendsChart({ height = 400 }: RequestTrendsChartProps) {
+  const { _ } = useLingui();
+  
   // State for filters
   const [dateRangePreset, setDateRangePreset] = useState<DateRangePreset>('last30days');
   const [groupBy, setGroupBy] = useState<GroupByOption>('day');
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
+
+  // Translatable options
+  const dateRangeOptions = [
+    { value: 'last7days', label: _(msg`Last 7 days`) },
+    { value: 'last30days', label: _(msg`Last 30 days`) },
+    { value: 'last90days', label: _(msg`Last 90 days`) },
+  ];
+
+  const groupByOptions = [
+    { value: 'day', label: _(msg`Daily`) },
+    { value: 'week', label: _(msg`Weekly`) },
+    { value: 'month', label: _(msg`Monthly`) },
+  ];
 
   // Calculate date range based on preset
   const dateRange = useMemo(() => {
@@ -139,35 +146,29 @@ export default function RequestTrendsChart({ height = 400 }: RequestTrendsChartP
         <Grid>
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
             <Select
-              label="Date Range"
-              placeholder="Select range"
+              label={_(msg`Date Range`)}
+              placeholder={_(msg`Select range`)}
               value={dateRangePreset}
               onChange={(value) => setDateRangePreset(value as DateRangePreset)}
-              data={DATE_RANGE_PRESETS.map(preset => ({
-                value: preset.value,
-                label: preset.label,
-              }))}
+              data={dateRangeOptions}
               leftSection={<Calendar size={16} />}
             />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
             <Select
-              label="Group By"
-              placeholder="Select grouping"
+              label={_(msg`Group By`)}
+              placeholder={_(msg`Select grouping`)}
               value={groupBy}
               onChange={(value) => setGroupBy(value as GroupByOption)}
-              data={GROUP_BY_OPTIONS.map(option => ({
-                value: option.value,
-                label: option.label,
-              }))}
+              data={groupByOptions}
             />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, sm: 6, md: 3 }}>
             <Select
-              label="Request Type"
-              placeholder="All types"
+              label={_(msg`Request Type`)}
+              placeholder={_(msg`All types`)}
               value={selectedTemplate}
               onChange={setSelectedTemplate}
               data={

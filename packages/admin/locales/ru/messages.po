@@ -53,18 +53,20 @@ msgstr "У вас нет разрешения на выполнение этог
 msgid "{0, plural, one {subordinate} other {subordinates}}"
 msgstr "{0, plural, one {subordinate} other {subordinates}}"
 
-#. placeholder {0}: statusInfo.label
 #. placeholder {0}: props.children
-#: src/pages/dashboard/analytics/analytics.page.tsx:193
 #: src/components/Typography.tsx:8
 msgid "{0}"
-msgstr ""
+msgstr "{0}"
 
 #. placeholder {0}: request.currentStep + 1
 #. placeholder {1}: templateSteps.length
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:270
 msgid "{0} of {1}"
 msgstr "{0} из {1}"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:245
+msgid "{status}"
+msgstr "{status}"
 
 #: src/components/ProtectedRoute.tsx:44
 msgid "Access Denied"
@@ -85,6 +87,10 @@ msgstr "Действия"
 msgid "Active"
 msgstr "Активный"
 
+#: src/pages/dashboard/analytics/analytics.page.tsx:126
+msgid "Active Users"
+msgstr "Активные пользователи"
+
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:406
 msgid "Add a comment about your decision..."
 msgstr "Добавьте комментарий о вашем решении..."
@@ -101,6 +107,7 @@ msgstr "Добавить комментарий"
 msgid "Add Step"
 msgstr "Добавить этап"
 
+#: src/pages/dashboard/analytics/analytics.page.tsx:46
 #: src/components/DashboardLayout/DashboardLayout.tsx:102
 msgid "All Requests"
 msgstr "Все заявки"
@@ -109,9 +116,13 @@ msgstr "Все заявки"
 msgid "All statuses"
 msgstr "Все статусы"
 
-#: src/pages/dashboard/analytics/analytics.page.tsx:20
-#: src/pages/dashboard/analytics/analytics.page.tsx:35
-#: src/pages/dashboard/analytics/analytics.page.tsx:94
+#: src/components/Analytics/RequestTrendsChart.tsx:171
+msgid "All types"
+msgstr "Все типы"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:92
+#: src/pages/dashboard/analytics/analytics.page.tsx:107
+#: src/pages/dashboard/analytics/analytics.page.tsx:167
 #: src/components/DashboardLayout/DashboardLayout.tsx:74
 msgid "Analytics"
 msgstr "Аналитика"
@@ -128,8 +139,13 @@ msgstr "Одобрить"
 #: src/pages/dashboard/workflows/my-requests.page.tsx:46
 #: src/pages/dashboard/workflows/all-requests.page.tsx:53
 #: src/pages/dashboard/workflows/all-requests.page.tsx:90
+#: src/pages/dashboard/analytics/analytics.page.tsx:235
 msgid "Approved"
 msgstr "Одобрено"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:140
+msgid "Approved Requests"
+msgstr "Одобренные заявки"
 
 #. placeholder {0}: approval.comment
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:354
@@ -161,6 +177,10 @@ msgstr "Тип назначения"
 msgid "Assignment: {0}"
 msgstr "Назначение: {0}"
 
+#: src/pages/dashboard/analytics/analytics.page.tsx:154
+msgid "Avg. Processing Time"
+msgstr "Среднее время обработки"
+
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:241
 msgid "Back to Requests"
 msgstr "Вернуться к заявкам"
@@ -179,6 +199,7 @@ msgstr "Отмена"
 #: src/pages/dashboard/workflows/my-requests.page.tsx:48
 #: src/pages/dashboard/workflows/all-requests.page.tsx:55
 #: src/pages/dashboard/workflows/all-requests.page.tsx:92
+#: src/pages/dashboard/analytics/analytics.page.tsx:243
 msgid "Cancelled"
 msgstr "Отменено"
 
@@ -191,8 +212,8 @@ msgid "Change theme"
 msgstr "Сменить тему"
 
 #: src/pages/dashboard/analytics/analytics.page.tsx:137
-msgid "Chart visualization will be implemented here"
-msgstr "Здесь будет реализована визуализация графиков"
+#~ msgid "Chart visualization will be implemented here"
+#~ msgstr "Здесь будет реализована визуализация графиков"
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:405
 msgid "Comment (Optional)"
@@ -221,6 +242,10 @@ msgstr "Подтвердить одобрение"
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:416
 msgid "Confirm Rejection"
 msgstr "Подтвердить отклонение"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:79
+msgid "Create a new workflow request"
+msgstr "Создайте новую заявку на рабочий процесс"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:301
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:510
@@ -257,6 +282,26 @@ msgstr "Текущий этап"
 msgid "Current Step:"
 msgstr "Текущий этап:"
 
+#: src/components/Analytics/RequestTrendsChart.tsx:47
+msgid "Daily"
+msgstr "Ежедневно"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:211
+msgid "Data Points:"
+msgstr "Data Points:"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:149
+msgid "Date Range"
+msgstr "Диапазон дат"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:193
+msgid "day"
+msgstr "день"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:193
+msgid "days"
+msgstr "дней"
+
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:318
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:441
 msgid "Description"
@@ -269,6 +314,7 @@ msgstr "Описание:"
 #: src/pages/dashboard/workflows/my-requests.page.tsx:43
 #: src/pages/dashboard/workflows/all-requests.page.tsx:50
 #: src/pages/dashboard/workflows/all-requests.page.tsx:87
+#: src/pages/dashboard/analytics/analytics.page.tsx:241
 msgid "Draft"
 msgstr "Черновик"
 
@@ -319,9 +365,13 @@ msgstr "Не удалось добавить комментарий"
 msgid "Failed to approve request"
 msgstr "Не удалось одобрить заявку"
 
-#: src/pages/dashboard/analytics/analytics.page.tsx:38
+#: src/pages/dashboard/analytics/analytics.page.tsx:110
 msgid "Failed to load analytics data. Please try again later."
 msgstr "Failed to load analytics data. Please try again later."
+
+#: src/components/Analytics/RequestTrendsChart.tsx:129
+msgid "Failed to load request trends data. Please try again later."
+msgstr "Failed to load request trends data. Please try again later."
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:387
 msgid "Failed to load the organization hierarchy. Please try again later."
@@ -335,6 +385,10 @@ msgstr "Не удалось отклонить заявку"
 msgid "Filter by status"
 msgstr "Фильтр по статусу"
 
+#: src/components/Analytics/RequestTrendsChart.tsx:215
+msgid "Filtered by:"
+msgstr "Filtered by:"
+
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:462
 msgid "Fit View"
 msgstr "Поместить в видимую область"
@@ -343,6 +397,10 @@ msgstr "Поместить в видимую область"
 msgid "Go Back"
 msgstr "Назад"
 
+#: src/components/Analytics/RequestTrendsChart.tsx:160
+msgid "Group By"
+msgstr "Группировать по"
+
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:455
 msgid "Horizontal Layout"
 msgstr "Горизонтальное расположение"
@@ -350,6 +408,7 @@ msgstr "Горизонтальное расположение"
 #: src/pages/dashboard/workflows/my-requests.page.tsx:45
 #: src/pages/dashboard/workflows/all-requests.page.tsx:52
 #: src/pages/dashboard/workflows/all-requests.page.tsx:89
+#: src/pages/dashboard/analytics/analytics.page.tsx:239
 msgid "In Progress"
 msgstr "В процессе"
 
@@ -366,6 +425,18 @@ msgstr "Инициатор"
 msgid "Initiator's Supervisor"
 msgstr "Руководитель инициатора"
 
+#: src/components/Analytics/RequestTrendsChart.tsx:42
+msgid "Last 30 days"
+msgstr "Последние 30 дней"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:41
+msgid "Last 7 days"
+msgstr "Последние 7 дней"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:43
+msgid "Last 90 days"
+msgstr "Последние 90 дней"
+
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:378
 msgid "Loading organization chart..."
 msgstr "Загрузка организационной схемы..."
@@ -378,15 +449,32 @@ msgstr "Loading..."
 msgid "Logout"
 msgstr "Выход"
 
+#: src/pages/dashboard/analytics/analytics.page.tsx:55
+msgid "Manage system users"
+msgstr "Управляйте пользователями системы"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:71
+msgid "Manage user roles and permissions"
+msgstr "Управляйте ролями и разрешениями пользователей"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:39
+msgid "Manage workflow templates"
+msgstr "Управляйте шаблонами рабочих процессов"
+
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:532
 msgid "Managers"
 msgstr "Менеджеры"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:49
+msgid "Monthly"
+msgstr "Ежемесячно"
 
 #: src/pages/dashboard/analytics/analytics.page.tsx:129
 #~ msgid "Most active users and approval statistics will be displayed here"
 #~ msgstr "Здесь будут отображены самые активные пользователи и статистика одобрений"
 
 #: src/pages/dashboard/workflows/my-requests.page.tsx:56
+#: src/pages/dashboard/analytics/analytics.page.tsx:22
 #: src/components/DashboardLayout/DashboardLayout.tsx:81
 msgid "My Requests"
 msgstr "Мои заявки"
@@ -400,6 +488,10 @@ msgstr "Н/Д"
 msgid "Name"
 msgstr "Название"
 
+#: src/pages/dashboard/analytics/analytics.page.tsx:391
+msgid "Navigate quickly to other sections of the dashboard"
+msgstr "Быстро переходите к другим разделам панели управления"
+
 #: src/pages/dashboard/workflows/my-requests.page.tsx:65
 msgid "New Request"
 msgstr "Новая заявка"
@@ -411,6 +503,10 @@ msgstr "Архивные шаблоны не найдены"
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:473
 msgid "No comments yet"
 msgstr "Комментарии пока отсутствуют"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:319
+msgid "No data available for the selected period"
+msgstr "Нет данных за выбранный период"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:343
 msgid "No description"
@@ -424,13 +520,13 @@ msgstr "Соответствующих заявок не найдено"
 msgid "No pending approvals"
 msgstr "Отсутствуют ожидающие одобрения"
 
-#: src/pages/dashboard/analytics/analytics.page.tsx:275
+#: src/pages/dashboard/analytics/analytics.page.tsx:342
 msgid "No performance data available yet"
-msgstr "No performance data available yet"
+msgstr "Данные о производительности пока недоступны"
 
-#: src/pages/dashboard/analytics/analytics.page.tsx:210
+#: src/pages/dashboard/analytics/analytics.page.tsx:277
 msgid "No request data available yet"
-msgstr "No request data available yet"
+msgstr "Данные о заявках пока недоступны"
 
 #: src/pages/dashboard/workflows/my-requests.page.tsx:83
 msgid "No requests found"
@@ -444,9 +540,9 @@ msgstr "Заявки не соответствуют запросу"
 msgid "No Results Found"
 msgstr "Результаты не найдены"
 
-#: src/pages/dashboard/analytics/analytics.page.tsx:309
+#: src/pages/dashboard/analytics/analytics.page.tsx:376
 msgid "No template usage data available yet"
-msgstr "No template usage data available yet"
+msgstr "Данные об использовании шаблонов пока недоступны"
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:481
 msgid "No users match the current search criteria."
@@ -468,6 +564,10 @@ msgstr "Шаблоны процессов не найдены. Создайте 
 msgid "Not started"
 msgstr "Не начато"
 
+#: src/pages/dashboard/analytics/analytics.page.tsx:62
+msgid "Organization"
+msgstr "Организация"
+
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:509
 #: src/components/DashboardLayout/DashboardLayout.tsx:116
 msgid "Organization Hierarchy"
@@ -480,6 +580,7 @@ msgstr "Партнер Нефть"
 #: src/pages/dashboard/workflows/my-requests.page.tsx:44
 #: src/pages/dashboard/workflows/all-requests.page.tsx:51
 #: src/pages/dashboard/workflows/all-requests.page.tsx:88
+#: src/pages/dashboard/analytics/analytics.page.tsx:233
 msgid "Pending"
 msgstr "В ожидании"
 
@@ -488,6 +589,8 @@ msgid "Pending approval"
 msgstr "Ожидает одобрения"
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:37
+#: src/pages/dashboard/analytics/analytics.page.tsx:30
+#: src/pages/dashboard/analytics/analytics.page.tsx:133
 #: src/components/DashboardLayout/DashboardLayout.tsx:88
 msgid "Pending Approvals"
 msgstr "Ожидающие одобрения"
@@ -496,6 +599,10 @@ msgstr "Ожидающие одобрения"
 msgid "Pending your approval"
 msgstr "Ожидает вашего одобрения"
 
+#: src/components/Analytics/RequestTrendsChart.tsx:208
+msgid "Period:"
+msgstr "Период:"
+
 #: src/pages/dashboard/analytics/analytics.page.tsx:113
 #~ msgid "Pie chart will be implemented here"
 #~ msgstr "Здесь будет реализована круговая диаграмма"
@@ -503,6 +610,14 @@ msgstr "Ожидает вашего одобрения"
 #: src/pages/dashboard/workflows/my-requests.page.tsx:101
 msgid "Progress"
 msgstr "Прогресс"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:388
+msgid "Quick Access"
+msgstr "Быстрый доступ"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:78
+msgid "Raise Request"
+msgstr "Подать заявку"
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:521
 #~ msgid "Refresh"
@@ -516,8 +631,13 @@ msgstr "Отклонить"
 #: src/pages/dashboard/workflows/my-requests.page.tsx:47
 #: src/pages/dashboard/workflows/all-requests.page.tsx:54
 #: src/pages/dashboard/workflows/all-requests.page.tsx:91
+#: src/pages/dashboard/analytics/analytics.page.tsx:237
 msgid "Rejected"
 msgstr "Отклонено"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:147
+msgid "Rejected Requests"
+msgstr "Отклоненные заявки"
 
 #. placeholder {0}: approval.comment
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:358
@@ -548,9 +668,13 @@ msgstr "Заявка не найдена"
 msgid "Request rejected successfully"
 msgstr "Заявка успешно отклонена"
 
-#: src/pages/dashboard/analytics/analytics.page.tsx:131
+#: src/components/Analytics/RequestTrendsChart.tsx:139
 msgid "Request Trends"
 msgstr "Тренды заявок"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:170
+msgid "Request Type"
+msgstr "Тип заявки"
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:79
 msgid "requests"
@@ -561,6 +685,10 @@ msgstr "заявок"
 msgid "Requires {0} approval"
 msgstr "Требует одобрения {0}"
 
+#: src/components/Analytics/RequestTrendsChart.tsx:194
+msgid "Reset Filters"
+msgstr "Сбросить фильтры"
+
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:415
 msgid "Restore Template"
 msgstr "Восстановить шаблон"
@@ -568,6 +696,10 @@ msgstr "Восстановить шаблон"
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:164
 msgid "Review"
 msgstr "Рассмотреть"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:31
+msgid "Review requests awaiting approval"
+msgstr "Рассматривайте заявки, ожидающие одобрения"
 
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:136
 msgid "Review Required"
@@ -586,6 +718,7 @@ msgstr "На основе роли (назначение пользовател�
 msgid "Role: {0}"
 msgstr "Роль: {0}"
 
+#: src/pages/dashboard/analytics/analytics.page.tsx:70
 #: src/components/DashboardLayout/DashboardLayout.tsx:123
 msgid "Roles"
 msgstr "Роли"
@@ -614,9 +747,17 @@ msgstr "Поиск заявок..."
 msgid "Select a role"
 msgstr "Выберите роль"
 
+#: src/components/Analytics/RequestTrendsChart.tsx:161
+msgid "Select grouping"
+msgstr "Выберите группировку"
+
 #: src/components/LanguageSwitcher.tsx:24
 msgid "Select Language"
 msgstr "Выбрать язык"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:150
+msgid "Select range"
+msgstr "Выберите диапазон"
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:195
 msgid "Self-managed"
@@ -641,7 +782,7 @@ msgstr "Войти"
 msgid "Status"
 msgstr "Статус"
 
-#: src/pages/dashboard/analytics/analytics.page.tsx:147
+#: src/pages/dashboard/analytics/analytics.page.tsx:214
 msgid "Status Distribution"
 msgstr "Распределение по статусам"
 
@@ -693,7 +834,7 @@ msgstr "Шаблон"
 msgid "Template Name"
 msgstr "Название шаблона"
 
-#: src/pages/dashboard/analytics/analytics.page.tsx:286
+#: src/pages/dashboard/analytics/analytics.page.tsx:353
 msgid "Template Usage"
 msgstr "Использование шаблонов"
 
@@ -716,25 +857,37 @@ msgstr "В данный момент нет заявок, ожидающих о�
 msgid "Title"
 msgstr "Название"
 
-#: src/pages/dashboard/analytics/analytics.page.tsx:236
+#: src/pages/dashboard/analytics/analytics.page.tsx:303
 msgid "Top Approvers"
-msgstr "Top Approvers"
+msgstr "Лучшие утверждающие"
 
-#: src/pages/dashboard/analytics/analytics.page.tsx:225
+#: src/pages/dashboard/analytics/analytics.page.tsx:292
 msgid "Top Performers"
 msgstr "Лучшие исполнители"
 
-#: src/pages/dashboard/analytics/analytics.page.tsx:256
+#: src/pages/dashboard/analytics/analytics.page.tsx:323
 msgid "Top Request Creators"
-msgstr "Top Request Creators"
+msgstr "Лучшие создатели заявок"
 
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:544
 msgid "Top-level Nodes"
 msgstr "Узлы верхнего уровня"
 
+#: src/pages/dashboard/analytics/analytics.page.tsx:119
+msgid "Total Requests"
+msgstr "Всего заявок"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:205
+msgid "Total Requests:"
+msgstr "Всего заявок:"
+
 #: src/pages/dashboard/users/organization-hierarchy.page.tsx:520
 msgid "Total Users"
 msgstr "Всего пользователей"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:322
+msgid "Try adjusting your filters or date range"
+msgstr "Попробуйте изменить фильтры или диапазон дат"
 
 #: src/pages/dashboard/workflows/all-requests.page.tsx:102
 msgid "Try adjusting your search criteria or filters."
@@ -772,6 +925,7 @@ msgstr "Неизвестный шаблон"
 msgid "Unnamed User"
 msgstr "Безымянный пользователь"
 
+#: src/pages/dashboard/analytics/analytics.page.tsx:54
 #: src/components/DashboardLayout/DashboardLayout.tsx:109
 msgid "Users"
 msgstr "Пользователи"
@@ -784,9 +938,21 @@ msgstr "Вертикальное расположение"
 msgid "View"
 msgstr "Просмотр"
 
+#: src/pages/dashboard/analytics/analytics.page.tsx:47
+msgid "View all system requests"
+msgstr "Просматривайте все системные заявки"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:23
+msgid "View and manage your requests"
+msgstr "Просматривайте и управляйте своими заявками"
+
 #: src/pages/dashboard/workflows/all-requests.page.tsx:151
 msgid "View Details"
 msgstr "Детали"
+
+#: src/pages/dashboard/analytics/analytics.page.tsx:63
+msgid "View organization hierarchy"
+msgstr "Просматривайте организационную иерархию"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:387
 msgid "View Template"
@@ -795,6 +961,10 @@ msgstr "Просмотр шаблона"
 #: src/pages/dashboard/workflows/pending-approvals.page.tsx:79
 msgid "waiting for your approval"
 msgstr "ожидают вашего одобрения"
+
+#: src/components/Analytics/RequestTrendsChart.tsx:48
+msgid "Weekly"
+msgstr "Еженедельно"
 
 #: src/pages/dashboard/workflows/workflow-request.page.tsx:310
 msgid "Workflow Progress"
@@ -809,6 +979,7 @@ msgstr "Этапы процесса"
 #~ msgstr "Здесь будут показаны популярность шаблонов процессов и показатели успешности"
 
 #: src/pages/dashboard/workflows/workflow-templates.page.tsx:293
+#: src/pages/dashboard/analytics/analytics.page.tsx:38
 #: src/components/DashboardLayout/DashboardLayout.tsx:95
 msgid "Workflow Templates"
 msgstr "Шаблоны процессов"
