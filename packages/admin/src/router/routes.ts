@@ -17,6 +17,7 @@ export const ROUTES = {
   DASHBOARD_ALL_REQUESTS: "/all-requests",
   DASHBOARD_WORKFLOW_REQUEST: "/workflow-request",
   DASHBOARD_RAISE_REQUEST: "/raise-request",
+  DASHBOARD_NEW_REQUEST: "/new-request",
   DASHBOARD_MY_REQUESTS: "/my-requests",
   DASHBOARD_PENDING_APPROVALS: "/pending-approvals",
 };
