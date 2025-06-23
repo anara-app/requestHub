@@ -5,29 +5,22 @@ import {
   TextInput,
   Textarea,
   Group,
-  ActionIcon,
   Stack,
-  Select,
   Paper,
   Text,
   Divider,
+  Container,
 } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { X, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { trpc } from "../../../common/trpc";
-import Container from "../../../components/Container";
 import { FormBuilder, FormField } from "../../../components/Forms";
 import PageTitle from "../../../components/PageTitle";
+import {
+  WorkflowStepEditor,
+  WorkflowStep,
+} from "../../../components/WorkflowStepEditor";
 import { ROUTES } from "../../../router/routes";
-
-interface WorkflowStep {
-  assigneeType: "ROLE_BASED" | "DYNAMIC";
-  roleBasedAssignee?: string;
-  dynamicAssignee?: string;
-  actionLabel: string;
-  type: string;
-}
 
 export const NewWorkflowTemplatePage = () => {
   const { t } = useLingui();
@@ -64,34 +57,6 @@ export const NewWorkflowTemplatePage = () => {
       },
     });
 
-  const addStep = () => {
-    setSteps([
-      ...steps,
-      {
-        assigneeType: "DYNAMIC",
-        dynamicAssignee: "INITIATOR_SUPERVISOR",
-        type: "approval",
-        actionLabel: "",
-      },
-    ]);
-  };
-
-  const removeStep = (index: number) => {
-    if (steps.length > 1) {
-      setSteps(steps.filter((_, i) => i !== index));
-    }
-  };
-
-  const updateStep = (
-    index: number,
-    field: keyof WorkflowStep,
-    value: string
-  ) => {
-    const updatedSteps = [...steps];
-    updatedSteps[index] = { ...updatedSteps[index], [field]: value };
-    setSteps(updatedSteps);
-  };
-
   const handleCreate = () => {
     if (!name.trim()) {
       notifications.show({
@@ -110,16 +75,6 @@ export const NewWorkflowTemplatePage = () => {
     });
   };
 
-  const dynamicOptions = [
-    { value: "INITIATOR_SUPERVISOR", label: "Initiator's Supervisor" },
-  ];
-
-  const roleOptions =
-    roles?.map((role) => ({
-      value: role.name,
-      label: role.name,
-    })) || [];
-
   const handleCancel = () => {
     navigate(ROUTES.DASHBOARD_WORKFLOW_TEMPLATES);
   };
@@ -129,7 +84,7 @@ export const NewWorkflowTemplatePage = () => {
   };
 
   return (
-    <Container>
+    <Container size="xl" my="lg">
       <PageTitle>{t`Create New Workflow Template`}</PageTitle>
 
       <Paper p="xl" withBorder>
@@ -148,83 +103,11 @@ export const NewWorkflowTemplatePage = () => {
             onChange={(e) => setDescription(e.target.value)}
           />
 
-          <Text fw={500}>{t`Workflow Steps`}</Text>
-          {steps.map((step, index) => (
-            <Paper key={index} p="md" withBorder>
-              <Stack gap="sm">
-                <Text fw={500} size="sm">
-                  {t`Step`} {index + 1}
-                </Text>
-
-                <Select
-                  label={t`Assignment Type`}
-                  data={[
-                    {
-                      value: "ROLE_BASED",
-                      label: t`Role-based (assign to users with specific role)`,
-                    },
-                    {
-                      value: "DYNAMIC",
-                      label: t`Dynamic (assign based on relationships)`,
-                    },
-                  ]}
-                  value={step.assigneeType}
-                  onChange={(value) =>
-                    updateStep(index, "assigneeType", value || "DYNAMIC")
-                  }
-                />
-
-                {step.assigneeType === "ROLE_BASED" && (
-                  <Select
-                    label={t`Role`}
-                    placeholder={t`Select a role`}
-                    data={roleOptions}
-                    value={step.roleBasedAssignee || ""}
-                    onChange={(value) =>
-                      updateStep(index, "roleBasedAssignee", value || "")
-                    }
-                    searchable
-                  />
-                )}
-
-                {step.assigneeType === "DYNAMIC" && (
-                  <Select
-                    label={t`Dynamic Assignment`}
-                    data={dynamicOptions}
-                    value={step.dynamicAssignee || ""}
-                    onChange={(value) =>
-                      updateStep(index, "dynamicAssignee", value || "")
-                    }
-                  />
-                )}
-
-                <TextInput
-                  label={t`Action Label`}
-                  placeholder={t`Enter action label (e.g., 'Review and Approve')`}
-                  value={step.actionLabel}
-                  onChange={(e) =>
-                    updateStep(index, "actionLabel", e.target.value)
-                  }
-                />
-
-                {steps.length > 1 && (
-                  <Group justify="flex-end">
-                    <ActionIcon color="red" onClick={() => removeStep(index)}>
-                      <X size={16} />
-                    </ActionIcon>
-                  </Group>
-                )}
-              </Stack>
-            </Paper>
-          ))}
-
-          <Button
-            variant="outline"
-            onClick={addStep}
-            leftSection={<Plus size={16} />}
-          >
-            {t`Add Step`}
-          </Button>
+          <WorkflowStepEditor
+            steps={steps}
+            onStepsChange={setSteps}
+            roles={roles}
+          />
 
           <Divider my="xl" />
 

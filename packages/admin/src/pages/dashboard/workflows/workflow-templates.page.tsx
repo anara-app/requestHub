@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useLingui } from "@lingui/react/macro";
 import {
   Table,
   Button,
@@ -9,17 +10,16 @@ import {
   Badge,
   Group,
   Switch,
+  Container,
 } from "@mantine/core";
 import { Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { trpc } from "../../../common/trpc";
-import Container from "../../../components/Container";
 import PageTitle from "../../../components/PageTitle";
 import { ROUTES } from "../../../router/routes";
-import { useLingui } from "@lingui/react/macro";
 
 interface WorkflowStep {
-  assigneeType: 'ROLE_BASED' | 'DYNAMIC';
+  assigneeType: "ROLE_BASED" | "DYNAMIC";
   roleBasedAssignee?: string;
   dynamicAssignee?: string;
   actionLabel: string;
@@ -51,7 +51,7 @@ export default function WorkflowTemplatesPage() {
 
   if (isLoading) {
     return (
-      <Container>
+      <Container size="xl" my="lg">
         <Center style={{ height: 400 }}>
           <Loader size="lg" />
         </Center>
@@ -60,7 +60,7 @@ export default function WorkflowTemplatesPage() {
   }
 
   return (
-    <Container>
+    <Container size="xl" my="lg">
       <Group justify="space-between" align="center" mb="lg">
         <PageTitle>{t`Workflow Templates`}</PageTitle>
         <Group>
@@ -125,7 +125,9 @@ export default function WorkflowTemplatesPage() {
                       </Text>
                     </Table.Td>
                     <Table.Td>
-                      <Badge variant="light">{steps.length} {t`steps`}</Badge>
+                      <Badge variant="light">
+                        {steps.length} {t`steps`}
+                      </Badge>
                     </Table.Td>
                     <Table.Td>
                       <Badge
