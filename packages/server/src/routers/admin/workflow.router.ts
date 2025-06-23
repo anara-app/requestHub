@@ -335,13 +335,36 @@ export const adminWorkflowRouter = router({
         page: z.number().int().positive().default(1),
         limit: z.number().int().positive().default(50),
         status: z.nativeEnum(RequestStatus).optional(),
+        search: z.string().optional(),
       })
     )
     .query(async ({ input }) => {
-      const { page, limit, status } = input;
+      const { page, limit, status, search } = input;
       const skip = (page - 1) * limit;
 
-      const where = status ? { status } : {};
+      // Build where clause
+      const where: any = {};
+      
+      if (status) {
+        where.status = status;
+      }
+      
+      if (search) {
+        where.OR = [
+          { title: { contains: search, mode: "insensitive" } },
+          { description: { contains: search, mode: "insensitive" } },
+          { template: { name: { contains: search, mode: "insensitive" } } },
+          { 
+            initiator: {
+              OR: [
+                { firstName: { contains: search, mode: "insensitive" } },
+                { lastName: { contains: search, mode: "insensitive" } },
+                { email: { contains: search, mode: "insensitive" } },
+              ],
+            },
+          },
+        ];
+      }
 
       const [requests, totalCount] = await Promise.all([
         db.workflowRequest.findMany({
