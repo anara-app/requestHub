@@ -4,6 +4,7 @@ import PageTitle from "../../../components/PageTitle";
 import PermissionVisibility from "../../../components/PermissionVisibility";
 import { BarChart3, TrendingUp, Users, FileText, Clock, CheckCircle, XCircle, Activity, AlertCircle } from "lucide-react";
 import { trpc } from "../../../common/trpc";
+import RequestTrendsChart from "../../../components/Analytics/RequestTrendsChart";
 
 export default function AnalyticsPage() {
   // Fetch real analytics data
@@ -125,19 +126,7 @@ export default function AnalyticsPage() {
           {/* Charts Section */}
           <Grid>
             <Grid.Col span={{ base: 12, md: 8 }}>
-              <Card shadow="sm" padding="lg" radius="md" withBorder>
-                <Group justify="space-between" mb="md">
-                  <Title order={3}>
-                    <Trans>Request Trends</Trans>
-                  </Title>
-                  <BarChart3 size={20} />
-                </Group>
-                <div style={{ height: 300, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Text c="dimmed">
-                    <Trans>Chart visualization will be implemented here</Trans>
-                  </Text>
-                </div>
-              </Card>
+              <RequestTrendsChart height={300} />
             </Grid.Col>
 
             <Grid.Col span={{ base: 12, md: 4 }}>

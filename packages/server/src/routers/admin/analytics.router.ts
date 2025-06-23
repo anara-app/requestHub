@@ -84,55 +84,150 @@ export const analyticsRouter = router({
   getRequestTrends: protectedPermissionProcedure(["READ_ANALYTICS"])
     .input(
       z.object({
-        days: z.number().int().positive().default(30),
+        startDate: z.string().datetime().optional(),
+        endDate: z.string().datetime().optional(),
+        groupBy: z.enum(['day', 'week', 'month']).default('day'),
+        templateId: z.string().uuid().optional(),
+        days: z.number().int().positive().default(30), // Fallback for backward compatibility
       })
     )
     .query(async ({ input }) => {
-      const { days } = input;
-      const startDate = new Date();
-      startDate.setDate(startDate.getDate() - days);
-
-      const requests = await db.workflowRequest.findMany({
-        where: {
-          createdAt: {
-            gte: startDate,
-          },
-        },
-        select: {
-          createdAt: true,
-          status: true,
-        },
-        orderBy: {
-          createdAt: "asc",
-        },
-      });
-
-      // Group by date
-      const trendData: { [key: string]: { total: number; approved: number; rejected: number; pending: number } } = {};
-      
-      requests.forEach((request) => {
-        const dateKey = request.createdAt.toISOString().split('T')[0];
-        if (!trendData[dateKey]) {
-          trendData[dateKey] = { total: 0, approved: 0, rejected: 0, pending: 0 };
-        }
-        trendData[dateKey].total++;
+      try {
+        const { startDate, endDate, groupBy, templateId, days } = input;
         
-        if (request.status === RequestStatus.APPROVED) {
-          trendData[dateKey].approved++;
-        } else if (request.status === RequestStatus.REJECTED) {
-          trendData[dateKey].rejected++;
+        // Determine date range
+        let queryStartDate: Date;
+        let queryEndDate: Date;
+        
+        if (startDate && endDate) {
+          queryStartDate = new Date(startDate);
+          queryEndDate = new Date(endDate);
         } else {
-          trendData[dateKey].pending++;
+          queryEndDate = new Date();
+          queryStartDate = new Date();
+          queryStartDate.setDate(queryStartDate.getDate() - days);
         }
-      });
 
-      // Convert to array format
-      const trends = Object.entries(trendData).map(([date, data]) => ({
-        date,
-        ...data,
-      }));
+        // Build where clause
+        const whereClause: any = {
+          createdAt: {
+            gte: queryStartDate,
+            lte: queryEndDate,
+          },
+        };
 
-      return trends;
+        if (templateId) {
+          whereClause.templateId = templateId;
+        }
+
+        const requests = await db.workflowRequest.findMany({
+          where: whereClause,
+          select: {
+            createdAt: true,
+            status: true,
+            templateId: true,
+            template: {
+              select: {
+                name: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: "asc",
+          },
+        });
+
+        // Helper function to get date key based on groupBy
+        const getDateKey = (date: Date, groupBy: string): string => {
+          switch (groupBy) {
+            case 'day':
+              return date.toISOString().split('T')[0];
+            case 'week':
+              const weekStart = new Date(date);
+              weekStart.setDate(date.getDate() - date.getDay());
+              return weekStart.toISOString().split('T')[0];
+            case 'month':
+              return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+            default:
+              return date.toISOString().split('T')[0];
+          }
+        };
+
+        // Group by date and calculate metrics
+        const trendData: { [key: string]: { 
+          total: number; 
+          approved: number; 
+          rejected: number; 
+          pending: number;
+          inProgress: number;
+          draft: number;
+          cancelled: number;
+        } } = {};
+        
+        requests.forEach((request) => {
+          const dateKey = getDateKey(request.createdAt, groupBy);
+          
+          if (!trendData[dateKey]) {
+            trendData[dateKey] = { 
+              total: 0, 
+              approved: 0, 
+              rejected: 0, 
+              pending: 0,
+              inProgress: 0,
+              draft: 0,
+              cancelled: 0
+            };
+          }
+          
+          trendData[dateKey].total++;
+          
+          switch (request.status) {
+            case RequestStatus.APPROVED:
+              trendData[dateKey].approved++;
+              break;
+            case RequestStatus.REJECTED:
+              trendData[dateKey].rejected++;
+              break;
+            case RequestStatus.PENDING:
+              trendData[dateKey].pending++;
+              break;
+            case RequestStatus.IN_PROGRESS:
+              trendData[dateKey].inProgress++;
+              break;
+            case RequestStatus.DRAFT:
+              trendData[dateKey].draft++;
+              break;
+            case RequestStatus.CANCELLED:
+              trendData[dateKey].cancelled++;
+              break;
+          }
+        });
+
+        // Convert to array format and fill missing dates
+        const trends = Object.entries(trendData).map(([date, data]) => ({
+          date,
+          ...data,
+        }));
+
+        // Sort by date
+        trends.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+        return {
+          trends,
+          summary: {
+            totalRequests: requests.length,
+            dateRange: {
+              start: queryStartDate.toISOString(),
+              end: queryEndDate.toISOString(),
+            },
+            groupBy,
+            templateFilter: templateId || null,
+          },
+        };
+      } catch (error) {
+        console.error('Error fetching request trends:', error);
+        throw new Error('Failed to fetch request trends data');
+      }
     }),
 
   getStatusDistribution: protectedPermissionProcedure(["READ_ANALYTICS"])
@@ -299,5 +394,29 @@ export const analyticsRouter = router({
       );
 
       return templateStats;
+    }),
+
+  getAvailableTemplates: protectedPermissionProcedure(["READ_ANALYTICS"])
+    .query(async () => {
+      try {
+        const templates = await db.workflowTemplate.findMany({
+          where: {
+            isActive: true,
+          },
+          select: {
+            id: true,
+            name: true,
+            description: true,
+          },
+          orderBy: {
+            name: 'asc',
+          },
+        });
+
+        return templates;
+      } catch (error) {
+        console.error('Error fetching available templates:', error);
+        throw new Error('Failed to fetch available templates');
+      }
     }),
 }); 
